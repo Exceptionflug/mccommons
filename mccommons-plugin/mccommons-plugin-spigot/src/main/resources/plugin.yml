@@ -1,0 +1,11 @@
+name: MCCommons
+author: Exceptionflug
+version: 2.0
+softdepend:
+  - ProtocolLib
+
+main: de.exceptionflug.mccommons.plugin.spigot.SpigotMCCommonsPlugin
+
+commands:
+  mcrl:
+  hrl:
