@@ -4,6 +4,7 @@ import de.exceptionflug.mccommons.config.shared.ConfigItemStack;
 import de.exceptionflug.mccommons.core.Converter;
 import de.exceptionflug.mccommons.core.utils.FormatUtils;
 import de.exceptionflug.mccommons.inventories.proxy.utils.ItemUtils;
+import de.exceptionflug.protocolize.items.ItemFlag;
 import de.exceptionflug.protocolize.items.ItemStack;
 import de.exceptionflug.protocolize.items.ItemType;
 import net.md_5.bungee.api.ProxyServer;
@@ -31,10 +32,15 @@ public class ItemStackConverter implements Converter<ConfigItemStack, ItemStack>
                 ItemUtils.setSkullAndName(out, skullOwner);
             }
         }
-
         if(!src.getEnchantments().isEmpty())
             ItemUtils.addGlow(out);
-
+        for(final String flagName : src.getFlags()) {
+            try {
+                out.setFlag(ItemFlag.valueOf(flagName), true);
+            } catch (final Exception e) {
+                ProxyServer.getInstance().getLogger().warning("[ItemStackConverter] WARN: "+src.getDisplayName()+" has invalid flag "+flagName);
+            }
+        }
         out.setLore(FormatUtils.formatAmpersandColorCodes(src.getLore()));
         out.setDisplayName(src.getDisplayName());
         return out;
