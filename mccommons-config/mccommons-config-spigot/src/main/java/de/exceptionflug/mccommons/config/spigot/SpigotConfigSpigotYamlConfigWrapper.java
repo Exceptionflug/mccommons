@@ -71,6 +71,8 @@ public class SpigotConfigSpigotYamlConfigWrapper implements SpigotConfig {
         return new PositionedSound(getLocation(path+".location"), sound, volume, pitch);
     }
 
+
+
     @Override
     public <T> T getHandle() {
         return (T) fileConfiguration;

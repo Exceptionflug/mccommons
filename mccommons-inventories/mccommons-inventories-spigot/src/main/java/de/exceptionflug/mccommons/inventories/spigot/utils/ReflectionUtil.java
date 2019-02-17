@@ -8,12 +8,17 @@ import org.bukkit.scoreboard.Scoreboard;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.AbstractMap;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class ReflectionUtil {
 
     private ReflectionUtil(){}
+
+    private static final Map<Map.Entry<Class, String>, Field> CACHED_FIELDS = new HashMap<>();
 
     public static Class<?> getClass(String classname) throws ClassNotFoundException {
         String path = classname.replace("{nms}", "net.minecraft.server." + getVersion()).replace("{obc}", "org.bukkit.craftbukkit." + getVersion())
@@ -49,9 +54,21 @@ public class ReflectionUtil {
     }
 
     public static Object getFieldValue(Object instance, String fieldName)
-            throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
-        Field field = instance.getClass().getDeclaredField(fieldName);
-        field.setAccessible(true);
+            throws IllegalArgumentException, IllegalAccessException, SecurityException {
+        final Map.Entry<Class, String> key = new AbstractMap.SimpleEntry<>(instance.getClass(), fieldName);
+        final Field field = CACHED_FIELDS.computeIfAbsent(key, i -> {
+            try {
+                return instance.getClass().getDeclaredField(fieldName);
+            } catch (final NoSuchFieldException e) {
+                e.printStackTrace();
+            }
+            return null;
+        });
+        if(field == null)
+            return null;
+        if(!field.isAccessible()) {
+            field.setAccessible(true);
+        }
         return field.get(instance);
     }
 
