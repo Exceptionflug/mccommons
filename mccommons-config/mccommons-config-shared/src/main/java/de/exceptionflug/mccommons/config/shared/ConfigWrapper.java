@@ -4,10 +4,7 @@ import de.exceptionflug.mccommons.core.Providers;
 import de.exceptionflug.mccommons.core.providers.LocaleProvider;
 import de.exceptionflug.mccommons.core.utils.FormatUtils;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 
 public interface ConfigWrapper {
@@ -34,7 +31,18 @@ public interface ConfigWrapper {
     default ConfigItemStack getItemStack(final String path, final Locale locale, final Supplier<String[]> replacer) {
         return getItemStack(path, locale, replacer.get());
     }
-    ConfigItemStack getItemStack(final String path, final Locale locale, final Map<String, String> replacements);
+    default ConfigItemStack getItemStack(final String path, final Locale locale, final Map<String, String> replacements) {
+        String material = getOrSetDefault(path+".type", "GRASS");
+        final int amount = getOrSetDefault(path+".amount", 1);
+        String displayName = getLocalizedString(locale, path, ".displayName", path);
+        List<String> lore = getLocalizedStringList(locale, path, ".lore", new ArrayList<>());
+        final List<String> enchantments = getOrSetDefault(path+".enchantments", new ArrayList<>());
+        final List<String> flags = getOrSetDefault(path+".flags", new ArrayList<>());
+        displayName = FormatUtils.formatAmpersandColorCodes(FormatUtils.format(displayName, replacements));
+        material = FormatUtils.format(material, replacements);
+        lore = FormatUtils.format(lore, replacements);
+        return new ConfigItemStack().setAmount(amount).setDisplayName(displayName).setEnchantments(enchantments).setFlags(flags).setLore(lore).setType(material).setSkull(getOrSetDefault(path+".skull", null));
+    }
 
     default String getLocalizedString(final Locale locale, final String pathPrefix, final String pathSuffix, final String defaultMessage) {
         if(isSet(pathPrefix+"."+locale.getLanguage()+pathSuffix)) {

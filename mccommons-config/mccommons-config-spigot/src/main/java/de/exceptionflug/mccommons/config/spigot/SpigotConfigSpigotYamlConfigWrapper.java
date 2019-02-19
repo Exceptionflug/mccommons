@@ -58,17 +58,8 @@ public class SpigotConfigSpigotYamlConfigWrapper implements SpigotConfig {
 
     @Override
     public PositionedSound getPositionedSound(final String path) {
-        final String soundName = getOrSetDefault(path+".sound", "CLICK");
-        final float volume = getOrSetDefault(path+".volume", 1F);
-        final float pitch = getOrSetDefault(path+".pitch", 1F);
-        Sound sound;
-        try {
-            sound = Sound.valueOf(soundName);
-        } catch (final IllegalArgumentException e) {
-            sound = Sound.CLICK;
-            Bukkit.getLogger().warning("[SpigotConfig] WARN: "+path+" has invalid sound "+soundName);
-        }
-        return new PositionedSound(getLocation(path+".location"), sound, volume, pitch);
+        final SoundData sound = getSoundData(path);
+        return new PositionedSound(getLocation(path+".location"), sound.getSound(), sound.getVolume(), sound.getPitch());
     }
 
 
@@ -96,8 +87,10 @@ public class SpigotConfigSpigotYamlConfigWrapper implements SpigotConfig {
     public <T> T getOrSetDefault(String path, T def) {
         final Object o = fileConfiguration.get(path);
         if(o == null) {
-            fileConfiguration.set(path, def);
-            save();
+            if(def != null) {
+                fileConfiguration.set(path, def);
+                save();
+            }
             return def;
         }
         return (T) o;
@@ -114,20 +107,6 @@ public class SpigotConfigSpigotYamlConfigWrapper implements SpigotConfig {
     @Override
     public boolean isSet(String path) {
         return fileConfiguration.isSet(path);
-    }
-
-    @Override
-    public ConfigItemStack getItemStack(String path, Locale locale, Map<String, String> replacements) {
-        String material = getOrSetDefault(path+".type", Material.GRASS.name());
-        final int amount = getOrSetDefault(path+".amount", 1);
-        String displayName = getLocalizedString(locale, path, ".displayName", path);
-        List<String> lore = getLocalizedStringList(locale, path, ".lore", new ArrayList<>());
-        final List<String> enchantments = getOrSetDefault(path+".enchantments", new ArrayList<>());
-        final List<String> flags = getOrSetDefault(path+".flags", new ArrayList<>());
-        displayName = ChatColor.translateAlternateColorCodes('&', FormatUtils.format(displayName, replacements));
-        material = FormatUtils.format(material, replacements);
-        lore = FormatUtils.format(lore, replacements);
-        return new ConfigItemStack().setAmount(amount).setDisplayName(displayName).setEnchantments(enchantments).setFlags(flags).setLore(lore).setType(material).setSkull(fileConfiguration.getString(path+".skull")).setEntityType(fileConfiguration.getString(path+".entityType"));
     }
 
     @Override

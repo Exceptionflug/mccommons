@@ -73,6 +73,8 @@ public class ConcurrentLinkedList<T> extends AbstractSequentialList<T> implement
         public int elementsBefore() {
             int i = 0;
             Node cursor = prev;
+            if(prev == null)
+                return 0;
             while ((cursor = cursor.prev) != null) {
                 i ++;
             }

@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class ConfigItemStack {
 
-    private String type, displayName, skull, entityType;
+    private String type, displayName, skull;
     private List<String> lore = new ArrayList<>();
     private List<String> enchantments = new ArrayList<>();
     private List<String> flags = new ArrayList<>();
@@ -37,15 +37,6 @@ public class ConfigItemStack {
 
     public ConfigItemStack setSkull(String skull) {
         this.skull = skull;
-        return this;
-    }
-
-    public String getEntityType() {
-        return entityType;
-    }
-
-    public ConfigItemStack setEntityType(String entityType) {
-        this.entityType = entityType;
         return this;
     }
 
@@ -94,7 +85,6 @@ public class ConfigItemStack {
                 Objects.equals(type, that.type) &&
                 Objects.equals(displayName, that.displayName) &&
                 Objects.equals(skull, that.skull) &&
-                Objects.equals(entityType, that.entityType) &&
                 Objects.equals(lore, that.lore) &&
                 Objects.equals(enchantments, that.enchantments) &&
                 Objects.equals(flags, that.flags);
@@ -102,7 +92,7 @@ public class ConfigItemStack {
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, displayName, skull, entityType, lore, enchantments, flags, amount);
+        return Objects.hash(type, displayName, skull, lore, enchantments, flags, amount);
     }
 
     @Override
@@ -111,7 +101,6 @@ public class ConfigItemStack {
                 "type='" + type + '\'' +
                 ", displayName='" + displayName + '\'' +
                 ", skull='" + skull + '\'' +
-                ", entityType='" + entityType + '\'' +
                 ", lore=" + lore +
                 ", enchantments=" + enchantments +
                 ", flags=" + flags +
