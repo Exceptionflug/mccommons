@@ -16,37 +16,37 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import java.util.Locale;
 import java.util.logging.Level;
 
-public abstract class ProxyAbstractAsyncFetchMultiPageInventoryWrapper<T> extends AbstractAsyncFetchMultiPageInventoryWrapper<ProxiedPlayer, ItemStack, Inventory, T> implements Schedulable {
+public abstract class AbstractProxyAsyncFetchMultiPageInventoryWrapper<T> extends AbstractAsyncFetchMultiPageInventoryWrapper<ProxiedPlayer, ItemStack, Inventory, T> implements Schedulable {
 
-    protected ProxyAbstractAsyncFetchMultiPageInventoryWrapper(ProxiedPlayer player, InventoryType type, ConfigWrapper configWrapper) {
+    protected AbstractProxyAsyncFetchMultiPageInventoryWrapper(ProxiedPlayer player, InventoryType type, ConfigWrapper configWrapper) {
         super(player, type, configWrapper, Providers.get(LocaleProvider.class).provide(player.getUniqueId()));
     }
 
-    protected ProxyAbstractAsyncFetchMultiPageInventoryWrapper(ProxiedPlayer player, ConfigWrapper configWrapper) {
+    protected AbstractProxyAsyncFetchMultiPageInventoryWrapper(ProxiedPlayer player, ConfigWrapper configWrapper) {
         super(player, configWrapper, Providers.get(LocaleProvider.class).provide(player.getUniqueId()));
     }
 
-    protected ProxyAbstractAsyncFetchMultiPageInventoryWrapper(ProxiedPlayer player, InventoryType type, ConfigWrapper configWrapper, Locale locale) {
+    protected AbstractProxyAsyncFetchMultiPageInventoryWrapper(ProxiedPlayer player, InventoryType type, ConfigWrapper configWrapper, Locale locale) {
         super(player, type, configWrapper, locale);
     }
 
-    protected ProxyAbstractAsyncFetchMultiPageInventoryWrapper(ProxiedPlayer player, ConfigWrapper configWrapper, Locale locale) {
+    protected AbstractProxyAsyncFetchMultiPageInventoryWrapper(ProxiedPlayer player, ConfigWrapper configWrapper, Locale locale) {
         super(player, configWrapper, locale);
     }
 
-    protected ProxyAbstractAsyncFetchMultiPageInventoryWrapper(ProxiedPlayer player, InventoryType type, ConfigWrapper configWrapper, boolean update, boolean loading) {
+    protected AbstractProxyAsyncFetchMultiPageInventoryWrapper(ProxiedPlayer player, InventoryType type, ConfigWrapper configWrapper, boolean update, boolean loading) {
         super(player, type, configWrapper, Providers.get(LocaleProvider.class).provide(player.getUniqueId()), update, loading);
     }
 
-    protected ProxyAbstractAsyncFetchMultiPageInventoryWrapper(ProxiedPlayer player, ConfigWrapper configWrapper, boolean update, boolean loading) {
+    protected AbstractProxyAsyncFetchMultiPageInventoryWrapper(ProxiedPlayer player, ConfigWrapper configWrapper, boolean update, boolean loading) {
         super(player, configWrapper, Providers.get(LocaleProvider.class).provide(player.getUniqueId()), update, loading);
     }
 
-    protected ProxyAbstractAsyncFetchMultiPageInventoryWrapper(ProxiedPlayer player, ConfigWrapper config, Locale locale, boolean update, boolean loading) {
+    protected AbstractProxyAsyncFetchMultiPageInventoryWrapper(ProxiedPlayer player, ConfigWrapper config, Locale locale, boolean update, boolean loading) {
         super(player, config, locale, update, loading);
     }
 
-    protected ProxyAbstractAsyncFetchMultiPageInventoryWrapper(ProxiedPlayer player, InventoryType type, ConfigWrapper config, Locale locale, boolean update, boolean loading) {
+    protected AbstractProxyAsyncFetchMultiPageInventoryWrapper(ProxiedPlayer player, InventoryType type, ConfigWrapper config, Locale locale, boolean update, boolean loading) {
         super(player, type, config, locale, update, loading);
     }
 
