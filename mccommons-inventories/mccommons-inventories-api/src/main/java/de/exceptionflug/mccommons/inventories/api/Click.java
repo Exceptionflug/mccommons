@@ -6,10 +6,10 @@ public class Click {
 
     private final ClickType clickType;
     private final InventoryWrapper clickedInventory;
-    private final ItemStackWrapper clickedItem;
+    private final InventoryItem clickedItem;
     private final int slot;
 
-    public Click(final ClickType clickType, final InventoryWrapper clickedInventory, final ItemStackWrapper clickedItem, final int slot) {
+    public Click(final ClickType clickType, final InventoryWrapper clickedInventory, final InventoryItem clickedItem, final int slot) {
         this.clickType = clickType;
         this.clickedInventory = clickedInventory;
         this.clickedItem = clickedItem;
@@ -25,7 +25,15 @@ public class Click {
     }
 
     public ItemStackWrapper getClickedItem() {
-        return clickedItem;
+        return clickedItem.getItemStackWrapper();
+    }
+
+    public Arguments getArguments() {
+        return clickedItem.getArguments();
+    }
+
+    public <T extends InventoryItem> T getInventoryItem() {
+        return (T) clickedItem;
     }
 
     public int getSlot() {

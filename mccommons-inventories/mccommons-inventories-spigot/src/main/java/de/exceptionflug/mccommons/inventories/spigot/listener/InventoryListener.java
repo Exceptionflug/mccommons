@@ -40,7 +40,7 @@ public class InventoryListener implements Listener {
         if (actionHandler == null)
             return;
         try {
-            final CallResult callResult = actionHandler.handle(new Click(Converters.convert(e.getClick(), ClickType.class), wrapper, item.getItemStackWrapper(), e.getSlot()));
+            final CallResult callResult = actionHandler.handle(new Click(Converters.convert(e.getClick(), ClickType.class), wrapper, item, e.getSlot()));
             e.setCancelled(callResult == null || callResult == CallResult.DENY_GRABBING);
         } catch (final Exception ex) {
             e.setCancelled(true);

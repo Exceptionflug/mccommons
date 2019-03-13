@@ -30,7 +30,7 @@
         </repository>
         <repository>
             <id>exceptionflug</id>
-            <url>http://unshown.net:8081/repository/exceptionflug/</url>
+            <url>http://mvn.exceptionflug.de/repository/exceptionflug-public/</url>
         </repository>
     </repositories>
 
@@ -42,5 +42,12 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>exceptionflug</id>
+            <url>http://mvn.exceptionflug.de/repository/exceptionflug-public/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
 </project>
