@@ -15,37 +15,37 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Locale;
 import java.util.logging.Level;
 
-public abstract class SpigotAbstractAsyncFetchMultiPageInventoryWrapper<T> extends AbstractAsyncFetchMultiPageInventoryWrapper<Player, ItemStack, Inventory, T> implements Schedulable {
+public abstract class AbstractSpigotAsyncFetchMultiPageInventoryWrapper<T> extends AbstractAsyncFetchMultiPageInventoryWrapper<Player, ItemStack, Inventory, T> implements Schedulable {
 
-    protected SpigotAbstractAsyncFetchMultiPageInventoryWrapper(Player player, InventoryType type, ConfigWrapper configWrapper) {
+    protected AbstractSpigotAsyncFetchMultiPageInventoryWrapper(Player player, InventoryType type, ConfigWrapper configWrapper) {
         super(player, type, configWrapper, Providers.get(LocaleProvider.class).provide(player.getUniqueId()));
     }
 
-    protected SpigotAbstractAsyncFetchMultiPageInventoryWrapper(Player player, ConfigWrapper configWrapper) {
+    protected AbstractSpigotAsyncFetchMultiPageInventoryWrapper(Player player, ConfigWrapper configWrapper) {
         super(player, configWrapper, Providers.get(LocaleProvider.class).provide(player.getUniqueId()));
     }
 
-    protected SpigotAbstractAsyncFetchMultiPageInventoryWrapper(Player player, InventoryType type, ConfigWrapper configWrapper, Locale locale) {
+    protected AbstractSpigotAsyncFetchMultiPageInventoryWrapper(Player player, InventoryType type, ConfigWrapper configWrapper, Locale locale) {
         super(player, type, configWrapper, locale);
     }
 
-    protected SpigotAbstractAsyncFetchMultiPageInventoryWrapper(Player player, ConfigWrapper configWrapper, Locale locale) {
+    protected AbstractSpigotAsyncFetchMultiPageInventoryWrapper(Player player, ConfigWrapper configWrapper, Locale locale) {
         super(player, configWrapper, locale);
     }
 
-    protected SpigotAbstractAsyncFetchMultiPageInventoryWrapper(Player player, InventoryType type, ConfigWrapper configWrapper, boolean update, boolean loading) {
+    protected AbstractSpigotAsyncFetchMultiPageInventoryWrapper(Player player, InventoryType type, ConfigWrapper configWrapper, boolean update, boolean loading) {
         super(player, type, configWrapper, Providers.get(LocaleProvider.class).provide(player.getUniqueId()), update, loading);
     }
 
-    protected SpigotAbstractAsyncFetchMultiPageInventoryWrapper(Player player, ConfigWrapper configWrapper, boolean update, boolean loading) {
+    protected AbstractSpigotAsyncFetchMultiPageInventoryWrapper(Player player, ConfigWrapper configWrapper, boolean update, boolean loading) {
         super(player, configWrapper, Providers.get(LocaleProvider.class).provide(player.getUniqueId()), update, loading);
     }
 
-    protected SpigotAbstractAsyncFetchMultiPageInventoryWrapper(Player player, ConfigWrapper config, Locale locale, boolean update, boolean loading) {
+    protected AbstractSpigotAsyncFetchMultiPageInventoryWrapper(Player player, ConfigWrapper config, Locale locale, boolean update, boolean loading) {
         super(player, config, locale, update, loading);
     }
 
-    protected SpigotAbstractAsyncFetchMultiPageInventoryWrapper(Player player, InventoryType type, ConfigWrapper config, Locale locale, boolean update, boolean loading) {
+    protected AbstractSpigotAsyncFetchMultiPageInventoryWrapper(Player player, InventoryType type, ConfigWrapper config, Locale locale, boolean update, boolean loading) {
         super(player, type, config, locale, update, loading);
     }
 

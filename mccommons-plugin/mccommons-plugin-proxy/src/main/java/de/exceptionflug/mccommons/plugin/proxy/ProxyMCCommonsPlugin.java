@@ -32,7 +32,7 @@ public class ProxyMCCommonsPlugin extends Plugin {
         Providers.register(InventoryBuilder.class, new ProtocolizeInventoryBuilder());
         ConfigFactory.register(ProxyConfig.class, ProxyConfigProxyYamlConfigWrapper::new);
         Converters.register(ConfigItemStack.class, ItemStack.class, new ItemStackConverter());
-        Converters.register(InventoryType.class, de.exceptionflug.mccommons.inventories.api.InventoryType.class, new ProtocolizeInventoryTypeConverter());
+        Converters.register(de.exceptionflug.mccommons.inventories.api.InventoryType.class, InventoryType.class, new ProtocolizeInventoryTypeConverter());
         Converters.register(ItemType.class, de.exceptionflug.mccommons.inventories.api.item.ItemType.class, new ProtocolizeItemTypeConverter());
         Converters.register(de.exceptionflug.mccommons.inventories.api.item.ItemType.class, ItemType.class, new ItemTypeConverter());
         Converters.register(ItemStack.class, ItemStackWrapper.class, src -> new ProtocolizeItemStackWrapper((ItemStack) src));
