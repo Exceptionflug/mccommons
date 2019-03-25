@@ -2,6 +2,6 @@ package de.exceptionflug.mccommons.config.shared;
 
 public enum MessageMode {
 
-    RAW, TITLE, DEFAULT
+    RAW, TITLE, DEFAULT, SOUND
 
 }
