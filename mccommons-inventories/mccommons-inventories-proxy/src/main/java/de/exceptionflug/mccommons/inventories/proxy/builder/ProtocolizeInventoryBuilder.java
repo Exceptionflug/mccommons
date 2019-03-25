@@ -20,7 +20,7 @@ import java.util.*;
 public class ProtocolizeInventoryBuilder implements InventoryBuilder {
 
     private final Map<UUID, Map.Entry<InventoryWrapper, Long>> buildMap = new LinkedHashMap<>();
-    private final List<InventoryWrapper> wrappers = new LinkedList<>();
+    private final Set<InventoryWrapper> wrappers = new HashSet<>();
 
     @Override
     public <T> T build(T prebuild, InventoryWrapper wrapper) {
@@ -66,8 +66,9 @@ public class ProtocolizeInventoryBuilder implements InventoryBuilder {
             }
         }
         buildMap.put(((ProxiedPlayer)wrapper.getPlayer()).getUniqueId(), new AbstractMap.SimpleEntry<>(wrapper, System.currentTimeMillis()));
-        if(register)
+        if(register) {
             wrappers.add(wrapper);
+        }
         if(reopen)
             InventoryModule.sendInventory((ProxiedPlayer) wrapper.getPlayer(), inventory);
         return prebuild;
@@ -84,6 +85,8 @@ public class ProtocolizeInventoryBuilder implements InventoryBuilder {
 
     @Override
     public InventoryWrapper getWrapperByHandle(final Object handle) {
+        if(handle == null)
+            return null;
         for(final InventoryWrapper wrapper : wrappers) {
             if(wrapper.equals(handle))
                 return wrapper;

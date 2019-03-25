@@ -41,7 +41,10 @@ public interface ConfigWrapper {
         displayName = FormatUtils.formatAmpersandColorCodes(FormatUtils.format(displayName, replacements));
         material = FormatUtils.format(material, replacements);
         lore = FormatUtils.format(lore, replacements);
-        return new ConfigItemStack().setAmount(amount).setDisplayName(displayName).setEnchantments(enchantments).setFlags(flags).setLore(lore).setType(material).setSkull(getOrSetDefault(path+".skull", null));
+        String skull = getOrSetDefault(path + ".skull", null);
+        if(skull != null)
+            skull = FormatUtils.format(skull, replacements);
+        return new ConfigItemStack().setAmount(amount).setDisplayName(displayName).setEnchantments(enchantments).setFlags(flags).setLore(lore).setType(material).setSkull(skull);
     }
 
     default String getLocalizedString(final Locale locale, final String pathPrefix, final String pathSuffix, final String defaultMessage) {

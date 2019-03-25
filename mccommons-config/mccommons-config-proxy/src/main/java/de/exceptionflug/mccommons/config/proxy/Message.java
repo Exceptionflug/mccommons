@@ -1,6 +1,7 @@
 package de.exceptionflug.mccommons.config.proxy;
 
 import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
+import de.exceptionflug.mccommons.config.shared.MessageMode;
 import de.exceptionflug.mccommons.core.Providers;
 import de.exceptionflug.mccommons.core.providers.LocaleProvider;
 import de.exceptionflug.mccommons.core.utils.FormatUtils;
@@ -9,6 +10,8 @@ import net.md_5.bungee.api.Title;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -67,11 +70,18 @@ public final class Message {
     }
 
     private static String getString0(final ConfigWrapper config, final Locale locale, final boolean prefix, final String messageKey, final String defaultMessage, final String[] replacements) {
-        String message = config.getOrSetDefault(messageKey+"."+locale.getLanguage(), defaultMessage);
-        message = FormatUtils.format(message, replacements);
-        if(prefix)
-            message = getPrefix(config, locale)+message;
-        return message;
+        List<MessageMode> messageModes = Collections.singletonList(MessageMode.DEFAULT);
+        if(config.isSet(messageKey+".modes")) {
+            messageModes = config.getOrSetDefault(messageKey+".modes", messageModes);
+
+        } else {
+            // LEGACY FORMAT
+            String message = config.getOrSetDefault(messageKey+"."+locale.getLanguage(), defaultMessage);
+            message = FormatUtils.format(message, replacements);
+            if(prefix)
+                message = getPrefix(config, locale)+message;
+            return message;
+        }
     }
 
 }

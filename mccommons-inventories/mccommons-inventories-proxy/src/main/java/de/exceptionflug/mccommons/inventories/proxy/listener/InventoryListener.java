@@ -67,6 +67,8 @@ public class InventoryListener implements Listener {
         final Map.Entry<InventoryWrapper, Long> lastBuild = inventoryBuilder.getLastBuild(e.getPlayer().getUniqueId());
         if (lastBuild.getKey().getInternalId() == wrapper.getInternalId() && (System.currentTimeMillis() - lastBuild.getValue()) <= 55)
             return;
+        wrapper.onExit((System.currentTimeMillis() - lastBuild.getValue()) <= 55);
+        inventoryBuilder.uncache(wrapper);
     }
 
 }

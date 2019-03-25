@@ -2,12 +2,15 @@ package de.exceptionflug.mccommons.inventories.api.design;
 
 import de.exceptionflug.mccommons.config.shared.ConfigItemStack;
 import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
+import de.exceptionflug.mccommons.core.Converter;
+import de.exceptionflug.mccommons.core.Converters;
 import de.exceptionflug.mccommons.core.Providers;
 import de.exceptionflug.mccommons.core.providers.LocaleProvider;
 import de.exceptionflug.mccommons.core.utils.FormatUtils;
 import de.exceptionflug.mccommons.inventories.api.Arguments;
 import de.exceptionflug.mccommons.inventories.api.CallResult;
 import de.exceptionflug.mccommons.inventories.api.InventoryType;
+import de.exceptionflug.mccommons.inventories.api.item.ItemStackWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +20,7 @@ public class OnePageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryWra
 
     private final ConfigWrapper config;
     private boolean customTitle;
+    private ItemStackWrapper placeHolder;
 
     protected OnePageInventoryWrapper(final P player, final ConfigWrapper configWrapper) {
         this(player, InventoryType.valueOf(configWrapper.getOrSetDefault("Inventory.type", "CHEST")), configWrapper, Providers.get(LocaleProvider.class).getFallbackLocale(), true);
@@ -63,10 +67,11 @@ public class OnePageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryWra
             setTitle(FormatUtils.format(config.getLocalizedString(getLocale(), "Inventory", ".title", "&6Inventory"), replacer));
             customTitle = false;
         }
-        final ConfigItemStack placeHolder = config.getItemStack("Placeholder.itemStack", replacer);
+        if(placeHolder == null)
+            placeHolder = Converters.convert(config.getItemStack("Placeholder.itemStack", replacer), ItemStackWrapper.class);
         final List<Integer> placeholderSlots = config.getOrSetDefault("Placeholder.slots", new ArrayList<>());
         for(final int slot : placeholderSlots) {
-            set(slot, placeHolder, "noAction");
+            set(slot, (I) placeHolder.getHandle(), "noAction");
         }
         for(final String key : config.getKeys("Items")) {
             final int slot = config.getOrSetDefault("Items."+key+".slot", 0);
@@ -91,4 +96,9 @@ public class OnePageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryWra
     @Override
     public void onExit(final boolean inventorySwitch) {
     }
+
+    public void setPlaceHolder(final ItemStackWrapper placeHolder) {
+        this.placeHolder = placeHolder;
+    }
+
 }

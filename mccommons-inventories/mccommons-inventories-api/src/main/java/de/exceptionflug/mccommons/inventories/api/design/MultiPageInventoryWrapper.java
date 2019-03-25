@@ -2,10 +2,12 @@ package de.exceptionflug.mccommons.inventories.api.design;
 
 import de.exceptionflug.mccommons.config.shared.ConfigItemStack;
 import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
+import de.exceptionflug.mccommons.core.Converters;
 import de.exceptionflug.mccommons.core.Providers;
 import de.exceptionflug.mccommons.core.providers.LocaleProvider;
 import de.exceptionflug.mccommons.core.utils.FormatUtils;
 import de.exceptionflug.mccommons.inventories.api.*;
+import de.exceptionflug.mccommons.inventories.api.item.ItemStackWrapper;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -19,6 +21,7 @@ public class MultiPageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryW
     private int currentPage = 1;
     int itemsPerPage;
     private boolean customTitle;
+    private ItemStackWrapper placeHolder;
 
     protected MultiPageInventoryWrapper(final P player, final InventoryType type, final ConfigWrapper configWrapper) {
         this(player, type, configWrapper, Providers.get(LocaleProvider.class).getFallbackLocale(), true);
@@ -92,10 +95,11 @@ public class MultiPageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryW
             setTitle(FormatUtils.format(config.getLocalizedString(getLocale(), "Inventory", ".title", "&6Inventory"), replacer));
             customTitle = false;
         }
-        final ConfigItemStack placeHolder = config.getItemStack("Placeholder.itemStack", replacer);
+        if(placeHolder == null)
+            placeHolder = Converters.convert(config.getItemStack("Placeholder.itemStack", replacer), ItemStackWrapper.class);
         final List<Integer> placeholderSlots = config.getOrSetDefault("Placeholder.slots", new ArrayList<>());
         for(final int slot : placeholderSlots) {
-            set(slot, placeHolder, "noAction");
+            set(slot, (I) placeHolder.getHandle(), "noAction");
         }
         for(final String key : config.getKeys("Items")) {
             final int slot = config.getOrSetDefault("Items."+key+".slot", 0);
@@ -142,11 +146,12 @@ public class MultiPageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryW
                 continue;
             final InventoryItem item = get(i);
             if(item == null) {
+                return i;
+            } else {
                 itemCount ++;
                 if(itemCount >= itemsPerPage) {
                     return -1;
                 }
-                return i;
             }
         }
         return -1;
@@ -187,6 +192,10 @@ public class MultiPageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryW
     @Override
     public void set(final int slot, final I stack, final String actionHandler, final Arguments args) {
         getCurrentPage().set(slot, stack, actionHandler, args);
+    }
+
+    public void setPlaceHolder(final ItemStackWrapper placeHolder) {
+        this.placeHolder = placeHolder;
     }
 
     public void setCustomTitle(final boolean customTitle) {
