@@ -24,14 +24,22 @@ public final class Message {
     }
 
     public static void send(final ProxiedPlayer proxiedPlayer, final ConfigWrapper config, final boolean prefix, final String messageKey, final String defaultMessage, final String... replacements) {
-        List<MessageMode> messageModes = Collections.singletonList(MessageMode.DEFAULT);
+        List<String> messageModes = Collections.singletonList("DEFAULT");
         if(config.isSet(messageKey+".modes")) {
             messageModes = config.getOrSetDefault(messageKey+".modes", messageModes);
-            for(final MessageMode messageMode : messageModes) {
+            for(final String i : messageModes) {
+                final MessageMode messageMode = MessageMode.valueOf(i);
                 if(messageMode == MessageMode.DEFAULT) {
                     getMessage1(config, Providers.get(LocaleProvider.class).provide(proxiedPlayer.getUniqueId()), prefix, messageKey, defaultMessage, replacements).forEach(proxiedPlayer::sendMessage);
                 } else if(messageMode == MessageMode.RAW) {
-                    final BaseComponent[] textComponent = ComponentSerializer.parse(getMessage2(config, Providers.get(LocaleProvider.class).provide(proxiedPlayer.getUniqueId()), prefix, messageKey, defaultMessage, replacements));
+                    final BaseComponent[] textComponent = ComponentSerializer.parse(getMessage2(config, Providers.get(LocaleProvider.class).provide(proxiedPlayer.getUniqueId()), messageKey, defaultMessage, replacements));
+                    if(prefix) {
+                        final BaseComponent[] component = TextComponent.fromLegacyText(getPrefix(config, Providers.get(LocaleProvider.class).provide(proxiedPlayer.getUniqueId())));
+                        final List<BaseComponent> c = new ArrayList<>(Arrays.asList(component));
+                        c.addAll(Arrays.asList(textComponent));
+                        proxiedPlayer.sendMessage(c.toArray(new BaseComponent[0]));
+                        continue;
+                    }
                     proxiedPlayer.sendMessage(textComponent);
                 } else if(messageMode == MessageMode.TITLE) {
                     final Title title = ProxyServer.getInstance().createTitle();
@@ -42,11 +50,11 @@ public final class Message {
                     title.subTitle(TextComponent.fromLegacyText(FormatUtils.format(config.getOrSetDefault(messageKey+".title.subTitle", messageKey+".title.subTitle"), replacements)));
                 } else if(messageMode == MessageMode.SOUND) {
                     for(final String key : config.getKeys(messageKey+".sounds")) {
-                        final Sound sound = Sound.valueOf(config.getOrSetDefault(messageKey+"."+key+".sound", "ENTITY_EXPERIENCE_ORB_PICKUP"));
-                        final SoundCategory category = SoundCategory.getCategory(config.getOrSetDefault(messageKey+"."+key+".category", "master"));
-                        final float volume = config.getOrSetDefault(messageKey+"."+key+".volume", 1F);
-                        final float pitch = config.getOrSetDefault(messageKey+"."+key+".pitch", 1F);
-                        WorldModule.playSound(proxiedPlayer, sound, category, volume, pitch);
+                        final Sound sound = Sound.valueOf(config.getOrSetDefault(messageKey+".sounds."+key+".sound", "ENTITY_EXPERIENCE_ORB_PICKUP"));
+                        final SoundCategory category = SoundCategory.getCategory(config.getOrSetDefault(messageKey+".sounds."+key+".category", "master"));
+                        final double volume = config.getOrSetDefault(messageKey+".sounds."+key+".volume", 1D);
+                        final double pitch = config.getOrSetDefault(messageKey+".sounds."+key+".pitch", 1D);
+                        WorldModule.playSound(proxiedPlayer, sound, category, (float) volume, (float) pitch);
                     }
                 }
             }
@@ -131,25 +139,20 @@ public final class Message {
         return messages;
     }
 
-    private static String getMessage2(final ConfigWrapper config, final Locale locale, final String messageKey, final String defaultMessage, final String... replacements) {
-        return getMessage2(config, locale, true, messageKey, defaultMessage, replacements);
-    }
 
-    private static String getMessage2(final ConfigWrapper config, final Locale locale, final boolean prefix, final String messageKey, final String defaultMessage, final String... replacements) {
+    private static String getMessage2(final ConfigWrapper config, final Locale locale, final String messageKey, final String defaultMessage, final String... replacements) {
         if(config.isSet(messageKey+".raw."+locale.getLanguage())) {
-            return getString2(config, locale, prefix, messageKey, defaultMessage, replacements);
+            return getString2(config, locale, messageKey, defaultMessage, replacements);
         } else if(!locale.getLanguage().equalsIgnoreCase(Providers.get(LocaleProvider.class).getFallbackLocale().getLanguage())) {
             return getMessage2(config, Providers.get(LocaleProvider.class).getFallbackLocale(), messageKey, defaultMessage, replacements);
         } else {
-            return getString2(config, locale, prefix, messageKey, defaultMessage, replacements);
+            return getString2(config, locale, messageKey, defaultMessage, replacements);
         }
     }
 
-    private static String getString2(final ConfigWrapper config, final Locale locale, final boolean prefix, final String messageKey, final String defaultMessage, final String[] replacements) {
+    private static String getString2(final ConfigWrapper config, final Locale locale, final String messageKey, final String defaultMessage, final String[] replacements) {
         String message = config.getOrSetDefault(messageKey+".raw."+locale.getLanguage(), defaultMessage);
         message = FormatUtils.format(message, replacements);
-        if(prefix)
-            message = getPrefix(config, locale)+message;
         return message;
     }
 
