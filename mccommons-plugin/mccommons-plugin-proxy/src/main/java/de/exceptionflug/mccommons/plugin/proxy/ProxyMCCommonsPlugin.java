@@ -6,6 +6,7 @@ import de.exceptionflug.mccommons.config.shared.ConfigFactory;
 import de.exceptionflug.mccommons.config.shared.ConfigItemStack;
 import de.exceptionflug.mccommons.core.Converters;
 import de.exceptionflug.mccommons.core.Providers;
+import de.exceptionflug.mccommons.core.providers.AsyncProvider;
 import de.exceptionflug.mccommons.inventories.api.InventoryBuilder;
 import de.exceptionflug.mccommons.inventories.api.item.ItemStackWrapper;
 import de.exceptionflug.mccommons.inventories.proxy.builder.ProtocolizeInventoryBuilder;
@@ -30,6 +31,12 @@ public class ProxyMCCommonsPlugin extends Plugin {
     public void onEnable() {
         Providers.register(Plugin.class, this);
         Providers.register(InventoryBuilder.class, new ProtocolizeInventoryBuilder());
+        Providers.register(AsyncProvider.class, new AsyncProvider() {
+            @Override
+            public void async(Runnable runnable) {
+                ProxyServer.getInstance().getScheduler().runAsync(ProxyMCCommonsPlugin.this, runnable);
+            }
+        });
         ConfigFactory.register(ProxyConfig.class, ProxyConfigProxyYamlConfigWrapper::new);
         Converters.register(ConfigItemStack.class, ItemStack.class, new ItemStackConverter());
         Converters.register(de.exceptionflug.mccommons.inventories.api.InventoryType.class, InventoryType.class, new ProtocolizeInventoryTypeConverter());

@@ -7,6 +7,7 @@ import de.exceptionflug.mccommons.config.spigot.SpigotConfig;
 import de.exceptionflug.mccommons.config.spigot.SpigotConfigSpigotYamlConfigWrapper;
 import de.exceptionflug.mccommons.core.Converters;
 import de.exceptionflug.mccommons.core.Providers;
+import de.exceptionflug.mccommons.core.providers.AsyncProvider;
 import de.exceptionflug.mccommons.inventories.api.InventoryBuilder;
 import de.exceptionflug.mccommons.inventories.api.InventoryType;
 import de.exceptionflug.mccommons.inventories.api.item.ItemStackWrapper;
@@ -32,6 +33,12 @@ public class SpigotMCCommonsPlugin extends JavaPlugin {
     public void onEnable() {
         Providers.register(InventoryBuilder.class, new SpigotInventoryBuilder());
         Providers.register(JavaPlugin.class, this);
+        Providers.register(AsyncProvider.class, new AsyncProvider() {
+            @Override
+            public void async(final Runnable runnable) {
+                Bukkit.getScheduler().runTaskAsynchronously(SpigotMCCommonsPlugin.this, runnable);
+            }
+        });
         Providers.register(ServerVersionProvider.class, new ServerVersionProvider());
         ConfigFactory.register(SpigotConfig.class, SpigotConfigSpigotYamlConfigWrapper::new);
         Converters.register(ConfigItemStack.class, ItemStack.class, new ItemStackConverter());

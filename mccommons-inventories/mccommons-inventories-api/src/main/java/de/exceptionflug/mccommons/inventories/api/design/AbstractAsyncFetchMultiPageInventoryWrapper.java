@@ -2,7 +2,9 @@ package de.exceptionflug.mccommons.inventories.api.design;
 
 import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
 import de.exceptionflug.mccommons.core.Providers;
+import de.exceptionflug.mccommons.core.providers.AsyncProvider;
 import de.exceptionflug.mccommons.core.providers.LocaleProvider;
+import de.exceptionflug.mccommons.inventories.api.CallResult;
 import de.exceptionflug.mccommons.inventories.api.DataInventoryItem;
 import de.exceptionflug.mccommons.inventories.api.InventoryType;
 
@@ -49,14 +51,18 @@ public abstract class AbstractAsyncFetchMultiPageInventoryWrapper<P, I, INV, T> 
     protected AbstractAsyncFetchMultiPageInventoryWrapper(final P player, final InventoryType type, final ConfigWrapper config, final Locale locale, final boolean update, final boolean loading) {
         super(player, type, config, locale, update);
 
-//        registerActionHandler("nextPage", click -> {
-//            if(getPages().size() == getCurrentPageIndex())
-//                return CallResult.DENY_GRABBING;
-//            async(() -> unsafe(() -> {
-//                setCurrentPage(getCurrentPageIndex() + 1);
-//
-//            }));
-//        });
+        registerActionHandler("nextPage", click -> {
+            if(getPages().size() == getCurrentPageIndex())
+                return CallResult.DENY_GRABBING;
+            Providers.get(AsyncProvider.class).async(() -> unsafe(() -> {
+                final int currentPage = getCurrentPageIndex();
+                fetch().forEach(this::addFetchedItem);
+                setCurrentPage(currentPage + 1);
+                updateInventory();
+                build();
+            }));
+            return CallResult.DENY_GRABBING;
+        });
 
         this.showLoadingScreen = loading;
         refetch();

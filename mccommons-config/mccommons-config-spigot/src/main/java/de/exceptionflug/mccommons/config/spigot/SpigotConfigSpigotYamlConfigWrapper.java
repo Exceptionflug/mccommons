@@ -1,17 +1,17 @@
 package de.exceptionflug.mccommons.config.spigot;
 
-import de.exceptionflug.mccommons.config.shared.ConfigItemStack;
 import de.exceptionflug.mccommons.core.Providers;
-import de.exceptionflug.mccommons.core.utils.FormatUtils;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.Set;
 import java.util.logging.Level;
 
 public class SpigotConfigSpigotYamlConfigWrapper implements SpigotConfig {
