@@ -2,7 +2,6 @@ package de.exceptionflug.mccommons.inventories.spigot.converters;
 
 import de.exceptionflug.mccommons.core.Converter;
 import de.exceptionflug.mccommons.core.Providers;
-import de.exceptionflug.mccommons.inventories.api.item.IDMapping;
 import de.exceptionflug.mccommons.inventories.api.item.ItemType;
 import de.exceptionflug.mccommons.inventories.spigot.utils.ServerVersionProvider;
 import org.bukkit.material.MaterialData;

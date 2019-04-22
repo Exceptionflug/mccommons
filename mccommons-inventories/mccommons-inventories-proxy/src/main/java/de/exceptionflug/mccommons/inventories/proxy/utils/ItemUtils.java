@@ -8,6 +8,8 @@ import de.exceptionflug.mccommons.core.Converter;
 import de.exceptionflug.mccommons.core.Converters;
 import de.exceptionflug.mccommons.core.Providers;
 import de.exceptionflug.mccommons.core.providers.TextureProvider;
+import de.exceptionflug.mccommons.core.utils.ProtocolVersions;
+import de.exceptionflug.protocolize.api.util.ReflectionUtil;
 import de.exceptionflug.protocolize.inventory.Inventory;
 import de.exceptionflug.protocolize.inventory.InventoryModule;
 import de.exceptionflug.protocolize.items.ItemStack;
@@ -34,7 +36,7 @@ public class ItemUtils {
     }
     
     public static int getFreeSlots(final Inventory inv) {
-        ItemStack[] a = inv.getItemsIndexed().toArray(new ItemStack[0]);
+        ItemStack[] a = inv.getItemsIndexed(ProtocolVersions.MINECRAFT_1_8).toArray(new ItemStack[0]);
         int c = 0;
         for (ItemStack ic : a) {
             if (ic == null || ic.getType() == ItemType.AIR) {
@@ -45,7 +47,7 @@ public class ItemUtils {
     }
     
     public static int getFirstSlot(final Inventory inv, final ItemStack is) {
-        ItemStack[] a = inv.getItemsIndexed().toArray(new ItemStack[0]);
+        ItemStack[] a = inv.getItemsIndexed(ProtocolVersions.MINECRAFT_1_8).toArray(new ItemStack[0]);
         for (int i = 0; i < a.length; i++) {
             ItemStack ic = a[i];
             if (is.equals(ic)) {
@@ -75,7 +77,7 @@ public class ItemUtils {
     public static int count(ProxiedPlayer p, ItemType material) {
         int r = 0;
         Inventory inv = InventoryModule.getInventory(p.getUniqueId(), 0);
-        for (ItemStack is : inv.getItemsIndexed()) {
+        for (ItemStack is : inv.getItemsIndexed(ReflectionUtil.getProtocolVersion(p))) {
             if (is == null && material == ItemType.AIR) {
                 r += 1;
             }
@@ -87,7 +89,7 @@ public class ItemUtils {
     public static int count(ProxiedPlayer p, Predicate<ItemStack> match) {
         int r = 0;
         Inventory inv = InventoryModule.getInventory(p.getUniqueId(), 0);
-        for (ItemStack is : inv.getItemsIndexed()) {
+        for (ItemStack is : inv.getItemsIndexed(ReflectionUtil.getProtocolVersion(p))) {
             if (is != null && match.test(is)) {
                 r += is.getAmount();
             }
@@ -111,7 +113,7 @@ public class ItemUtils {
     }
     
     public static ItemStack first(Inventory inv, Predicate<ItemStack> match) {
-        for (ItemStack is : inv.getItemsIndexed()) {
+        for (ItemStack is : inv.getItemsIndexed(ProtocolVersions.MINECRAFT_1_8)) {
             if (is != null && match.test(is)) {
                 return is;
             }

@@ -1,8 +1,6 @@
 package de.exceptionflug.mccommons.inventories.api.design;
 
-import de.exceptionflug.mccommons.config.shared.ConfigItemStack;
 import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
-import de.exceptionflug.mccommons.core.Converter;
 import de.exceptionflug.mccommons.core.Converters;
 import de.exceptionflug.mccommons.core.Providers;
 import de.exceptionflug.mccommons.core.providers.LocaleProvider;
@@ -54,7 +52,6 @@ public class OnePageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryWra
         super(player, type, locale);
         this.config = configWrapper;
         setTitle(configWrapper.getLocalizedString(locale, "Inventory", ".title", "&6Inventory"));
-        setSize(configWrapper.getOrSetDefault("Inventory.size", 54));
         registerActionHandler("noAction", click -> CallResult.DENY_GRABBING);
         registerActionHandlers();
         if(update)
@@ -84,7 +81,6 @@ public class OnePageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryWra
     @Override
     public void setInventoryType(InventoryType type) {
         super.setInventoryType(type);
-        setSize(config.getOrSetDefault("Inventory.size", 54));
     }
 
     @Override

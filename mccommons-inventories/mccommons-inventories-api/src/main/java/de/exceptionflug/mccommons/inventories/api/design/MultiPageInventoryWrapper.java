@@ -57,7 +57,6 @@ public class MultiPageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryW
         setDefaultReplacer(() -> new String[0]);
         childs.add(new ChildInventoryWrapper<>(player, type, locale, config, this));
         setTitle(config.getLocalizedString(locale, "Inventory", ".title", "&6Inventory"));
-        setSize(config.getOrSetDefault("Inventory.size", 54));
         registerActionHandler("noAction", click -> CallResult.DENY_GRABBING);
 
         registerActionHandler("nextPage", click -> {
@@ -135,7 +134,6 @@ public class MultiPageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryW
     public void setInventoryType(final InventoryType type) {
         super.setInventoryType(type);
         childs.forEach(i -> i.setInventoryType(type));
-        setSize(config.getOrSetDefault("Inventory.size", 54));
     }
 
     @Override
@@ -249,12 +247,6 @@ public class MultiPageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryW
         customTitle = true;
         super.setTitle(title);
         childs.forEach(it -> it.setTitle(title));
-    }
-
-    @Override
-    public void setSize(final int size) {
-        super.setSize(size);
-        childs.forEach(it -> it.setSize(size));
     }
 
 }

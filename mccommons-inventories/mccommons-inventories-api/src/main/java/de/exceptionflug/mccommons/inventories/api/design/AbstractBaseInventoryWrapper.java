@@ -1,5 +1,6 @@
 package de.exceptionflug.mccommons.inventories.api.design;
 
+import de.exceptionflug.mccommons.core.Converter;
 import de.exceptionflug.mccommons.core.Converters;
 import de.exceptionflug.mccommons.core.Providers;
 import de.exceptionflug.mccommons.core.utils.FormatUtils;
@@ -20,7 +21,6 @@ public abstract class AbstractBaseInventoryWrapper<P, I, INV> implements Invento
     private final Locale locale;
     private final int id = ID_COUNTER.incrementAndGet();
     protected Supplier<String[]> replacer = () -> new String[0];
-    private int size = 56;
     private InventoryType type;
     private ActionHandler customActionHandler;
     private String title;
@@ -91,14 +91,7 @@ public abstract class AbstractBaseInventoryWrapper<P, I, INV> implements Invento
     }
 
     public int getSize() {
-        return size;
-    }
-
-    public void setSize(final int size) {
-        if(type == InventoryType.CHEST)
-            this.size = size;
-        else
-            this.size = type.getTypicalSize();
+        return type.getTypicalSize(Converters.convert(player, PlayerWrapper.class).getProtocolVersion());
     }
 
     public void setTitle(final String title) {
