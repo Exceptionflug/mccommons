@@ -1,8 +1,6 @@
 package de.exceptionflug.mccommons.inventories.api.design;
 
-import de.exceptionflug.mccommons.config.shared.ConfigItemStack;
 import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
-import de.exceptionflug.mccommons.core.Converter;
 import de.exceptionflug.mccommons.core.Converters;
 import de.exceptionflug.mccommons.core.Providers;
 import de.exceptionflug.mccommons.core.providers.LocaleProvider;
@@ -23,7 +21,7 @@ public class OnePageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryWra
     private ItemStackWrapper placeHolder;
 
     protected OnePageInventoryWrapper(final P player, final ConfigWrapper configWrapper) {
-        this(player, InventoryType.valueOf(configWrapper.getOrSetDefault("Inventory.type", "CHEST")), configWrapper, Providers.get(LocaleProvider.class).getFallbackLocale(), true);
+        this(player, configWrapper.isSet("Inventory.size") ? InventoryType.getChestInventoryWithSize(configWrapper.getOrSetDefault("Inventory.size", 36)) : InventoryType.valueOf(configWrapper.getOrSetDefault("Inventory.type", "GENERIC_9X5")), configWrapper, Providers.get(LocaleProvider.class).getFallbackLocale(), true);
     }
 
     protected OnePageInventoryWrapper(final P player, final InventoryType type, final ConfigWrapper configWrapper) {
@@ -31,7 +29,7 @@ public class OnePageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryWra
     }
 
     protected OnePageInventoryWrapper(final P player, final ConfigWrapper configWrapper, final Locale locale) {
-        this(player, InventoryType.valueOf(configWrapper.getOrSetDefault("Inventory.type", "CHEST")), configWrapper, locale, true);
+        this(player, configWrapper.isSet("Inventory.size") ? InventoryType.getChestInventoryWithSize(configWrapper.getOrSetDefault("Inventory.size", 36)) : InventoryType.valueOf(configWrapper.getOrSetDefault("Inventory.type", "GENERIC_9X5")), configWrapper, locale, true);
     }
 
     protected OnePageInventoryWrapper(final P player, final InventoryType type, final ConfigWrapper configWrapper, final Locale locale) {
@@ -43,18 +41,17 @@ public class OnePageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryWra
     }
 
     protected OnePageInventoryWrapper(final P player, final ConfigWrapper configWrapper, final boolean update) {
-        this(player, InventoryType.valueOf(configWrapper.getOrSetDefault("Inventory.type", "CHEST")), configWrapper, Providers.get(LocaleProvider.class).getFallbackLocale(), update);
+        this(player, configWrapper.isSet("Inventory.size") ? InventoryType.getChestInventoryWithSize(configWrapper.getOrSetDefault("Inventory.size", 36)) : InventoryType.valueOf(configWrapper.getOrSetDefault("Inventory.type", "GENERIC_9X5")), configWrapper, Providers.get(LocaleProvider.class).getFallbackLocale(), update);
     }
 
     protected OnePageInventoryWrapper(final P player, final ConfigWrapper configWrapper, final Locale locale, final boolean update) {
-        this(player, InventoryType.valueOf(configWrapper.getOrSetDefault("Inventory.type", "CHEST")), configWrapper, locale, update);
+        this(player, InventoryType.valueOf(configWrapper.getOrSetDefault("Inventory.type", "GENERIC_9X5")), configWrapper, locale, update);
     }
 
     protected OnePageInventoryWrapper(final P player, final InventoryType type, final ConfigWrapper configWrapper, final Locale locale, final boolean update) {
         super(player, type, locale);
         this.config = configWrapper;
         setTitle(configWrapper.getLocalizedString(locale, "Inventory", ".title", "&6Inventory"));
-        setSize(configWrapper.getOrSetDefault("Inventory.size", 54));
         registerActionHandler("noAction", click -> CallResult.DENY_GRABBING);
         registerActionHandlers();
         if(update)
@@ -84,7 +81,6 @@ public class OnePageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryWra
     @Override
     public void setInventoryType(InventoryType type) {
         super.setInventoryType(type);
-        setSize(config.getOrSetDefault("Inventory.size", 54));
     }
 
     @Override

@@ -129,12 +129,6 @@ public interface InventoryWrapper<P, I, INV> {
     void setDefaultReplacer(final Supplier<String[]> replacer);
 
     /**
-     * Sets the size of the current inventory. This will do nothing if the inventory is not a chest inventory.
-     * @param size the new size
-     */
-    void setSize(final int size);
-
-    /**
      * Sets the title of the inventory
      * @param title the title
      */

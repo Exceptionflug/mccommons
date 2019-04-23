@@ -18,19 +18,13 @@ public class SpigotInventoryTypeConverter implements Converter<InventoryType, or
             case BREWING_STAND:
                 return org.bukkit.event.inventory.InventoryType.BREWING;
 
-            case CHEST:
-                return org.bukkit.event.inventory.InventoryType.CHEST;
-
-            case CRAFTING_TABLE:
+            case CRAFTING:
                 return org.bukkit.event.inventory.InventoryType.WORKBENCH;
 
-            case DISPENSER:
+            case GENERIC_3X3:
                 return org.bukkit.event.inventory.InventoryType.DISPENSER;
 
-            case DROPPER:
-                return org.bukkit.event.inventory.InventoryType.DROPPER;
-
-            case ENCHANTMENT_TABLE:
+            case ENCHANTMENT:
                 return org.bukkit.event.inventory.InventoryType.ENCHANTING;
 
             case FURNACE:
@@ -39,10 +33,12 @@ public class SpigotInventoryTypeConverter implements Converter<InventoryType, or
             case HOPPER:
                 return org.bukkit.event.inventory.InventoryType.HOPPER;
 
-            case VILLAGER:
+            case MERCHANT:
                 return org.bukkit.event.inventory.InventoryType.MERCHANT;
 
         }
+        if(src.name().startsWith("GENERIC"))
+            return org.bukkit.event.inventory.InventoryType.CHEST;
         return null;
     }
 }

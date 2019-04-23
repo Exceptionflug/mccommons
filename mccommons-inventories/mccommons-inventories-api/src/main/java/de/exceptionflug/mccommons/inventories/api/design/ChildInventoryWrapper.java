@@ -17,7 +17,6 @@ final class ChildInventoryWrapper<P, I, INV> extends AbstractBaseInventoryWrappe
         super(player, type, locale);
         this.parent = parent;
         setTitle(config.getLocalizedString(locale, "Inventory", ".title", "&6Inventory"));
-        setSize(config.getOrSetDefault("Inventory.size", 54));
         registerActionHandler("noAction", click -> CallResult.DENY_GRABBING);
         registerActionHandlers();
     }

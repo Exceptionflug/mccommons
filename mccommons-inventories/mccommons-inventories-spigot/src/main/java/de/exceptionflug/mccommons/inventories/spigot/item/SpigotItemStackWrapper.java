@@ -3,8 +3,8 @@ package de.exceptionflug.mccommons.inventories.spigot.item;
 import com.flowpowered.nbt.CompoundTag;
 import de.exceptionflug.mccommons.core.Converters;
 import de.exceptionflug.mccommons.core.Providers;
-import de.exceptionflug.mccommons.inventories.api.item.AbstractCustomMapping;
-import de.exceptionflug.mccommons.inventories.api.item.IDMapping;
+import de.exceptionflug.mccommons.inventories.api.item.AbstractCustomItemIDMapping;
+import de.exceptionflug.mccommons.inventories.api.item.ItemIDMapping;
 import de.exceptionflug.mccommons.inventories.api.item.ItemStackWrapper;
 import de.exceptionflug.mccommons.inventories.api.item.ItemType;
 import de.exceptionflug.mccommons.inventories.spigot.utils.ReflectionUtil;
@@ -62,13 +62,13 @@ public class SpigotItemStackWrapper implements ItemStackWrapper {
 
     @Override
     public void setType(final ItemType type) {
-        final IDMapping applicableMapping = type.getApplicableMapping(Providers.get(ServerVersionProvider.class).getProtocolVersion());
+        final ItemIDMapping applicableMapping = type.getApplicableMapping(Providers.get(ServerVersionProvider.class).getProtocolVersion());
         if(applicableMapping == null)
             throw new UnsupportedOperationException(type.name()+" is not allowed on version "+ReflectionUtil.getVersion());
         handle.setType(Material.getMaterial(applicableMapping.getId()));
         handle.setDurability((short) applicableMapping.getData());
-        if(applicableMapping instanceof AbstractCustomMapping)
-            ((AbstractCustomMapping) applicableMapping).apply(this, Providers.get(ServerVersionProvider.class).getProtocolVersion());
+        if(applicableMapping instanceof AbstractCustomItemIDMapping)
+            ((AbstractCustomItemIDMapping) applicableMapping).apply(this, Providers.get(ServerVersionProvider.class).getProtocolVersion());
     }
 
     @Override

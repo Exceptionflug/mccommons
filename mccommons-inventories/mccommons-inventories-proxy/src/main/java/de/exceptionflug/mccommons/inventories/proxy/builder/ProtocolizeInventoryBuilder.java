@@ -4,6 +4,7 @@ import de.exceptionflug.mccommons.core.Converters;
 import de.exceptionflug.mccommons.inventories.api.InventoryBuilder;
 import de.exceptionflug.mccommons.inventories.api.InventoryItem;
 import de.exceptionflug.mccommons.inventories.api.InventoryWrapper;
+import de.exceptionflug.mccommons.inventories.api.PlayerWrapper;
 import de.exceptionflug.mccommons.inventories.proxy.utils.ItemUtils;
 import de.exceptionflug.protocolize.inventory.Inventory;
 import de.exceptionflug.protocolize.inventory.InventoryModule;
@@ -28,7 +29,7 @@ public class ProtocolizeInventoryBuilder implements InventoryBuilder {
         boolean register = prebuild == null;
         if(prebuild instanceof Inventory) {
             final Inventory inventory = (Inventory) prebuild;
-            if(!ComponentSerializer.toString(inventory.getTitle()).equals(ComponentSerializer.toString(new TextComponent(wrapper.getTitle()))) || inventory.getSize() != wrapper.getSize() || inventory.getType() != Converters.convert(wrapper.getInventoryType(), InventoryType.class)) {
+            if(!ComponentSerializer.toString(inventory.getTitle()).equals(ComponentSerializer.toString(new TextComponent(wrapper.getTitle()))) || inventory.getType().getTypicalSize(Converters.convert(wrapper.getPlayer(), PlayerWrapper.class).getProtocolVersion()) != wrapper.getSize() || inventory.getType() != Converters.convert(wrapper.getInventoryType(), InventoryType.class)) {
                 prebuild = (T) makeInv(wrapper);
                 reopen = true;
             }
@@ -75,12 +76,8 @@ public class ProtocolizeInventoryBuilder implements InventoryBuilder {
     }
 
     private Inventory makeInv(final InventoryWrapper wrapper) {
-        if(wrapper.getInventoryType() == de.exceptionflug.mccommons.inventories.api.InventoryType.CHEST) {
-            return new Inventory(wrapper.getSize(), new TextComponent(wrapper.getTitle()));
-        } else {
-            final InventoryType type = Converters.convert(wrapper.getInventoryType(), InventoryType.class);
-            return new Inventory(type, type.getTypicalSize(), new TextComponent(wrapper.getTitle()));
-        }
+        final InventoryType type = Converters.convert(wrapper.getInventoryType(), InventoryType.class);
+        return new Inventory(type, new TextComponent(wrapper.getTitle()));
     }
 
     @Override

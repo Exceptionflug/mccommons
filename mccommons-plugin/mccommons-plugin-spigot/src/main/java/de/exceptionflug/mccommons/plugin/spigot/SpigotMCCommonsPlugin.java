@@ -5,23 +5,28 @@ import de.exceptionflug.mccommons.config.shared.ConfigFactory;
 import de.exceptionflug.mccommons.config.shared.ConfigItemStack;
 import de.exceptionflug.mccommons.config.spigot.SpigotConfig;
 import de.exceptionflug.mccommons.config.spigot.SpigotConfigSpigotYamlConfigWrapper;
+import de.exceptionflug.mccommons.core.Converter;
 import de.exceptionflug.mccommons.core.Converters;
 import de.exceptionflug.mccommons.core.Providers;
 import de.exceptionflug.mccommons.core.providers.AsyncProvider;
 import de.exceptionflug.mccommons.inventories.api.InventoryBuilder;
 import de.exceptionflug.mccommons.inventories.api.InventoryType;
+import de.exceptionflug.mccommons.inventories.api.PlayerWrapper;
 import de.exceptionflug.mccommons.inventories.api.item.ItemStackWrapper;
 import de.exceptionflug.mccommons.inventories.api.item.ItemType;
 import de.exceptionflug.mccommons.inventories.spigot.builder.SpigotInventoryBuilder;
 import de.exceptionflug.mccommons.inventories.spigot.converters.*;
 import de.exceptionflug.mccommons.inventories.spigot.item.SpigotItemStackWrapper;
 import de.exceptionflug.mccommons.inventories.spigot.listener.InventoryListener;
+import de.exceptionflug.mccommons.inventories.spigot.utils.ReflectionUtil;
 import de.exceptionflug.mccommons.inventories.spigot.utils.ServerVersionProvider;
 import de.exceptionflug.mccommons.plugin.spigot.commands.ConfigReloadCommand;
 import de.exceptionflug.mccommons.plugin.spigot.commands.HologramReloadCommand;
 import de.exceptionflug.mccommons.plugin.spigot.converter.ItemStackConverter;
+import de.exceptionflug.mccommons.plugin.spigot.converter.PlayerConverter;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
@@ -41,6 +46,11 @@ public class SpigotMCCommonsPlugin extends JavaPlugin {
         });
         Providers.register(ServerVersionProvider.class, new ServerVersionProvider());
         ConfigFactory.register(SpigotConfig.class, SpigotConfigSpigotYamlConfigWrapper::new);
+        try {
+            Converters.register(ReflectionUtil.getClass("{obc}.entity.CraftPlayer"), PlayerWrapper.class, new PlayerConverter());
+        } catch (final ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         Converters.register(ConfigItemStack.class, ItemStack.class, new ItemStackConverter());
         Converters.register(ItemType.class, MaterialData.class, new ItemTypeMaterialDataConverter());
         Converters.register(MaterialData.class, ItemType.class, new MaterialDataItemTypeConverter());

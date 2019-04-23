@@ -25,7 +25,7 @@ public abstract class AbstractAsyncFetchMultiPageInventoryWrapper<P, I, INV, T> 
     }
 
     protected AbstractAsyncFetchMultiPageInventoryWrapper(final P player, final ConfigWrapper configWrapper) {
-        this(player, InventoryType.valueOf(configWrapper.getOrSetDefault("Inventory.type", "CHEST")), configWrapper, Providers.get(LocaleProvider.class).getFallbackLocale(), true, true);
+        this(player, configWrapper.isSet("Inventory.size") ? InventoryType.getChestInventoryWithSize(configWrapper.getOrSetDefault("Inventory.size", 36)) : InventoryType.valueOf(configWrapper.getOrSetDefault("Inventory.type", "GENERIC_9X5")), configWrapper, Providers.get(LocaleProvider.class).getFallbackLocale(), true, true);
     }
 
     protected AbstractAsyncFetchMultiPageInventoryWrapper(final P player, final InventoryType type, final ConfigWrapper configWrapper, final Locale locale) {
@@ -33,7 +33,7 @@ public abstract class AbstractAsyncFetchMultiPageInventoryWrapper<P, I, INV, T> 
     }
 
     protected AbstractAsyncFetchMultiPageInventoryWrapper(final P player, final ConfigWrapper configWrapper, final Locale locale) {
-        this(player, InventoryType.valueOf(configWrapper.getOrSetDefault("Inventory.type", "CHEST")), configWrapper, locale, true, true);
+        this(player, configWrapper.isSet("Inventory.size") ? InventoryType.getChestInventoryWithSize(configWrapper.getOrSetDefault("Inventory.size", 36)) : InventoryType.valueOf(configWrapper.getOrSetDefault("Inventory.type", "GENERIC_9X5")), configWrapper, locale, true, true);
     }
 
     protected AbstractAsyncFetchMultiPageInventoryWrapper(final P player, final InventoryType type, final ConfigWrapper configWrapper, final boolean update, final boolean loading) {
@@ -41,11 +41,11 @@ public abstract class AbstractAsyncFetchMultiPageInventoryWrapper<P, I, INV, T> 
     }
 
     protected AbstractAsyncFetchMultiPageInventoryWrapper(final P player, final ConfigWrapper configWrapper, final boolean update, final boolean loading) {
-        this(player, InventoryType.valueOf(configWrapper.getOrSetDefault("Inventory.type", "CHEST")), configWrapper, Providers.get(LocaleProvider.class).getFallbackLocale(), update, loading);
+        this(player, configWrapper.isSet("Inventory.size") ? InventoryType.getChestInventoryWithSize(configWrapper.getOrSetDefault("Inventory.size", 36)) : InventoryType.valueOf(configWrapper.getOrSetDefault("Inventory.type", "GENERIC_9X5")), configWrapper, Providers.get(LocaleProvider.class).getFallbackLocale(), update, loading);
     }
 
     protected AbstractAsyncFetchMultiPageInventoryWrapper(final P player, final ConfigWrapper config, final Locale locale, final boolean update, final boolean loading) {
-        this(player, InventoryType.valueOf(config.getOrSetDefault("Inventory.type", "CHEST")), config, locale, update, loading);
+        this(player, config.isSet("Inventory.size") ? InventoryType.getChestInventoryWithSize(config.getOrSetDefault("Inventory.size", 36)) : InventoryType.valueOf(config.getOrSetDefault("Inventory.type", "GENERIC_9X5")), config, locale, update, loading);
     }
 
     protected AbstractAsyncFetchMultiPageInventoryWrapper(final P player, final InventoryType type, final ConfigWrapper config, final Locale locale, final boolean update, final boolean loading) {

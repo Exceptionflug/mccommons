@@ -28,7 +28,7 @@ public class SpigotInventoryBuilder implements InventoryBuilder {
         if(prebuild instanceof Inventory) {
             final Inventory inventory = (Inventory) prebuild;
             if(!inventory.getTitle().equals(wrapper.getTitle()) || inventory.getSize() != wrapper.getSize() || inventory.getType() != Converters.convert(wrapper.getInventoryType(), org.bukkit.event.inventory.InventoryType.class)) {
-                if(wrapper.getInventoryType() == InventoryType.CHEST) {
+                if(wrapper.getInventoryType().isChest()) {
                     prebuild = (T) Bukkit.createInventory((InventoryHolder) wrapper.getPlayer(), wrapper.getSize(), wrapper.getTitle());
                 } else {
                     prebuild = (T) Bukkit.createInventory((InventoryHolder) wrapper.getPlayer(), Converters.convert(wrapper.getInventoryType(), org.bukkit.event.inventory.InventoryType.class), wrapper.getTitle());
@@ -36,7 +36,7 @@ public class SpigotInventoryBuilder implements InventoryBuilder {
                 reopen = true;
             }
         } else {
-            if(wrapper.getInventoryType() == InventoryType.CHEST) {
+            if(wrapper.getInventoryType().isChest()) {
                 prebuild = (T) Bukkit.createInventory((InventoryHolder) wrapper.getPlayer(), wrapper.getSize(), wrapper.getTitle());
             } else {
                 prebuild = (T) Bukkit.createInventory((InventoryHolder) wrapper.getPlayer(), Converters.convert(wrapper.getInventoryType(), org.bukkit.event.inventory.InventoryType.class), wrapper.getTitle());
