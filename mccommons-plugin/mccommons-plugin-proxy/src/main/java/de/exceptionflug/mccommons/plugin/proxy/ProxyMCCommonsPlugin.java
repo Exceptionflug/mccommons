@@ -25,6 +25,7 @@ import de.exceptionflug.protocolize.api.ClickType;
 import de.exceptionflug.protocolize.inventory.InventoryType;
 import de.exceptionflug.protocolize.items.ItemStack;
 import de.exceptionflug.protocolize.items.ItemType;
+import net.md_5.bungee.UserConnection;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -43,7 +44,7 @@ public class ProxyMCCommonsPlugin extends Plugin {
         });
         ConfigFactory.register(ProxyConfig.class, ProxyConfigProxyYamlConfigWrapper::new);
         Converters.register(ConfigItemStack.class, ItemStack.class, new ItemStackConverter());
-        Converters.register(ProxiedPlayer.class, PlayerWrapper.class, new PlayerConverter());
+        Converters.register(UserConnection.class, PlayerWrapper.class, new PlayerConverter());
         Converters.register(de.exceptionflug.mccommons.inventories.api.InventoryType.class, InventoryType.class, new ProtocolizeInventoryTypeConverter());
         Converters.register(ItemType.class, de.exceptionflug.mccommons.inventories.api.item.ItemType.class, new ProtocolizeItemTypeConverter());
         Converters.register(de.exceptionflug.mccommons.inventories.api.item.ItemType.class, ItemType.class, new ItemTypeConverter());

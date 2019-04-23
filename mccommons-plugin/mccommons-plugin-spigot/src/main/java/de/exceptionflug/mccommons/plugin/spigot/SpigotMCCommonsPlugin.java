@@ -18,6 +18,7 @@ import de.exceptionflug.mccommons.inventories.spigot.builder.SpigotInventoryBuil
 import de.exceptionflug.mccommons.inventories.spigot.converters.*;
 import de.exceptionflug.mccommons.inventories.spigot.item.SpigotItemStackWrapper;
 import de.exceptionflug.mccommons.inventories.spigot.listener.InventoryListener;
+import de.exceptionflug.mccommons.inventories.spigot.utils.ReflectionUtil;
 import de.exceptionflug.mccommons.inventories.spigot.utils.ServerVersionProvider;
 import de.exceptionflug.mccommons.plugin.spigot.commands.ConfigReloadCommand;
 import de.exceptionflug.mccommons.plugin.spigot.commands.HologramReloadCommand;
@@ -45,7 +46,11 @@ public class SpigotMCCommonsPlugin extends JavaPlugin {
         });
         Providers.register(ServerVersionProvider.class, new ServerVersionProvider());
         ConfigFactory.register(SpigotConfig.class, SpigotConfigSpigotYamlConfigWrapper::new);
-        Converters.register(Player.class, PlayerWrapper.class, new PlayerConverter());
+        try {
+            Converters.register(ReflectionUtil.getClass("{obc}.entity.CraftPlayer"), PlayerWrapper.class, new PlayerConverter());
+        } catch (final ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         Converters.register(ConfigItemStack.class, ItemStack.class, new ItemStackConverter());
         Converters.register(ItemType.class, MaterialData.class, new ItemTypeMaterialDataConverter());
         Converters.register(MaterialData.class, ItemType.class, new MaterialDataItemTypeConverter());

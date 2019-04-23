@@ -1,6 +1,5 @@
 package de.exceptionflug.mccommons.inventories.api.design;
 
-import de.exceptionflug.mccommons.core.Converter;
 import de.exceptionflug.mccommons.core.Converters;
 import de.exceptionflug.mccommons.core.Providers;
 import de.exceptionflug.mccommons.core.utils.FormatUtils;
