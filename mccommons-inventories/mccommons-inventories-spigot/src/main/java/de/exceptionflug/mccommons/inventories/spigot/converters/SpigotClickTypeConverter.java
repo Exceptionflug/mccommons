@@ -19,10 +19,10 @@ public class SpigotClickTypeConverter implements Converter<ClickType, de.excepti
                 return de.exceptionflug.mccommons.inventories.api.ClickType.DROP;
 
             case MIDDLE:
-                return de.exceptionflug.mccommons.inventories.api.ClickType.MIDDLE_CLICK;
+                return de.exceptionflug.mccommons.inventories.api.ClickType.CREATIVE_MIDDLE_CLICK;
 
             case NUMBER_KEY:
-                return de.exceptionflug.mccommons.inventories.api.ClickType.NUMBER_BUTTON;
+                return de.exceptionflug.mccommons.inventories.api.ClickType.NUMBER_BUTTON_1;
 
             case SHIFT_LEFT:
                 return de.exceptionflug.mccommons.inventories.api.ClickType.SHIFT_LEFT_CLICK;

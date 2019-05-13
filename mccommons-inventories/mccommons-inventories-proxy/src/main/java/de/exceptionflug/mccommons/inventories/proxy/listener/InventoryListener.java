@@ -24,10 +24,11 @@ public class InventoryListener implements Listener {
         if (wrapper == null)
             return;
         final InventoryItem item = wrapper.get(e.getSlot());
+        final de.exceptionflug.protocolize.api.ClickType type = e.getClickType();
         if (item == null) {
             if(wrapper.getCustomActionHandler() != null) {
                 try {
-                    final CallResult callResult = wrapper.getCustomActionHandler().handle(new Click(Converters.convert(e.getClickType(), ClickType.class), wrapper, null, e.getSlot()));
+                    final CallResult callResult = wrapper.getCustomActionHandler().handle(new Click(Converters.convert(type, ClickType.class), wrapper, null, e.getSlot()));
                     e.setCancelled(callResult == null || callResult == CallResult.DENY_GRABBING);
                 } catch (final Exception ex) {
                     e.setCancelled(true);
@@ -40,7 +41,7 @@ public class InventoryListener implements Listener {
         if (actionHandler == null)
             return;
         try {
-            final CallResult callResult = actionHandler.handle(new Click(Converters.convert(e.getClickType(), ClickType.class), wrapper, item, e.getSlot()));
+            final CallResult callResult = actionHandler.handle(new Click(Converters.convert(type, ClickType.class), wrapper, item, e.getSlot()));
             e.setCancelled(callResult == null || callResult == CallResult.DENY_GRABBING);
         } catch (final Exception ex) {
             e.setCancelled(true);
