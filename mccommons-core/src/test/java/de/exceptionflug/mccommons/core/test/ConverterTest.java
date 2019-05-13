@@ -4,6 +4,9 @@ import de.exceptionflug.mccommons.core.Converters;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.nio.charset.Charset;
+import java.util.UUID;
+
 public class ConverterTest {
 
     @Test
