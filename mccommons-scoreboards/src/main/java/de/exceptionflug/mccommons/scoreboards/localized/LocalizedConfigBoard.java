@@ -136,7 +136,7 @@ public class LocalizedConfigBoard {
 
     class BoardPacketAdapter extends PacketAdapter {
 
-        private Map<String, String> lastState;
+        private Map<String, String> lastState = new HashMap<>();
 
         BoardPacketAdapter() {
             super(Providers.get(JavaPlugin.class), PacketType.Play.Server.SCOREBOARD_SCORE, PacketType.Play.Server.SCOREBOARD_OBJECTIVE);
