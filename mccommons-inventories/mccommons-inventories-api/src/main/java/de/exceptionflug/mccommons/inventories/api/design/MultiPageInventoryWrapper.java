@@ -210,6 +210,9 @@ public class MultiPageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryW
                 return;
             }
             newPage();
+            if(getNextFreeSlot() == -1) {
+                throw new RuntimeException("[MCCommons] Inventory has no space for additional items. Inventory size is "+getSize()+" and type is "+getInventoryType().name()+". There are "+getInventoryItemMap().size()+" items preconfigured in a new page. Max items per page are "+itemsPerPage+".");
+            }
             add(stack, actionHandler, args);
         } else {
             set(slot, stack, actionHandler, args);
