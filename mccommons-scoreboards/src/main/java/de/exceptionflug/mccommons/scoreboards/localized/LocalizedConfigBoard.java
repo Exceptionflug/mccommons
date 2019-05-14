@@ -11,6 +11,7 @@ import de.exceptionflug.mccommons.core.Providers;
 import de.exceptionflug.mccommons.core.providers.LocaleProvider;
 import de.exceptionflug.mccommons.core.utils.FormatUtils;
 import de.exceptionflug.mccommons.scoreboards.*;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -65,11 +66,50 @@ public class LocalizedConfigBoard {
         update();
     }
 
+    private void preUpdate() {
+        for(final AbstractBoardHolder boardHolder : Scoreboards.getBoardHolders(scoreboard)) {
+            for(final Objective objective : scoreboard.getObjectives()) {
+                for(final Score score : objective.getScores()) {
+                    final String localizedString = getLocalizedString(boardHolder, score);
+                    for(final String placeholder : getUsedPlaceHolders(localizedString)) {
+                        final String apply = replacements.computeIfAbsent(placeholder, s -> abstractBoardHolder -> placeholder).apply(boardHolder);
+                        final String s = packetAdapter.getLastState().computeIfAbsent(boardHolder.getUniqueId(), uuid -> new HashMap<>()).get(placeholder);
+                        Bukkit.broadcastMessage(s +" vs "+apply);
+                        if(!Objects.equals(s, apply)) {
+                            boardHolder.accept(score.createRemovePacket());
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private String getLocalizedString(final AbstractBoardHolder boardHolder, final Score score) {
+        final String key = score.getEntry().substring(3);
+        final String[] split = key.split("\\.");
+        final String localizedString;
+        if(split[2].equals("custom")) {
+            localizedString = config.getLocalizedString(Providers.get(LocaleProvider.class).provide(boardHolder.getUniqueId()), "Objectives." + split[1] + ".custom", "."+split[3], "&6Entry");
+        } else {
+            localizedString = config.getLocalizedString(Providers.get(LocaleProvider.class).provide(boardHolder.getUniqueId()), "Objectives." + split[1] + ".scores." + split[2], ".entry", "&6Entry");
+        }
+        return localizedString;
+    }
+
     public void update() {
+        preUpdate();
+        for(final AbstractBoardHolder boardHolder : Scoreboards.getBoardHolders(scoreboard)) {
+            for(final String k : this.replacements.keySet()) {
+                packetAdapter.getLastState().computeIfAbsent(boardHolder.getUniqueId(), uuid -> new HashMap<>()).put(k, this.replacements.get(k).apply(boardHolder));
+            }
+        }
         for(final AbstractBoardHolder boardHolder : Scoreboards.getBoardHolders(scoreboard)) {
             for(final Objective objective : scoreboard.getObjectives()) {
                 for(final String placeholder : getUsedPlaceHolders(config.getLocalizedString(Providers.get(LocaleProvider.class).provide(boardHolder.getUniqueId()), "Objectives." + objective.getName(), ".displayName", "&eObjective"))) {
-                    if(!Objects.equals(packetAdapter.getLastState().get(placeholder), replacements.computeIfAbsent(placeholder, s -> abstractBoardHolder -> placeholder).apply(boardHolder))) {
+                    final String apply = replacements.computeIfAbsent(placeholder, s -> abstractBoardHolder -> placeholder).apply(boardHolder);
+                    final String s = packetAdapter.getLastState().computeIfAbsent(boardHolder.getUniqueId(), uuid -> new HashMap<>()).get(placeholder);
+                    if(!Objects.equals(s, apply)) {
                         boardHolder.accept(objective.createRenamePacket());
                         break;
                     }
@@ -77,17 +117,10 @@ public class LocalizedConfigBoard {
             }
             for(final Objective objective : scoreboard.getObjectives()) {
                 for(final Score score : objective.getScores()) {
-                    final String key = score.getEntry().substring(3);
-                    final String[] split = key.split("\\.");
-                    final String localizedString;
-                    if(split[2].equals("custom")) {
-                        localizedString = config.getLocalizedString(Providers.get(LocaleProvider.class).provide(boardHolder.getUniqueId()), "Objectives." + split[1] + ".custom", "."+split[3], "&6Entry");
-                    } else {
-                        localizedString = config.getLocalizedString(Providers.get(LocaleProvider.class).provide(boardHolder.getUniqueId()), "Objectives." + split[1] + ".scores." + split[2], ".entry", "&6Entry");
-                    }
-                    for(final String placeholder : getUsedPlaceHolders(localizedString)) {
-                        if(!Objects.equals(packetAdapter.getLastState().get(placeholder), replacements.get(placeholder).apply(boardHolder))) {
-                            boardHolder.accept(score.createRemovePacket());
+                    for(final String placeholder : getUsedPlaceHolders(getLocalizedString(boardHolder, score))) {
+                        final String apply = replacements.computeIfAbsent(placeholder, s -> abstractBoardHolder -> placeholder).apply(boardHolder);
+                        final String s = packetAdapter.getLastState().computeIfAbsent(boardHolder.getUniqueId(), uuid -> new HashMap<>()).get(placeholder);
+                        if(!Objects.equals(s, apply)) {
                             boardHolder.accept(score.createSetScorePacket());
                             break;
                         }
@@ -137,7 +170,7 @@ public class LocalizedConfigBoard {
 
     class BoardPacketAdapter extends PacketAdapter {
 
-        private final Map<String, String> lastState = new ConcurrentHashMap<>();
+        private final Map<UUID, Map<String, String>> lastState = new ConcurrentHashMap<>();
 
         BoardPacketAdapter() {
             super(Providers.get(JavaPlugin.class), PacketType.Play.Server.SCOREBOARD_SCORE, PacketType.Play.Server.SCOREBOARD_OBJECTIVE);
@@ -160,11 +193,7 @@ public class LocalizedConfigBoard {
                     } else {
                         localizedString = config.getLocalizedString(Providers.get(LocaleProvider.class).provide(event.getPlayer().getUniqueId()), "Objectives." + split[1] + ".scores." + split[2], ".entry", "&6Entry");
                     }
-                    lastState.clear();
-                    for(final String k : LocalizedConfigBoard.this.replacements.keySet()) {
-                        lastState.put(k, LocalizedConfigBoard.this.replacements.get(k).apply(new PlayerBoardHolder(event.getPlayer().getUniqueId())));
-                    }
-                    scoreboardScore.setScoreName(FormatUtils.formatAmpersandColorCodes(FormatUtils.format(localizedString, lastState)));
+                    scoreboardScore.setScoreName(FormatUtils.formatAmpersandColorCodes(FormatUtils.format(localizedString, lastState.computeIfAbsent(event.getPlayer().getUniqueId(), uuid -> new HashMap<>()))));
                     scoreboardScore.sendPacket(event.getPlayer());
                     event.setCancelled(true);
                 }
@@ -176,18 +205,14 @@ public class LocalizedConfigBoard {
                     if(scoreboard.getObjective(objective.getName()) == null)
                         return;
                     final String localizedString = config.getLocalizedString(Providers.get(LocaleProvider.class).provide(event.getPlayer().getUniqueId()), "Objectives." + objective.getName(), ".displayName", "&eObjective");
-                    lastState.clear();
-                    for(final String k : LocalizedConfigBoard.this.replacements.keySet()) {
-                        lastState.put(k, LocalizedConfigBoard.this.replacements.get(k).apply(new PlayerBoardHolder(event.getPlayer().getUniqueId())));
-                    }
-                    objective.setDisplayName(FormatUtils.formatAmpersandColorCodes(FormatUtils.format(localizedString, lastState)));
+                    objective.setDisplayName(FormatUtils.formatAmpersandColorCodes(FormatUtils.format(localizedString, lastState.computeIfAbsent(event.getPlayer().getUniqueId(), uuid -> new HashMap<>()))));
                     objective.sendPacket(event.getPlayer());
                     event.setCancelled(true);
                 }
             }
         }
 
-        public Map<String, String> getLastState() {
+        public Map<UUID, Map<String, String>> getLastState() {
             return lastState;
         }
     }
