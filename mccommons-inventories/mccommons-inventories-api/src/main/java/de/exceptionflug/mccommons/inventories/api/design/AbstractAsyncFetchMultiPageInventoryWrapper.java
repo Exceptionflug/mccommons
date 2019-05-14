@@ -113,6 +113,9 @@ public abstract class AbstractAsyncFetchMultiPageInventoryWrapper<P, I, INV, T> 
                 return;
             }
             newPage();
+            if(getNextFreeSlot() == -1) {
+                throw new RuntimeException("[MCCommons] Inventory has no space for additional items. Inventory size is "+getSize()+" and type is "+getInventoryType().name()+". There are "+getInventoryItemMap().size()+" items preconfigured in a new page. Max items per page are "+itemsPerPage+".");
+            }
             addFetchedItem(item);
             return;
         }
