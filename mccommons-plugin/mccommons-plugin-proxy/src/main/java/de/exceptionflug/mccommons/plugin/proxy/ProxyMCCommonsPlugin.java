@@ -9,6 +9,7 @@ import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
 import de.exceptionflug.mccommons.core.Converters;
 import de.exceptionflug.mccommons.core.Providers;
 import de.exceptionflug.mccommons.core.providers.AsyncProvider;
+import de.exceptionflug.mccommons.core.providers.WorkingDirectoryProvider;
 import de.exceptionflug.mccommons.inventories.api.InventoryBuilder;
 import de.exceptionflug.mccommons.inventories.api.PlayerWrapper;
 import de.exceptionflug.mccommons.inventories.api.item.ItemStackWrapper;
@@ -30,6 +31,8 @@ import net.md_5.bungee.UserConnection;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 
+import java.io.File;
+
 public class ProxyMCCommonsPlugin extends Plugin {
 
     @Override
@@ -40,6 +43,12 @@ public class ProxyMCCommonsPlugin extends Plugin {
             @Override
             public void async(Runnable runnable) {
                 ProxyServer.getInstance().getScheduler().runAsync(ProxyMCCommonsPlugin.this, runnable);
+            }
+        });
+        Providers.register(WorkingDirectoryProvider.class, new WorkingDirectoryProvider() {
+            @Override
+            public File getWorkingDirectory() {
+                return getDataFolder();
             }
         });
         ConfigFactory.register(ConfigWrapper.class, ProxyConfigProxyYamlConfigWrapper::new);

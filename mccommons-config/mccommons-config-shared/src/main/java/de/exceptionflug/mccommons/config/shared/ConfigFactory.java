@@ -2,6 +2,8 @@ package de.exceptionflug.mccommons.config.shared;
 
 import de.exceptionflug.mccommons.config.remote.client.RemoteConfigClient;
 import de.exceptionflug.mccommons.config.remote.model.ConfigData;
+import de.exceptionflug.mccommons.core.Providers;
+import de.exceptionflug.mccommons.core.providers.WorkingDirectoryProvider;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,7 +34,7 @@ public class ConfigFactory {
             throw new NullPointerException("Remote supplier not found.");
         final ConfigData configData = getRemoteConfigClient().getConfigService().getConfig(remotePath).doOnError(throwable -> LogManager.getLogManager().getLogger("ConfigFactory").log(Level.SEVERE, "[MCCommons] Exception while getting remote config. Returning fallback config...", throwable)).blockingFirst();
         if(configData == null) {
-            return create(new File(new File("plugins/MCCommons/RemoteFallback/"), remotePath), configType);
+            return create(new File(new File(Providers.get(WorkingDirectoryProvider.class).getWorkingDirectory(), "RemoteFallback/"), remotePath), configType);
         }
         T out = (T) supplier.apply(configData);
         LOADED_CONFIGS.put(remotePath, out);

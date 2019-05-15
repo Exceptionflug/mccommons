@@ -10,6 +10,7 @@ import de.exceptionflug.mccommons.core.Converter;
 import de.exceptionflug.mccommons.core.Converters;
 import de.exceptionflug.mccommons.core.Providers;
 import de.exceptionflug.mccommons.core.providers.AsyncProvider;
+import de.exceptionflug.mccommons.core.providers.WorkingDirectoryProvider;
 import de.exceptionflug.mccommons.inventories.api.InventoryBuilder;
 import de.exceptionflug.mccommons.inventories.api.InventoryType;
 import de.exceptionflug.mccommons.inventories.api.PlayerWrapper;
@@ -33,6 +34,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+
 public class SpigotMCCommonsPlugin extends JavaPlugin {
 
     @Override
@@ -43,6 +46,12 @@ public class SpigotMCCommonsPlugin extends JavaPlugin {
             @Override
             public void async(final Runnable runnable) {
                 Bukkit.getScheduler().runTaskAsynchronously(SpigotMCCommonsPlugin.this, runnable);
+            }
+        });
+        Providers.register(WorkingDirectoryProvider.class, new WorkingDirectoryProvider() {
+            @Override
+            public File getWorkingDirectory() {
+                return getDataFolder();
             }
         });
         Providers.register(ServerVersionProvider.class, new ServerVersionProvider());
