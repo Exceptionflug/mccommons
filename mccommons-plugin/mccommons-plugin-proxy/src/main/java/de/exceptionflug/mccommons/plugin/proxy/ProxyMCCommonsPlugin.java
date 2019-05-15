@@ -2,9 +2,10 @@ package de.exceptionflug.mccommons.plugin.proxy;
 
 import de.exceptionflug.mccommons.config.proxy.ProxyConfig;
 import de.exceptionflug.mccommons.config.proxy.ProxyConfigProxyYamlConfigWrapper;
+import de.exceptionflug.mccommons.config.remote.model.ConfigData;
 import de.exceptionflug.mccommons.config.shared.ConfigFactory;
 import de.exceptionflug.mccommons.config.shared.ConfigItemStack;
-import de.exceptionflug.mccommons.core.Converter;
+import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
 import de.exceptionflug.mccommons.core.Converters;
 import de.exceptionflug.mccommons.core.Providers;
 import de.exceptionflug.mccommons.core.providers.AsyncProvider;
@@ -27,7 +28,6 @@ import de.exceptionflug.protocolize.items.ItemStack;
 import de.exceptionflug.protocolize.items.ItemType;
 import net.md_5.bungee.UserConnection;
 import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 
 public class ProxyMCCommonsPlugin extends Plugin {
@@ -42,7 +42,11 @@ public class ProxyMCCommonsPlugin extends Plugin {
                 ProxyServer.getInstance().getScheduler().runAsync(ProxyMCCommonsPlugin.this, runnable);
             }
         });
+        ConfigFactory.register(ConfigWrapper.class, ProxyConfigProxyYamlConfigWrapper::new);
         ConfigFactory.register(ProxyConfig.class, ProxyConfigProxyYamlConfigWrapper::new);
+        ConfigFactory.registerRemote(ConfigWrapper.class, s -> new ProxyConfigProxyYamlConfigWrapper(s, configData -> ConfigFactory.getRemoteConfigClient().getConfigService().update(configData).blockingSubscribe(), () -> ConfigFactory.getRemoteConfigClient().getConfigService().getConfig(s.getRemotePath()).blockingFirst()));
+        ConfigFactory.registerRemote(ProxyConfig.class, s -> new ProxyConfigProxyYamlConfigWrapper(s, configData -> ConfigFactory.getRemoteConfigClient().getConfigService().update(configData).blockingSubscribe(), () -> ConfigFactory.getRemoteConfigClient().getConfigService().getConfig(s.getRemotePath()).blockingFirst()));
+
         Converters.register(ConfigItemStack.class, ItemStack.class, new ItemStackConverter());
         Converters.register(UserConnection.class, PlayerWrapper.class, new PlayerConverter());
         Converters.register(de.exceptionflug.mccommons.inventories.api.InventoryType.class, InventoryType.class, new ProtocolizeInventoryTypeConverter());

@@ -11,21 +11,15 @@
     </parent>
 
     <groupId>de.exceptionflug</groupId>
-    <artifactId>mccommons-config-shared</artifactId>
+    <artifactId>mccommons-config-remote</artifactId>
     <version>2.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
-    <dependencies>
-        <dependency>
-            <groupId>de.exceptionflug</groupId>
-            <artifactId>mccommons-core</artifactId>
-            <version>2.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>de.exceptionflug</groupId>
-            <artifactId>mccommons-config-remote-client</artifactId>
-            <version>2.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-    </dependencies>
 
+    <modules>
+        <module>mccommons-config-remote-server</module>
+        <module>mccommons-config-remote-model</module>
+        <module>mccommons-config-remote-client</module>
+    </modules>
+    
 </project>

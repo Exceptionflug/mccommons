@@ -1,5 +1,6 @@
 package de.exceptionflug.mccommons.config.proxy;
 
-import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
-public interface ProxyConfig extends ConfigWrapper {
+import de.exceptionflug.mccommons.config.shared.RemoteConfigWrapper;
+
+public interface ProxyConfig extends RemoteConfigWrapper {
 }

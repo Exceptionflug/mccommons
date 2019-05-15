@@ -1,5 +1,6 @@
 package de.exceptionflug.mccommons.config.spigot;
 
+import de.exceptionflug.mccommons.config.remote.model.ConfigData;
 import de.exceptionflug.mccommons.core.Providers;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -10,8 +11,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.Collections;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 
 public class SpigotConfigSpigotYamlConfigWrapper implements SpigotConfig {
@@ -19,6 +23,10 @@ public class SpigotConfigSpigotYamlConfigWrapper implements SpigotConfig {
     private final YamlConfiguration fileConfiguration = new YamlConfiguration();
     private File file;
     private boolean damaged;
+
+    private ConfigData configData;
+    private final Consumer<ConfigData> updateConsumer;
+    private final Supplier<ConfigData> reloadSupplier;
 
     public SpigotConfigSpigotYamlConfigWrapper(final File file) {
         this.file = file;
@@ -28,6 +36,21 @@ public class SpigotConfigSpigotYamlConfigWrapper implements SpigotConfig {
             Bukkit.getLogger().log(Level.SEVERE,"[MCCommons] Unable to read "+file.getAbsolutePath()+":", e);
             damaged = true;
         }
+        updateConsumer = null;
+        reloadSupplier = null;
+    }
+
+    public SpigotConfigSpigotYamlConfigWrapper(final ConfigData data, final Consumer<ConfigData> updateConsumer, final Supplier<ConfigData> reloadSupplier) {
+        try {
+            fileConfiguration.load(new StringReader(data.getConfigData()));
+        } catch (final Exception e) {
+            Bukkit.getLogger().log(Level.SEVERE,"[MCCommons] Unable to read "+data.getRemotePath()+":", e);
+            damaged = true;
+        }
+        this.file = null;
+        this.updateConsumer = updateConsumer;
+        this.configData = data;
+        this.reloadSupplier = reloadSupplier;
     }
 
     @Override
@@ -117,6 +140,10 @@ public class SpigotConfigSpigotYamlConfigWrapper implements SpigotConfig {
         }
         try {
             fileConfiguration.options().header("MCCommons v"+ (Providers.has(JavaPlugin.class) ? Providers.get(JavaPlugin.class).getDescription().getVersion() : "2") +" configuration file; impl = "+getClass().getSimpleName());
+            if(configData != null) {
+                setConfigData(reloadSupplier.get());
+                return;
+            }
             fileConfiguration.save(file);
         } catch (final IOException e) {
             Bukkit.getLogger().log(Level.WARNING, "[MCCommons] Unable to save "+file.getAbsolutePath()+":", e);
@@ -130,6 +157,22 @@ public class SpigotConfigSpigotYamlConfigWrapper implements SpigotConfig {
             damaged = false;
         } catch (final Exception e) {
             Bukkit.getLogger().log(Level.SEVERE,"[MCCommons] Unable to read "+file.getAbsolutePath()+":", e);
+            damaged = true;
+        }
+    }
+
+    @Override
+    public ConfigData getConfigData() {
+        return configData;
+    }
+
+    @Override
+    public void setConfigData(final ConfigData configData) {
+        this.configData = configData;
+        try {
+            fileConfiguration.load(new StringReader(configData.getConfigData()));
+        } catch (final Exception e) {
+            Bukkit.getLogger().log(Level.SEVERE,"[MCCommons] Unable to read "+configData.getRemotePath()+":", e);
             damaged = true;
         }
     }

@@ -80,6 +80,12 @@
       <artifactId>mccommons-config-shared</artifactId>
       <version>2.0-SNAPSHOT</version>
       <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>mccommons-config-remote-client</artifactId>
+          <groupId>de.exceptionflug</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

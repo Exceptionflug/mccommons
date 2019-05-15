@@ -3,6 +3,7 @@ package de.exceptionflug.mccommons.plugin.spigot;
 import com.flowpowered.nbt.CompoundTag;
 import de.exceptionflug.mccommons.config.shared.ConfigFactory;
 import de.exceptionflug.mccommons.config.shared.ConfigItemStack;
+import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
 import de.exceptionflug.mccommons.config.spigot.SpigotConfig;
 import de.exceptionflug.mccommons.config.spigot.SpigotConfigSpigotYamlConfigWrapper;
 import de.exceptionflug.mccommons.core.Converter;
@@ -46,6 +47,10 @@ public class SpigotMCCommonsPlugin extends JavaPlugin {
         });
         Providers.register(ServerVersionProvider.class, new ServerVersionProvider());
         ConfigFactory.register(SpigotConfig.class, SpigotConfigSpigotYamlConfigWrapper::new);
+        ConfigFactory.register(ConfigWrapper.class, SpigotConfigSpigotYamlConfigWrapper::new);
+        ConfigFactory.registerRemote(ConfigWrapper.class, s -> new SpigotConfigSpigotYamlConfigWrapper(s, configData -> ConfigFactory.getRemoteConfigClient().getConfigService().update(configData).blockingSubscribe(), () -> ConfigFactory.getRemoteConfigClient().getConfigService().getConfig(s.getRemotePath()).blockingFirst()));
+        ConfigFactory.registerRemote(SpigotConfig.class, s -> new SpigotConfigSpigotYamlConfigWrapper(s, configData -> ConfigFactory.getRemoteConfigClient().getConfigService().update(configData).blockingSubscribe(), () -> ConfigFactory.getRemoteConfigClient().getConfigService().getConfig(s.getRemotePath()).blockingFirst()));
+
         try {
             Converters.register(ReflectionUtil.getClass("{obc}.entity.CraftPlayer"), PlayerWrapper.class, new PlayerConverter());
         } catch (final ClassNotFoundException e) {
