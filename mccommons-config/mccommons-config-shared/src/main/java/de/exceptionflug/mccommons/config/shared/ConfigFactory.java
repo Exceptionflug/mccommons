@@ -91,8 +91,7 @@ public class ConfigFactory {
 
     public static RemoteConfigClient getRemoteConfigClient() {
         if(remoteConfigClient == null) {
-            final ConfigWrapper configWrapper = create("MCCommons", ConfigFactory.class, ConfigWrapper.class);
-            remoteConfigClient = new RemoteConfigClient(configWrapper.getOrSetDefault("RemoteServer.url", "http://localhost:8881"), configWrapper.getOrSetDefault("RemoteServer.url", "x7834HgsTSds9"));
+            remoteConfigClient = Providers.get(RemoteClientProvider.class).get();
             Executors.newSingleThreadExecutor().execute(() -> {
                 while (!Thread.interrupted()) {
                     try {

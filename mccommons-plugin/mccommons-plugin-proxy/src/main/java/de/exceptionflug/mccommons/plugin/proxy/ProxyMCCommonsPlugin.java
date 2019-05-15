@@ -2,10 +2,13 @@ package de.exceptionflug.mccommons.plugin.proxy;
 
 import de.exceptionflug.mccommons.config.proxy.ProxyConfig;
 import de.exceptionflug.mccommons.config.proxy.ProxyConfigProxyYamlConfigWrapper;
+import de.exceptionflug.mccommons.config.remote.client.RemoteConfigClient;
 import de.exceptionflug.mccommons.config.remote.model.ConfigData;
 import de.exceptionflug.mccommons.config.shared.ConfigFactory;
 import de.exceptionflug.mccommons.config.shared.ConfigItemStack;
 import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
+import de.exceptionflug.mccommons.config.shared.RemoteClientProvider;
+import de.exceptionflug.mccommons.config.spigot.SpigotConfig;
 import de.exceptionflug.mccommons.core.Converters;
 import de.exceptionflug.mccommons.core.Providers;
 import de.exceptionflug.mccommons.core.providers.AsyncProvider;
@@ -43,6 +46,13 @@ public class ProxyMCCommonsPlugin extends Plugin {
             @Override
             public void async(Runnable runnable) {
                 ProxyServer.getInstance().getScheduler().runAsync(ProxyMCCommonsPlugin.this, runnable);
+            }
+        });
+        Providers.register(RemoteClientProvider.class, new RemoteClientProvider() {
+            @Override
+            public RemoteConfigClient get() {
+                final ConfigWrapper configWrapper = ConfigFactory.create("MCCommons", ProxyMCCommonsPlugin.class, SpigotConfig.class);
+                return new RemoteConfigClient(configWrapper.getOrSetDefault("RemoteServer.url", "http://localhost:8881"), configWrapper.getOrSetDefault("RemoteServer.url", "x7834HgsTSds9"));
             }
         });
         Providers.register(WorkingDirectoryProvider.class, new WorkingDirectoryProvider() {

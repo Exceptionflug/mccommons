@@ -1,9 +1,11 @@
 package de.exceptionflug.mccommons.plugin.spigot;
 
 import com.flowpowered.nbt.CompoundTag;
+import de.exceptionflug.mccommons.config.remote.client.RemoteConfigClient;
 import de.exceptionflug.mccommons.config.shared.ConfigFactory;
 import de.exceptionflug.mccommons.config.shared.ConfigItemStack;
 import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
+import de.exceptionflug.mccommons.config.shared.RemoteClientProvider;
 import de.exceptionflug.mccommons.config.spigot.SpigotConfig;
 import de.exceptionflug.mccommons.config.spigot.SpigotConfigSpigotYamlConfigWrapper;
 import de.exceptionflug.mccommons.core.Converter;
@@ -42,6 +44,13 @@ public class SpigotMCCommonsPlugin extends JavaPlugin {
     public void onEnable() {
         Providers.register(InventoryBuilder.class, new SpigotInventoryBuilder());
         Providers.register(JavaPlugin.class, this);
+        Providers.register(RemoteClientProvider.class, new RemoteClientProvider() {
+            @Override
+            public RemoteConfigClient get() {
+                final ConfigWrapper configWrapper = ConfigFactory.create("MCCommons", SpigotMCCommonsPlugin.class, SpigotConfig.class);
+                return new RemoteConfigClient(configWrapper.getOrSetDefault("RemoteServer.url", "http://localhost:8881"), configWrapper.getOrSetDefault("RemoteServer.url", "x7834HgsTSds9"));
+            }
+        });
         Providers.register(AsyncProvider.class, new AsyncProvider() {
             @Override
             public void async(final Runnable runnable) {
