@@ -66,7 +66,8 @@ public class LocalizedConfigBoard {
         update();
     }
 
-    private void preUpdate() {
+    private List<Score> preUpdate() {
+        final List<Score> resend = new ArrayList<>();
         for(final AbstractBoardHolder boardHolder : Scoreboards.getBoardHolders(scoreboard)) {
             for(final Objective objective : scoreboard.getObjectives()) {
                 for(final Score score : objective.getScores()) {
@@ -74,15 +75,16 @@ public class LocalizedConfigBoard {
                     for(final String placeholder : getUsedPlaceHolders(localizedString)) {
                         final String apply = replacements.computeIfAbsent(placeholder, s -> abstractBoardHolder -> placeholder).apply(boardHolder);
                         final String s = packetAdapter.getLastState().computeIfAbsent(boardHolder.getUniqueId(), uuid -> new HashMap<>()).get(placeholder);
-                        Bukkit.broadcastMessage(s +" vs "+apply);
                         if(!Objects.equals(s, apply)) {
                             boardHolder.accept(score.createRemovePacket());
+                            resend.add(score);
                             break;
                         }
                     }
                 }
             }
         }
+        return resend;
     }
 
     private String getLocalizedString(final AbstractBoardHolder boardHolder, final Score score) {
@@ -98,7 +100,7 @@ public class LocalizedConfigBoard {
     }
 
     public void update() {
-        preUpdate();
+        final List<Score> scores = preUpdate();
         for(final AbstractBoardHolder boardHolder : Scoreboards.getBoardHolders(scoreboard)) {
             for(final String k : this.replacements.keySet()) {
                 packetAdapter.getLastState().computeIfAbsent(boardHolder.getUniqueId(), uuid -> new HashMap<>()).put(k, this.replacements.get(k).apply(boardHolder));
@@ -106,26 +108,12 @@ public class LocalizedConfigBoard {
         }
         for(final AbstractBoardHolder boardHolder : Scoreboards.getBoardHolders(scoreboard)) {
             for(final Objective objective : scoreboard.getObjectives()) {
-                for(final String placeholder : getUsedPlaceHolders(config.getLocalizedString(Providers.get(LocaleProvider.class).provide(boardHolder.getUniqueId()), "Objectives." + objective.getName(), ".displayName", "&eObjective"))) {
-                    final String apply = replacements.computeIfAbsent(placeholder, s -> abstractBoardHolder -> placeholder).apply(boardHolder);
-                    final String s = packetAdapter.getLastState().computeIfAbsent(boardHolder.getUniqueId(), uuid -> new HashMap<>()).get(placeholder);
-                    if(!Objects.equals(s, apply)) {
-                        boardHolder.accept(objective.createRenamePacket());
-                        break;
-                    }
-                }
+                boardHolder.accept(objective.createRenamePacket());
             }
-            for(final Objective objective : scoreboard.getObjectives()) {
-                for(final Score score : objective.getScores()) {
-                    for(final String placeholder : getUsedPlaceHolders(getLocalizedString(boardHolder, score))) {
-                        final String apply = replacements.computeIfAbsent(placeholder, s -> abstractBoardHolder -> placeholder).apply(boardHolder);
-                        final String s = packetAdapter.getLastState().computeIfAbsent(boardHolder.getUniqueId(), uuid -> new HashMap<>()).get(placeholder);
-                        if(!Objects.equals(s, apply)) {
-                            boardHolder.accept(score.createSetScorePacket());
-                            break;
-                        }
-                    }
-                }
+        }
+        for(final AbstractBoardHolder boardHolder : Scoreboards.getBoardHolders(scoreboard)) {
+            for(final Score score : scores) {
+                boardHolder.accept(score.createSetScorePacket());
             }
         }
     }

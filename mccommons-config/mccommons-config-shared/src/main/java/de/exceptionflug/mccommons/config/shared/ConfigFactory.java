@@ -100,12 +100,19 @@ public class ConfigFactory {
                             if(wrapper instanceof RemoteConfigWrapper) {
                                 final ConfigData current = ((RemoteConfigWrapper) wrapper).getConfigData();
                                 if(current != null) {
-                                    getRemoteConfigClient().getConfigService().getConfig(current.getRemotePath()).subscribe(configData -> {
+                                    getRemoteConfigClient().getConfigService().getConfig(current.getRemotePath()).doOnError(throwable -> {
+                                        System.out.println("[MCCommons] Exception while refreshing " + current.getRemotePath() + " from remote server:");
+                                        throwable.printStackTrace();
+                                    }).subscribe(configData -> {
                                         if(configData.getLastUpdate() > current.getLastUpdate()) {
+                                            System.out.println("[MCCommons] Updating remote config "+configData.getRemotePath()+"...");
                                             ((RemoteConfigWrapper) wrapper).setConfigData(configData);
                                         }
                                     }, throwable -> {
-                                        LogManager.getLogManager().getLogger("ConfigFactory").log(Level.SEVERE, "[MCCommons] Exception while refreshing "+current.getRemotePath()+" from remote server", throwable);
+
+
+                                        System.out.println("[MCCommons] Exception while refreshing " + current.getRemotePath() + " from remote server:");
+                                        throwable.printStackTrace();
                                     });
                                 }
                             }

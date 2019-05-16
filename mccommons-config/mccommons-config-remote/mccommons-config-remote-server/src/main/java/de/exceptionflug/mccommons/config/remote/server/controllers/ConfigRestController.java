@@ -13,6 +13,6 @@ public interface ConfigRestController {
     ConfigData getConfig(@RequestParam("path") final String path) throws IOException;
 
     @PutMapping
-    void update(@RequestParam("path") final String path, @RequestBody final ConfigData configData) throws IOException;
+    void update(@RequestBody final ConfigData configData) throws IOException;
 
 }
