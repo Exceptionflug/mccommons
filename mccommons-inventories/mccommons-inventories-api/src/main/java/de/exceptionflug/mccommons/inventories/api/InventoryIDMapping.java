@@ -1,7 +1,5 @@
 package de.exceptionflug.mccommons.inventories.api;
 
-import de.exceptionflug.protocolize.api.AbstractProtocolIDMapping;
-
 public class InventoryIDMapping extends AbstractProtocolIDMapping {
 
     private final String legacyId;
