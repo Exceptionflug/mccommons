@@ -3,6 +3,7 @@ package de.exceptionflug.mccommons.inventories.spigot.listener;
 import de.exceptionflug.mccommons.core.Converters;
 import de.exceptionflug.mccommons.core.Providers;
 import de.exceptionflug.mccommons.inventories.api.*;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -37,8 +38,10 @@ public class InventoryListener implements Listener {
             return;
         }
         final ActionHandler actionHandler = wrapper.getActionHandler(item.getActionHandler());
-        if (actionHandler == null)
+        if (actionHandler == null) {
+            Bukkit.getLogger().warning("[MCCommons] Unknown action handler "+item.getActionHandler()+" in "+wrapper.getClass().getSimpleName());
             return;
+        }
         try {
             final CallResult callResult = actionHandler.handle(new Click(Converters.convert(e.getClick(), ClickType.class), wrapper, item, e.getSlot()));
             e.setCancelled(callResult == null || callResult == CallResult.DENY_GRABBING);

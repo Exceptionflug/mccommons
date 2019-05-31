@@ -6,8 +6,6 @@ import de.exceptionflug.mccommons.inventories.api.item.ItemType;
 import de.exceptionflug.mccommons.inventories.spigot.utils.ServerVersionProvider;
 import org.bukkit.material.MaterialData;
 
-import java.security.Provider;
-
 public class MaterialDataItemTypeConverter implements Converter<MaterialData, ItemType> {
 
     @Override

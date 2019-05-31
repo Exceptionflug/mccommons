@@ -23,8 +23,9 @@ public class ItemStackConverter implements Converter<ConfigItemStack, ItemStack>
 
     @Override
     public ItemStack convert(final ConfigItemStack src) {
-        if(src == null)
+        if(src == null) {
             return null;
+        }
         ItemType type;
         try {
             type = ItemType.valueOf(src.getType());
@@ -33,7 +34,13 @@ public class ItemStackConverter implements Converter<ConfigItemStack, ItemStack>
             type = ItemType.GRASS;
         }
         final MaterialData convert = Converters.convert(type, MaterialData.class);
-        ItemStack out = new ItemStack(convert.getItemType(), src.getAmount(), convert.getData() == 0 ? src.getDurability() : convert.getData());
+        if(convert == null)
+            throw new IllegalStateException("[MCCommons] Internal conversion problem. Result is null.");
+        ItemStack out = new ItemStack(convert.getItemType(),
+                src.getAmount(),
+                convert.getData() == 0 ?
+                        src.getDurability() :
+                        convert.getData());
         if(type == ItemType.PLAYER_HEAD) {
             String skullOwner = src.getSkull() == null ? "Exceptionflug" : src.getSkull();
             if(skullOwner.startsWith("texture:")) {

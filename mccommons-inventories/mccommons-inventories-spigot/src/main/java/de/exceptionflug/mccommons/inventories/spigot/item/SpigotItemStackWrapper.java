@@ -65,7 +65,7 @@ public class SpigotItemStackWrapper implements ItemStackWrapper {
         final ItemIDMapping applicableMapping = type.getApplicableMapping(Providers.get(ServerVersionProvider.class).getProtocolVersion());
         if(applicableMapping == null)
             throw new UnsupportedOperationException(type.name()+" is not allowed on version "+ReflectionUtil.getVersion());
-        handle.setType(ItemTypeMaterialDataConverter.byId(applicableMapping.getId()));
+        handle.setType(ItemTypeMaterialDataConverter.byId(applicableMapping.getId(), type));
         handle.setDurability((short) applicableMapping.getData());
         if(applicableMapping instanceof AbstractCustomItemIDMapping)
             ((AbstractCustomItemIDMapping) applicableMapping).apply(this, Providers.get(ServerVersionProvider.class).getProtocolVersion());

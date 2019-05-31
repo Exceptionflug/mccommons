@@ -6,9 +6,13 @@ import de.exceptionflug.mccommons.inventories.api.InventoryItem;
 import de.exceptionflug.mccommons.inventories.api.InventoryType;
 import de.exceptionflug.mccommons.inventories.api.InventoryWrapper;
 import de.exceptionflug.mccommons.inventories.api.item.ItemType;
+import de.exceptionflug.mccommons.inventories.spigot.utils.ReflectionUtil;
+import net.minecraft.server.v1_14_R1.IInventory;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftInventory;
+import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftInventoryCustom;
 import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftInventoryView;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -17,9 +21,23 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.lang.reflect.Field;
 import java.util.*;
 
 public class SpigotInventoryBuilder implements InventoryBuilder {
+
+    private static Class minecraftInventoryClass;
+    private static Field titleField;
+
+    static {
+        try {
+            minecraftInventoryClass = ReflectionUtil.getClass("{obc}.inventory.CraftInventoryCustom$MinecraftInventory");
+            titleField = minecraftInventoryClass.getDeclaredField("title");
+            titleField.setAccessible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private final Map<UUID, Map.Entry<InventoryWrapper, Long>> buildMap = new LinkedHashMap<>();
     private final List<InventoryWrapper> wrappers = new LinkedList<>();
@@ -29,12 +47,12 @@ public class SpigotInventoryBuilder implements InventoryBuilder {
         boolean reopen = false;
         boolean register = prebuild == null;
         if(prebuild instanceof Inventory) {
-            final InventoryView inventory = (InventoryView) prebuild;
-            if(!inventory.getTitle().equals(wrapper.getTitle()) || inventory.getTopInventory().getSize() != wrapper.getSize() || inventory.getType() != Converters.convert(wrapper.getInventoryType(), org.bukkit.event.inventory.InventoryType.class)) {
+            final Inventory inventory = (Inventory) prebuild;
+            if(!getTitle(inventory).equals(wrapper.getTitle()) || inventory.getSize() != wrapper.getSize() || inventory.getType() != Converters.convert(wrapper.getInventoryType(), org.bukkit.event.inventory.InventoryType.class)) {
                 if(wrapper.getInventoryType().isChest()) {
-                    prebuild = (T) new CraftInventoryView((Player)wrapper.getPlayer(), Bukkit.createInventory((InventoryHolder) wrapper.getPlayer(), wrapper.getSize(), wrapper.getTitle()), ((CraftPlayer)wrapper.getPlayer()).getHandle().activeContainer);
+                    prebuild = (T) Bukkit.createInventory((InventoryHolder) wrapper.getPlayer(), wrapper.getSize(), wrapper.getTitle());
                 } else {
-                    prebuild = (T) new CraftInventoryView((Player)wrapper.getPlayer(), Bukkit.createInventory((InventoryHolder) wrapper.getPlayer(), Converters.convert(wrapper.getInventoryType(), org.bukkit.event.inventory.InventoryType.class), wrapper.getTitle()), ((CraftPlayer)wrapper.getPlayer()).getHandle().activeContainer);
+                    prebuild = (T) Bukkit.createInventory((InventoryHolder) wrapper.getPlayer(), Converters.convert(wrapper.getInventoryType(), org.bukkit.event.inventory.InventoryType.class), wrapper.getTitle());
                 }
                 reopen = true;
             }
@@ -111,6 +129,22 @@ public class SpigotInventoryBuilder implements InventoryBuilder {
     @Override
     public void open(final InventoryWrapper wrapper) {
         ((Player)wrapper.getPlayer()).openInventory((Inventory) wrapper.build());
+    }
+
+    private String getTitle(final Inventory inventory) {
+        // Since the developers of spigot smoke weed every day, we can only get an inventory title
+        // by using the InventoryView (which we don't have). So we use tricky and hacky reflections to get the title.
+
+        final IInventory nmsInventory = ((CraftInventory)inventory).getInventory();
+        if(!minecraftInventoryClass.isAssignableFrom(nmsInventory.getClass())) {
+            throw new IllegalStateException("[MCCommons] Internal error: NMS Inventory can only be MinecraftInventory!");
+        }
+        try {
+            return (String) titleField.get(nmsInventory);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }
