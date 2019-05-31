@@ -29,7 +29,7 @@ public final class Message {
                 if(counter > 0)
                     fullComponent.addExtra(new TextComponent("\n"));
                 counter ++;
-                fullComponent.addExtra(TextComponent.fromLegacyText(s)[0]);
+                fullComponent.addExtra(new TextComponent(TextComponent.fromLegacyText(s)));
             }
         });
         p.spigot().sendMessage(fullComponent);
