@@ -4,6 +4,7 @@ import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
 import de.exceptionflug.mccommons.core.Providers;
 import de.exceptionflug.mccommons.core.providers.LocaleProvider;
 import de.exceptionflug.mccommons.core.utils.FormatUtils;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public final class Message {
     }
 
     public static void send(final Player p, final ConfigWrapper config, final boolean prefix, final String messageKey, final String defaultMessage, final String... replacements) {
-        p.sendMessage(getMessage(config, Providers.get(LocaleProvider.class).provide(p.getUniqueId()), prefix, messageKey, defaultMessage, replacements));
+        p.spigot().sendMessage(TextComponent.fromLegacyText(getMessage(config, Providers.get(LocaleProvider.class).provide(p.getUniqueId()), prefix, messageKey, defaultMessage, replacements)));
     }
 
     public static void broadcast(final List<Player> players, final ConfigWrapper config, final boolean prefix, final String messageKey, final String defaultMessage, final String... replacements) {
