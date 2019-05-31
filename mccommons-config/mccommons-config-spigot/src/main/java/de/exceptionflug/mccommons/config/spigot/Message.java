@@ -5,6 +5,7 @@ import de.exceptionflug.mccommons.core.Providers;
 import de.exceptionflug.mccommons.core.providers.LocaleProvider;
 import de.exceptionflug.mccommons.core.utils.FormatUtils;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
@@ -20,7 +21,7 @@ public final class Message {
 
     public static void send(final Player p, final ConfigWrapper config, final boolean prefix, final String messageKey, final String defaultMessage, final String... replacements) {
         final TextComponent fullComponent = new TextComponent();
-        Arrays.stream(getMessage(config, Providers.get(LocaleProvider.class).provide(p.getUniqueId()), prefix, messageKey, defaultMessage, replacements).split("\n")).forEach(new Consumer<String>() {
+        Arrays.stream(getMessage(config, Providers.get(LocaleProvider.class).provide(p.getUniqueId()), prefix, messageKey, defaultMessage, replacements).split("\\\\n")).forEach(new Consumer<String>() {
 
             private int counter;
 
