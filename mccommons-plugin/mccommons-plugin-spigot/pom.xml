@@ -36,6 +36,22 @@
                         <configuration>
                             <relocations>
                                 <relocation>
+                                    <pattern>okio</pattern>
+                                    <shadedPattern>de.exceptionflug.mccommons.config.remote.client.okio</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>okhttp</pattern>
+                                    <shadedPattern>de.exceptionflug.mccommons.config.remote.client.okhttp</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>retrofit2</pattern>
+                                    <shadedPattern>de.exceptionflug.mccommons.config.remote.client.retrofit2</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>io.reactivex</pattern>
+                                    <shadedPattern>de.exceptionflug.mccommons.config.remote.client.rxjava2</shadedPattern>
+                                </relocation>
+                                <relocation>
                                     <pattern>com.comphenix.packetwrapper</pattern>
                                     <shadedPattern>de.exceptionflug.mccommons.packetwrapper</shadedPattern>
                                 </relocation>
@@ -51,7 +67,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.8.8-R0.1-SNAPSHOT</version>
+            <version>1.14-R1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

@@ -12,7 +12,7 @@ public class MaterialDataItemTypeConverter implements Converter<MaterialData, It
 
     @Override
     public ItemType convert(final MaterialData src) {
-        return ItemType.getType(src.getItemTypeId(), src.getData(), Providers.get(ServerVersionProvider.class).getProtocolVersion(), null); // This will throw NPE when converting SpawnEggs
+        return ItemType.getType(ItemTypeMaterialDataConverter.getId(src.getItemType()), src.getData(), Providers.get(ServerVersionProvider.class).getProtocolVersion(), null); // This will throw NPE when converting SpawnEggs
     }
 
 }

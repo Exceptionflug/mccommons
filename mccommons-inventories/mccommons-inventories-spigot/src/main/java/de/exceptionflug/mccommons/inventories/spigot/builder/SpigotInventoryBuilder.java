@@ -8,9 +8,12 @@ import de.exceptionflug.mccommons.inventories.api.InventoryWrapper;
 import de.exceptionflug.mccommons.inventories.api.item.ItemType;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftInventoryView;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
@@ -26,12 +29,12 @@ public class SpigotInventoryBuilder implements InventoryBuilder {
         boolean reopen = false;
         boolean register = prebuild == null;
         if(prebuild instanceof Inventory) {
-            final Inventory inventory = (Inventory) prebuild;
-            if(!inventory.getTitle().equals(wrapper.getTitle()) || inventory.getSize() != wrapper.getSize() || inventory.getType() != Converters.convert(wrapper.getInventoryType(), org.bukkit.event.inventory.InventoryType.class)) {
+            final InventoryView inventory = (InventoryView) prebuild;
+            if(!inventory.getTitle().equals(wrapper.getTitle()) || inventory.getTopInventory().getSize() != wrapper.getSize() || inventory.getType() != Converters.convert(wrapper.getInventoryType(), org.bukkit.event.inventory.InventoryType.class)) {
                 if(wrapper.getInventoryType().isChest()) {
-                    prebuild = (T) Bukkit.createInventory((InventoryHolder) wrapper.getPlayer(), wrapper.getSize(), wrapper.getTitle());
+                    prebuild = (T) new CraftInventoryView((Player)wrapper.getPlayer(), Bukkit.createInventory((InventoryHolder) wrapper.getPlayer(), wrapper.getSize(), wrapper.getTitle()), ((CraftPlayer)wrapper.getPlayer()).getHandle().activeContainer);
                 } else {
-                    prebuild = (T) Bukkit.createInventory((InventoryHolder) wrapper.getPlayer(), Converters.convert(wrapper.getInventoryType(), org.bukkit.event.inventory.InventoryType.class), wrapper.getTitle());
+                    prebuild = (T) new CraftInventoryView((Player)wrapper.getPlayer(), Bukkit.createInventory((InventoryHolder) wrapper.getPlayer(), Converters.convert(wrapper.getInventoryType(), org.bukkit.event.inventory.InventoryType.class), wrapper.getTitle()), ((CraftPlayer)wrapper.getPlayer()).getHandle().activeContainer);
                 }
                 reopen = true;
             }
@@ -59,7 +62,7 @@ public class SpigotInventoryBuilder implements InventoryBuilder {
                     }
                     inventory.setItem(i, Converters.convert(item.getItemStackWrapper(), ItemStack.class));
                 } else {
-                    if(item.getItemStackWrapper().getType() == ItemType.PLAYER_HEAD && currentStack.getType() == Material.SKULL_ITEM) {
+                    if(item.getItemStackWrapper().getType() == ItemType.PLAYER_HEAD && currentStack.getType() == Material.PLAYER_HEAD) {
                         final SkullMeta meta1 = (SkullMeta) ((ItemStack)item.getItemStackWrapper().getHandle()).getItemMeta();
                         final SkullMeta meta2 = (SkullMeta) currentStack.getItemMeta();
                         if(meta1.hasOwner() && meta2.hasOwner() && meta1.getOwner().equals(meta2.getOwner())) {
