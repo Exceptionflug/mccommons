@@ -7,8 +7,10 @@ import de.exceptionflug.mccommons.core.utils.FormatUtils;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Consumer;
 
 public final class Message {
 
@@ -17,7 +19,20 @@ public final class Message {
     }
 
     public static void send(final Player p, final ConfigWrapper config, final boolean prefix, final String messageKey, final String defaultMessage, final String... replacements) {
-        p.spigot().sendMessage(TextComponent.fromLegacyText(getMessage(config, Providers.get(LocaleProvider.class).provide(p.getUniqueId()), prefix, messageKey, defaultMessage, replacements)));
+        final TextComponent fullComponent = new TextComponent();
+        Arrays.stream(getMessage(config, Providers.get(LocaleProvider.class).provide(p.getUniqueId()), prefix, messageKey, defaultMessage, replacements).split("\n")).forEach(new Consumer<String>() {
+
+            private int counter;
+
+            @Override
+            public void accept(final String s) {
+                if(counter > 0)
+                    fullComponent.addExtra(new TextComponent("\n"));
+                counter ++;
+                fullComponent.addExtra(TextComponent.fromLegacyText(s)[0]);
+            }
+        });
+        p.spigot().sendMessage(fullComponent);
     }
 
     public static void broadcast(final List<Player> players, final ConfigWrapper config, final boolean prefix, final String messageKey, final String defaultMessage, final String... replacements) {
