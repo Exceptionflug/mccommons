@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
@@ -36,13 +37,13 @@ public final class Message {
         p.spigot().sendMessage(fullComponent);
     }
 
-    public static void broadcast(final List<Player> players, final ConfigWrapper config, final boolean prefix, final String messageKey, final String defaultMessage, final String... replacements) {
+    public static void broadcast(final Collection<Player> players, final ConfigWrapper config, final boolean prefix, final String messageKey, final String defaultMessage, final String... replacements) {
         for(final Player player : players) {
             send(player, config, prefix, messageKey, defaultMessage, replacements);
         }
     }
 
-    public static void broadcast(final List<Player> players, final ConfigWrapper config, final String messageKey, final String defaultMessage, final String... replacements) {
+    public static void broadcast(final Collection<Player> players, final ConfigWrapper config, final String messageKey, final String defaultMessage, final String... replacements) {
         for(final Player player : players) {
             send(player, config, messageKey, defaultMessage, replacements);
         }

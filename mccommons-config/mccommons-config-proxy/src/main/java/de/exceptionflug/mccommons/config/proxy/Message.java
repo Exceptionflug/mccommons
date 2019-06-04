@@ -64,13 +64,13 @@ public final class Message {
         }
     }
 
-    public static void broadcast(final List<ProxiedPlayer> proxiedPlayers, final ConfigWrapper config, final boolean prefix, final String messageKey, final String defaultMessage, final String... replacements) {
+    public static void broadcast(final Collection<ProxiedPlayer> proxiedPlayers, final ConfigWrapper config, final boolean prefix, final String messageKey, final String defaultMessage, final String... replacements) {
         for(final ProxiedPlayer proxiedPlayer : proxiedPlayers) {
             send(proxiedPlayer, config, prefix, messageKey, defaultMessage, replacements);
         }
     }
 
-    public static void broadcast(final List<ProxiedPlayer> proxiedPlayers, final ConfigWrapper config, final String messageKey, final String defaultMessage, final String... replacements) {
+    public static void broadcast(final Collection<ProxiedPlayer> proxiedPlayers, final ConfigWrapper config, final String messageKey, final String defaultMessage, final String... replacements) {
         for(final ProxiedPlayer proxiedPlayer : proxiedPlayers) {
             send(proxiedPlayer, config, messageKey, defaultMessage, replacements);
         }

@@ -56,7 +56,6 @@ public class ItemTypeMaterialDataConverter implements Converter<ItemType, Materi
                 e.printStackTrace();
             }
         }
-        Bukkit.getLogger().warning("[MCCommons] Since spigot's internal id numbers are wrong, we only can guess the correct id by using its proto name...");
         try {
             return Material.valueOf(type.name());
         } catch (final Exception e) {
