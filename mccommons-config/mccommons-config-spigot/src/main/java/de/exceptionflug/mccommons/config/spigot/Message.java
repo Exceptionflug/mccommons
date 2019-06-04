@@ -6,6 +6,7 @@ import de.exceptionflug.mccommons.core.providers.LocaleProvider;
 import de.exceptionflug.mccommons.core.utils.FormatUtils;
 import org.bukkit.entity.Player;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
@@ -19,13 +20,13 @@ public final class Message {
         p.sendMessage(getMessage(config, Providers.get(LocaleProvider.class).provide(p.getUniqueId()), prefix, messageKey, defaultMessage, replacements));
     }
 
-    public static void broadcast(final List<Player> players, final ConfigWrapper config, final boolean prefix, final String messageKey, final String defaultMessage, final String... replacements) {
+    public static void broadcast(final Collection<Player> players, final ConfigWrapper config, final boolean prefix, final String messageKey, final String defaultMessage, final String... replacements) {
         for(final Player player : players) {
             send(player, config, prefix, messageKey, defaultMessage, replacements);
         }
     }
 
-    public static void broadcast(final List<Player> players, final ConfigWrapper config, final String messageKey, final String defaultMessage, final String... replacements) {
+    public static void broadcast(final Collection<Player> players, final ConfigWrapper config, final String messageKey, final String defaultMessage, final String... replacements) {
         for(final Player player : players) {
             send(player, config, messageKey, defaultMessage, replacements);
         }
