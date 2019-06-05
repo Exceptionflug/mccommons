@@ -1,8 +1,8 @@
 package de.exceptionflug.mccommons.holograms.localized;
 
-import com.comphenix.packetwrapper.WrapperPlayServerEntityMetadata;
 import com.comphenix.protocol.PacketType.Play.Server;
 import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
@@ -31,13 +31,13 @@ final class PacketListener extends PacketAdapter {
 
     @Override
     public void onPacketSending(final PacketEvent event) {
-        final WrapperPlayServerEntityMetadata meta = new WrapperPlayServerEntityMetadata(event.getPacket().deepClone());
-        if(!lineIds.contains(meta.getEntityID()))
+        final PacketContainer meta = event.getPacket().deepClone();
+        if(!lineIds.contains(meta.getIntegers().read(0)))
             return;
-        final List<WrappedWatchableObject> metadata = meta.getMetadata();
+        final List<WrappedWatchableObject> metadata = meta.getWatchableCollectionModifier().read(0);
         editMetadata(metadata, event.getPlayer());
-        meta.setMetadata(metadata);
-        event.setPacket(meta.getHandle());
+        meta.getWatchableCollectionModifier().write(0, metadata);
+        event.setPacket(meta);
     }
 
     private void editMetadata(final List<WrappedWatchableObject> metadata, final Player player) {
