@@ -3,6 +3,7 @@ package de.exceptionflug.mccommons.holograms.line;
 import com.comphenix.packetwrapper.*;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
+import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import de.exceptionflug.mccommons.holograms.util.EntityIDFactory;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
@@ -109,9 +110,8 @@ public class ItemHologramLine extends AbstractHologramLine {
     }
 
     private WrappedDataWatcher buildMetadata() {
-        final WrappedDataWatcher metadata = new WrappedDataWatcher();
-        metadata.setObject(1, (byte) 0x04); // Set riding
-        metadata.setObject(10, itemStack); // Set itemstack
+        final WrappedDataWatcher metadata = new WrappedDataWatcher(Arrays.asList(new WrappedWatchableObject(new WrappedDataWatcher.WrappedDataWatcherObject(1, WrappedDataWatcher.Registry.get(Byte.class)), (byte) 0x04),
+                new WrappedWatchableObject(new WrappedDataWatcher.WrappedDataWatcherObject(10, WrappedDataWatcher.Registry.getItemStackSerializer(false)), itemStack)));
         return metadata;
     }
 

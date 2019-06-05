@@ -12,8 +12,7 @@ public class EntityIDFactory {
 
     public static int getAndIncrement() {
         final AtomicInteger out = (AtomicInteger) ENTITY_ID.get(null);
-        final int i = out.incrementAndGet();
-        return i;
+        return out.incrementAndGet();
     }
 
 }

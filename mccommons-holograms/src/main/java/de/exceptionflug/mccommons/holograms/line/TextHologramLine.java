@@ -6,9 +6,11 @@ import com.comphenix.packetwrapper.WrapperPlayServerEntityTeleport;
 import com.comphenix.packetwrapper.WrapperPlayServerSpawnEntityLiving;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
+import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -68,11 +70,10 @@ public class TextHologramLine extends AbstractHologramLine {
     }
 
     private WrappedDataWatcher buildMetadata() {
-        final WrappedDataWatcher metadata = new WrappedDataWatcher();
-        metadata.setObject(0, (byte) 0x20); // Make armor stand invisible
-        metadata.setObject(2, text); // Set name tag
-        metadata.setObject(3, (byte) 1); // Always show nametag
-        metadata.setObject(10, (byte) 0); // Disable all default vals in bitmask
+        final WrappedDataWatcher metadata = new WrappedDataWatcher(Arrays.asList(new WrappedWatchableObject(new WrappedDataWatcher.WrappedDataWatcherObject(0, WrappedDataWatcher.Registry.get(Byte.class)), (byte) 0x20),
+                new WrappedWatchableObject(new WrappedDataWatcher.WrappedDataWatcherObject(2, WrappedDataWatcher.Registry.get(String.class)), text),
+                new WrappedWatchableObject(new WrappedDataWatcher.WrappedDataWatcherObject(3, WrappedDataWatcher.Registry.get(Byte.class)), (byte) 1),
+                new WrappedWatchableObject(new WrappedDataWatcher.WrappedDataWatcherObject(10, WrappedDataWatcher.Registry.get(Byte.class)), (byte) 0)));
         return metadata;
     }
 
