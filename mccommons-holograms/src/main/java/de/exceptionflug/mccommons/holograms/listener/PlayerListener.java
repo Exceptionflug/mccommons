@@ -13,8 +13,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import java.util.List;
+import java.util.concurrent.*;
 
 public class PlayerListener implements Listener {
+
+    private final ExecutorService pool = Executors.newFixedThreadPool(64);
 
     @EventHandler
     public void onJoin(final PlayerJoinEvent e) {
@@ -49,7 +52,12 @@ public class PlayerListener implements Listener {
             if(distanceNow > Holograms.hologramTrackingDistance && previousDistance < Holograms.hologramTrackingDistance) {
                 hologram.despawnFor(p);
             } else if(distanceNow < Holograms.hologramTrackingDistance && previousDistance > Holograms.hologramTrackingDistance) {
-                Bukkit.getScheduler().runTaskAsynchronously(Holograms.getRegistrant(), () -> hologram.spawnFor(p));
+                final Future<?> submit = pool.submit(() -> hologram.spawnFor(p));
+                try {
+                    submit.get(1, TimeUnit.SECONDS);
+                } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                    submit.cancel(true);
+                }
             }
         }
     }
