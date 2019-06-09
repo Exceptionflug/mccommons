@@ -1,8 +1,13 @@
 package de.exceptionflug.mccommons.inventories.spigot.utils;
 
+import com.flowpowered.nbt.CompoundTag;
+import com.flowpowered.nbt.StringTag;
 import com.google.common.base.Preconditions;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import de.exceptionflug.mccommons.core.Providers;
+import de.exceptionflug.mccommons.core.providers.TextureProvider;
+import de.exceptionflug.mccommons.inventories.spigot.item.SpigotItemStackWrapper;
 import net.minecraft.server.v1_8_R3.NBTBase;
 import net.minecraft.server.v1_8_R3.NBTTagByte;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
@@ -135,10 +140,17 @@ public class ItemUtils {
     public static ItemStack setSkullAndName(ItemStack is, String name) {
         is.setType(Material.SKULL_ITEM);
         is.setDurability((short) 3);
-        SkullMeta sm = (SkullMeta) is.getItemMeta();
-        sm.setOwner(name);
-        is.setItemMeta(sm);
+        setSkullOwner(is, name);
         return is;
+    }
+
+    public static void setSkullOwner(final ItemStack stack, final String skullOwner) {
+        if(!Providers.has(TextureProvider.class)) {
+            final SkullMeta itemMeta = (SkullMeta) stack.getItemMeta();
+            itemMeta.setOwner(skullOwner);
+            stack.setItemMeta(itemMeta);
+        } else
+            setSkullTexture(stack, Providers.get(TextureProvider.class).getSkin(skullOwner));
     }
     
     public static int count(Inventory inv, String hidden) {
