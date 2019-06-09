@@ -25,7 +25,6 @@ public class SpigotConfigSpigotYamlConfigWrapper implements SpigotConfig {
     private boolean damaged;
 
     private ConfigData configData;
-    private final Consumer<ConfigData> updateConsumer;
     private final Supplier<ConfigData> reloadSupplier;
 
     public SpigotConfigSpigotYamlConfigWrapper(final File file) {
@@ -36,7 +35,6 @@ public class SpigotConfigSpigotYamlConfigWrapper implements SpigotConfig {
             Bukkit.getLogger().log(Level.SEVERE,"[MCCommons] Unable to read "+file.getAbsolutePath()+":", e);
             damaged = true;
         }
-        updateConsumer = null;
         reloadSupplier = null;
     }
 
@@ -48,7 +46,6 @@ public class SpigotConfigSpigotYamlConfigWrapper implements SpigotConfig {
             damaged = true;
         }
         this.file = null;
-        this.updateConsumer = updateConsumer;
         this.configData = data;
         this.reloadSupplier = reloadSupplier;
     }
@@ -84,8 +81,6 @@ public class SpigotConfigSpigotYamlConfigWrapper implements SpigotConfig {
         final SoundData sound = getSoundData(path);
         return new PositionedSound(getLocation(path+".location"), sound.getSound(), sound.getVolume(), sound.getPitch());
     }
-
-
 
     @Override
     public <T> T getHandle() {
