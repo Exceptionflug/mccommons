@@ -85,13 +85,13 @@ public final class Message {
         }
     }
 
-    public static void broadcast(final Collection<Player> players, final ConfigWrapper config, final boolean prefix, final String messageKey, final String defaultMessage, final String... replacements) {
+    public static void broadcast(final Collection<? extends Player> players, final ConfigWrapper config, final boolean prefix, final String messageKey, final String defaultMessage, final String... replacements) {
         for(final Player player : players) {
             send(player, config, prefix, messageKey, defaultMessage, replacements);
         }
     }
 
-    public static void broadcast(final Collection<Player> players, final ConfigWrapper config, final String messageKey, final String defaultMessage, final String... replacements) {
+    public static void broadcast(final Collection<? extends Player> players, final ConfigWrapper config, final String messageKey, final String defaultMessage, final String... replacements) {
         for(final Player player : players) {
             send(player, config, messageKey, defaultMessage, replacements);
         }
