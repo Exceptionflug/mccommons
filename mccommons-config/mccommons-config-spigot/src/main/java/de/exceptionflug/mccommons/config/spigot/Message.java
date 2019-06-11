@@ -48,13 +48,13 @@ public final class Message {
                         if(player != null)
                             player.spigot().sendMessage(c.toArray(new BaseComponent[0]));
                         else
-                            sender.sendMessage(c.stream().map(BaseComponent::toLegacyText).collect(Collectors.joining()));
+                            sender.sendMessage(c.stream().map(it -> it.toLegacyText()).collect(Collectors.joining()));
                         continue;
                     }
                     if(player != null)
                         player.spigot().sendMessage(textComponent);
                     else
-                        sender.sendMessage(Arrays.stream(textComponent).map(BaseComponent::toLegacyText).collect(Collectors.joining()));
+                        sender.sendMessage(Arrays.stream(textComponent).map(it -> it.toLegacyText()).collect(Collectors.joining()));
                 } else if(messageMode == MessageMode.TITLE) {
                     throw new UnsupportedOperationException("Titles are currently not supported on spigot.");
 //                    final Title title = ProxyServer.getInstance().createTitle();
