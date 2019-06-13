@@ -16,7 +16,7 @@ public class MultiPageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryW
 
     final ConfigWrapper config;
     private final List<ChildInventoryWrapper<P, I, INV>> childs = new LinkedList<>();
-    private final List<Integer> nextPageItemSlots, previousPageItemSlots;
+    private final List<Integer> nextPageItemSlots, previousPageItemSlots, placeholderSlots;
     private final ConfigItemStack nextPageItem, previousPageItem;
     private int currentPage = 1;
     int itemsPerPage;
@@ -82,6 +82,7 @@ public class MultiPageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryW
         previousPageItemSlots = config.getOrSetDefault("Inventory.previousPageSlots", Collections.singletonList(45));
         nextPageItem = config.getItemStack("Inventory.nextPageItem", locale, replacer);
         previousPageItem = config.getItemStack("Inventory.previousPageItem", locale, replacer);
+        placeholderSlots = config.getOrSetDefault("Placeholder.slots", new ArrayList<>());
 
         registerActionHandlers();
         if(update)
@@ -96,7 +97,6 @@ public class MultiPageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryW
         }
         if(placeHolder == null)
             placeHolder = Converters.convert(config.getItemStack("Placeholder.itemStack", replacer), ItemStackWrapper.class);
-        final List<Integer> placeholderSlots = config.getOrSetDefault("Placeholder.slots", new ArrayList<>());
         for(final int slot : placeholderSlots) {
             set(slot, (I) placeHolder.getHandle(), "noAction");
         }
@@ -140,7 +140,7 @@ public class MultiPageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryW
     public int getNextFreeSlot() {
         int itemCount = 0;
         for (int i = 0; i < getSize(); i++) {
-            if(nextPageItemSlots.contains(i) || previousPageItemSlots.contains(i))
+            if(nextPageItemSlots.contains(i) || previousPageItemSlots.contains(i) || placeholderSlots.contains(i))
                 continue;
             final InventoryItem item = get(i);
             if(item == null) {
