@@ -3,6 +3,7 @@ package de.exceptionflug.mccommons.inventories.spigot.listener;
 import de.exceptionflug.mccommons.core.Converters;
 import de.exceptionflug.mccommons.core.Providers;
 import de.exceptionflug.mccommons.inventories.api.*;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -21,8 +22,9 @@ public class InventoryListener implements Listener {
             return;
         }
         final InventoryWrapper wrapper = Providers.get(InventoryBuilder.class).getWrapperByHandle(inventory);
-        if (wrapper == null)
+        if (wrapper == null) {
             return;
+        }
         final InventoryItem item = wrapper.get(e.getSlot());
         if (item == null) {
             if(wrapper.getCustomActionHandler() != null) {
@@ -37,8 +39,9 @@ public class InventoryListener implements Listener {
             return;
         }
         final ActionHandler actionHandler = wrapper.getActionHandler(item.getActionHandler());
-        if (actionHandler == null)
+        if (actionHandler == null) {
             return;
+        }
         try {
             final CallResult callResult = actionHandler.handle(new Click(Converters.convert(e.getClick(), ClickType.class), wrapper, item, e.getSlot()));
             e.setCancelled(callResult == null || callResult == CallResult.DENY_GRABBING);

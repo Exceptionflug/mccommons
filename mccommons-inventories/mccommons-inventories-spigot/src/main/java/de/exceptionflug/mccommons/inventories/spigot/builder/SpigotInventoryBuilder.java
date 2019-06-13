@@ -73,8 +73,10 @@ public class SpigotInventoryBuilder implements InventoryBuilder {
             }
         }
         buildMap.put(((Player)wrapper.getPlayer()).getUniqueId(), new AbstractMap.SimpleEntry<>(wrapper, System.currentTimeMillis()));
-        if(register)
+        if(register) {
+            Bukkit.broadcastMessage("REGISTER "+inventory.getTitle());
             wrappers.add(wrapper);
+        }
         if(reopen)
             ((Player) wrapper.getPlayer()).openInventory(inventory);
         return prebuild;
@@ -108,6 +110,7 @@ public class SpigotInventoryBuilder implements InventoryBuilder {
 
     @Override
     public void uncache(final InventoryWrapper wrapper) {
+        wrapper.markAsUnregistered();
         wrappers.remove(wrapper);
     }
 
