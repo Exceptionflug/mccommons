@@ -235,4 +235,5 @@ public interface InventoryWrapper<P, I, INV> {
         set(slot, (I) Converters.convert(stack, ItemStackWrapper.class).getHandle(), actionHandler);
     }
 
+    void markAsUnregistered();
 }

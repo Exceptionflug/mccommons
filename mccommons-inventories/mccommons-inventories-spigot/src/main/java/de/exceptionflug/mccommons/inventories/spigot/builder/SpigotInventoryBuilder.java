@@ -91,7 +91,13 @@ public class SpigotInventoryBuilder implements InventoryBuilder {
 
     @Override
     public void destroyWrappersBy(final UUID uniqueId) {
-        wrappers.removeIf(wrapper -> ((Player)wrapper.getPlayer()).getUniqueId().equals(uniqueId));
+        wrappers.removeIf(wrapper -> {
+            if(((Player)wrapper.getPlayer()).getUniqueId().equals(uniqueId)) {
+                wrapper.markAsUnregistered();
+                return true;
+            }
+            return false;
+        });
         buildMap.remove(uniqueId);
     }
 

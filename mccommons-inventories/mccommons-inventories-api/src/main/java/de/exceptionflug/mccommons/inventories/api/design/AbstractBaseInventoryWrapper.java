@@ -140,6 +140,11 @@ public abstract class AbstractBaseInventoryWrapper<P, I, INV> implements Invento
     }
 
     @Override
+    public void markAsUnregistered() {
+        inventory = null;
+    }
+
+    @Override
     public ActionHandler getCustomActionHandler() {
         return customActionHandler;
     }
