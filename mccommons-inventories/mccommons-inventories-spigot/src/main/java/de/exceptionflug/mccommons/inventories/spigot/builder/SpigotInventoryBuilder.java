@@ -74,7 +74,6 @@ public class SpigotInventoryBuilder implements InventoryBuilder {
         }
         buildMap.put(((Player)wrapper.getPlayer()).getUniqueId(), new AbstractMap.SimpleEntry<>(wrapper, System.currentTimeMillis()));
         if(register) {
-            Bukkit.broadcastMessage("REGISTER "+inventory.getTitle());
             wrappers.add(wrapper);
         }
         if(reopen)
