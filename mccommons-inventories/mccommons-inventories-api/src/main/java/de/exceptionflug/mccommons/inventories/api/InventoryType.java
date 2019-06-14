@@ -2,6 +2,9 @@ package de.exceptionflug.mccommons.inventories.api;
 
 import static de.exceptionflug.protocolize.api.util.ProtocolVersions.*;
 
+/**
+ * MCC replica of the protocolize InventoryType.
+ */
 public enum InventoryType {
 
     GENERIC_9X1(new InventoryIDMapping(MINECRAFT_1_8, MINECRAFT_1_13_2, "minecraft:container", 9), new InventoryIDMapping(MINECRAFT_1_14, MINECRAFT_1_14_1, 0, 9)),

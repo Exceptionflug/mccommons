@@ -1,5 +1,8 @@
 package de.exceptionflug.mccommons.inventories.api;
 
+/**
+ * MCC replica of protocolize ClickType.
+ */
 public enum ClickType {
 
     LEFT_CLICK(0, 0),

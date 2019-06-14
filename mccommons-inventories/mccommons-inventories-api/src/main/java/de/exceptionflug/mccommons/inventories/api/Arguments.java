@@ -3,6 +3,9 @@ package de.exceptionflug.mccommons.inventories.api;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This is a wrapper object that wraps a {@link List}<{@link Object}>. This is used to easily access given arguments for a {@link ActionHandler} call.
+ */
 public class Arguments {
 
     private final List<Object> arguments;

@@ -235,5 +235,18 @@ public interface InventoryWrapper<P, I, INV> {
         set(slot, (I) Converters.convert(stack, ItemStackWrapper.class).getHandle(), actionHandler);
     }
 
+    /**
+     * Marks an inventory as unregistered after it was closed.
+     */
     void markAsUnregistered();
+
+    /**
+     * Converts an object into an ItemStackWrapper.
+     * @param object the object to convert
+     * @return the wrapper object
+     */
+    default ItemStackWrapper wrapItemStack(final Object object) {
+        return Converters.convert(object, ItemStackWrapper.class);
+    }
+
 }
