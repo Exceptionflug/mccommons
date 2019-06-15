@@ -10,6 +10,9 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
+/**
+ * Basic implementation of an {@link InventoryWrapper} which holds {@link InventoryItem}s bound to a slot. This class also holds the {@link ActionHandler}s registered by the implementation. This class is the basis of all other sub-implementations of {@link InventoryWrapper}.
+ */
 public abstract class AbstractBaseInventoryWrapper<P, I, INV> implements InventoryWrapper<P, I, INV> {
 
     private final static AtomicInteger ID_COUNTER = new AtomicInteger();

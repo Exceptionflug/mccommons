@@ -13,6 +13,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * The async fetch inventory is a multi page inventory which loads asynchronously background data to show in the inventory. This allows also for paginated data fetching.
+ * @param <T> the type of the data to load in background
+ */
 public abstract class AbstractAsyncFetchMultiPageInventoryWrapper<P, I, INV, T> extends MultiPageInventoryWrapper<P, I, INV> {
 
     private final boolean showLoadingScreen;

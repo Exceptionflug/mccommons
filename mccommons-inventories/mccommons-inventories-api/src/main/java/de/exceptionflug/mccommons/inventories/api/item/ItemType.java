@@ -2,6 +2,9 @@ package de.exceptionflug.mccommons.inventories.api.item;
 
 import static de.exceptionflug.protocolize.api.util.ProtocolVersions.*;
 
+/**
+ * MCC replica of protocolize (pre v1.4) ItemType
+ */
 public enum ItemType {
 
     POLISHED_DIORITE(new ItemIDMapping(MINECRAFT_1_13, MINECRAFT_1_14, 5), new ItemIDMapping(MINECRAFT_1_8, MINECRAFT_1_12_2, 1, 4)),

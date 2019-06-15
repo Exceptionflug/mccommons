@@ -5,15 +5,20 @@ import de.exceptionflug.mccommons.core.Converters;
 import de.exceptionflug.mccommons.core.Providers;
 import de.exceptionflug.mccommons.core.providers.LocaleProvider;
 import de.exceptionflug.mccommons.core.utils.FormatUtils;
-import de.exceptionflug.mccommons.inventories.api.Arguments;
-import de.exceptionflug.mccommons.inventories.api.CallResult;
-import de.exceptionflug.mccommons.inventories.api.InventoryType;
+import de.exceptionflug.mccommons.inventories.api.*;
 import de.exceptionflug.mccommons.inventories.api.item.ItemStackWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * A simple one page inventory. This implementation is the simplest of an {@link InventoryWrapper}. This inventory can hold {@link InventoryItem}s
+ * which can call {@link ActionHandler}s. You can configure items by configuration file and set there action handler.
+ * @param <P>
+ * @param <I>
+ * @param <INV>
+ */
 public class OnePageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryWrapper<P, I, INV> {
 
     private final ConfigWrapper config;

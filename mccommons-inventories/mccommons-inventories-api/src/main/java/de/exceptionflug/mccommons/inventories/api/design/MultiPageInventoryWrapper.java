@@ -12,6 +12,10 @@ import de.exceptionflug.mccommons.inventories.api.item.ItemStackWrapper;
 import java.util.*;
 import java.util.function.Supplier;
 
+/**
+ * Multi page inventories are inventories which can automatically create new pages accessable through automatically positioned next and previous page items.
+ * A new page will be created when the add() method is invoked and there is no space left for a new item.
+ */
 public class MultiPageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryWrapper<P, I, INV> {
 
     final ConfigWrapper config;

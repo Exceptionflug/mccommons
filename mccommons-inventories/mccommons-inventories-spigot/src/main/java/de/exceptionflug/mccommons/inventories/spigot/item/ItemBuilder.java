@@ -1,6 +1,7 @@
 package de.exceptionflug.mccommons.inventories.spigot.item;
 
 import com.google.common.collect.Sets;
+import de.exceptionflug.mccommons.core.Converters;
 import de.exceptionflug.mccommons.core.utils.FormatUtils;
 import de.exceptionflug.mccommons.inventories.spigot.utils.ItemUtils;
 import org.bukkit.Bukkit;
@@ -34,6 +35,10 @@ public class ItemBuilder {
     private String title = null;
     private final Set<ItemFlag> itemFlags = Sets.newHashSet();
     private boolean glow;
+
+    public ItemBuilder(Object itemObjectConvertible) {
+        this(Converters.convert(itemObjectConvertible, ItemStack.class));
+    }
     
     public ItemBuilder(ItemStack item) {
         this(item.getType(), item.getDurability());

@@ -32,6 +32,8 @@ import de.exceptionflug.mccommons.plugin.spigot.converter.ItemStackConverter;
 import de.exceptionflug.mccommons.plugin.spigot.converter.PlayerConverter;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
@@ -85,6 +87,7 @@ public class SpigotMCCommonsPlugin extends JavaPlugin {
         Converters.register(SpigotItemStackWrapper.class, ItemStack.class, src -> ((ItemStackWrapper)src).getHandle());
         Converters.register(ClickType.class, de.exceptionflug.mccommons.inventories.api.ClickType.class, new SpigotClickTypeConverter());
         Converters.register(InventoryType.class, org.bukkit.event.inventory.InventoryType.class, new SpigotInventoryTypeConverter());
+        Converters.register(CraftItemStack.class, ItemStack.class, new CraftItemStackConverter());
 
         Bukkit.getPluginManager().registerEvents(new InventoryListener(), this);
         getCommand("mcrl").setExecutor(new ConfigReloadCommand());

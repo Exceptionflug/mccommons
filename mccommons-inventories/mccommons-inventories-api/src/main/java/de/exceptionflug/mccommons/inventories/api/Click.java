@@ -2,6 +2,9 @@ package de.exceptionflug.mccommons.inventories.api;
 
 import de.exceptionflug.mccommons.inventories.api.item.ItemStackWrapper;
 
+/**
+ * A click contains information about a click performed on an {@link InventoryItem}.
+ */
 public class Click {
 
     private final ClickType clickType;
