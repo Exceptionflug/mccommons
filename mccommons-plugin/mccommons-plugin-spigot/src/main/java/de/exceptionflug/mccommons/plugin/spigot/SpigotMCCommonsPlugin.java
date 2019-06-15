@@ -13,6 +13,8 @@ import de.exceptionflug.mccommons.core.Converters;
 import de.exceptionflug.mccommons.core.Providers;
 import de.exceptionflug.mccommons.core.providers.AsyncProvider;
 import de.exceptionflug.mccommons.core.providers.WorkingDirectoryProvider;
+import de.exceptionflug.mccommons.holograms.Hologram;
+import de.exceptionflug.mccommons.holograms.Holograms;
 import de.exceptionflug.mccommons.inventories.api.InventoryBuilder;
 import de.exceptionflug.mccommons.inventories.api.InventoryType;
 import de.exceptionflug.mccommons.inventories.api.PlayerWrapper;
@@ -30,7 +32,6 @@ import de.exceptionflug.mccommons.plugin.spigot.converter.ItemStackConverter;
 import de.exceptionflug.mccommons.plugin.spigot.converter.PlayerConverter;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
@@ -88,5 +89,7 @@ public class SpigotMCCommonsPlugin extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new InventoryListener(), this);
         getCommand("mcrl").setExecutor(new ConfigReloadCommand());
         getCommand("hrl").setExecutor(new HologramReloadCommand());
+
+        Holograms.init(this);
     }
 }

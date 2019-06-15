@@ -17,8 +17,6 @@ import java.util.concurrent.*;
 
 public class PlayerListener implements Listener {
 
-    private final ExecutorService pool = Executors.newFixedThreadPool(64);
-
     @EventHandler
     public void onJoin(final PlayerJoinEvent e) {
         final Player p = e.getPlayer();
@@ -52,12 +50,7 @@ public class PlayerListener implements Listener {
             if(distanceNow > Holograms.hologramTrackingDistance && previousDistance < Holograms.hologramTrackingDistance) {
                 hologram.despawnFor(p);
             } else if(distanceNow < Holograms.hologramTrackingDistance && previousDistance > Holograms.hologramTrackingDistance) {
-                final Future<?> submit = pool.submit(() -> hologram.spawnFor(p));
-                try {
-                    submit.get(1, TimeUnit.SECONDS);
-                } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                    submit.cancel(true);
-                }
+                Bukkit.getScheduler().runTaskAsynchronously(Holograms.getRegistrant(), () -> hologram.spawnFor(p));
             }
         }
     }
