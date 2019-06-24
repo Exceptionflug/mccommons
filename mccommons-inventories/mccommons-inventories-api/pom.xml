@@ -28,7 +28,7 @@
         <dependency>
             <groupId>de.exceptionflug</groupId>
             <artifactId>protocolize-api</artifactId>
-            <version>1.4.3-SNAPSHOT</version>
+            <version>1.4.5-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
