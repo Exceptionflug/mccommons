@@ -9,9 +9,9 @@ import de.exceptionflug.mccommons.inventories.api.item.ItemStackWrapper;
 import de.exceptionflug.mccommons.inventories.api.item.ItemType;
 import de.exceptionflug.mccommons.inventories.spigot.utils.ReflectionUtil;
 import de.exceptionflug.mccommons.inventories.spigot.utils.ServerVersionProvider;
-import net.minecraft.server.v1_8_R3.NBTTagCompound;
+import net.minecraft.server.v1_12_R1.NBTTagCompound;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -43,7 +43,7 @@ public class SpigotItemStackWrapper implements ItemStackWrapper {
     @Override
     public CompoundTag getNBT() {
         try {
-            return Converters.convert(((net.minecraft.server.v1_8_R3.ItemStack)ReflectionUtil.getFieldValue(CraftItemStack.class, handle, "handle")).getTag(), CompoundTag.class);
+            return Converters.convert(((net.minecraft.server.v1_12_R1.ItemStack)ReflectionUtil.getFieldValue(CraftItemStack.class, handle, "handle")).getTag(), CompoundTag.class);
         } catch (final IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace(); // Getting nbt from nms item is pain in the ass
         }
@@ -88,7 +88,7 @@ public class SpigotItemStackWrapper implements ItemStackWrapper {
     @Override
     public void setNBT(final CompoundTag tag) {
         try {
-            ((net.minecraft.server.v1_8_R3.ItemStack)ReflectionUtil.getFieldValue(CraftItemStack.class, handle, "handle")).setTag(Converters.convert(tag, NBTTagCompound.class));
+            ((net.minecraft.server.v1_12_R1.ItemStack)ReflectionUtil.getFieldValue(CraftItemStack.class, handle, "handle")).setTag(Converters.convert(tag, NBTTagCompound.class));
         } catch (final IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace(); // Setting nbt to nms item is also pain in the ass
         }

@@ -6,7 +6,7 @@
 
     <groupId>de.exceptionflug</groupId>
     <artifactId>mccommons</artifactId>
-    <version>2.0-SNAPSHOT</version>
+    <version>2.0_1.12-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -25,16 +25,16 @@
 
     <repositories>
         <repository>
+            <id>exceptionflug</id>
+            <url>http://mvn.exceptionflug.de/repository/exceptionflug-public/</url>
+        </repository>
+        <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
             <id>bungeecord-repo</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </repository>
-        <repository>
-            <id>exceptionflug</id>
-            <url>http://mvn.exceptionflug.de/repository/exceptionflug-public/</url>
         </repository>
     </repositories>
 

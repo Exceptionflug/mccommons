@@ -3,8 +3,8 @@ package de.exceptionflug.mccommons.inventories.spigot.converters;
 import com.flowpowered.nbt.CompoundTag;
 import com.flowpowered.nbt.stream.NBTInputStream;
 import de.exceptionflug.mccommons.core.Converter;
-import net.minecraft.server.v1_8_R3.NBTCompressedStreamTools;
-import net.minecraft.server.v1_8_R3.NBTTagCompound;
+import net.minecraft.server.v1_12_R1.NBTCompressedStreamTools;
+import net.minecraft.server.v1_12_R1.NBTTagCompound;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

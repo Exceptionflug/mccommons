@@ -7,12 +7,12 @@
     <parent>
         <groupId>de.exceptionflug</groupId>
         <artifactId>mccommons-plugin</artifactId>
-        <version>2.0-SNAPSHOT</version>
+        <version>2.0_1.12-SNAPSHOT</version>
     </parent>
 
     <groupId>de.exceptionflug</groupId>
     <artifactId>mccommons-plugin-spigot</artifactId>
-    <version>2.0-SNAPSHOT</version>
+    <version>2.0_1.12-SNAPSHOT</version>
 
     <build>
         <finalName>${project.name}-${project.version}</finalName>
@@ -67,41 +67,40 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.8.8-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
+            <version>1.12-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>de.exceptionflug</groupId>
             <artifactId>mccommons-config-spigot</artifactId>
-            <version>2.0-SNAPSHOT</version>
+            <version>2.0_1.12-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>de.exceptionflug</groupId>
             <artifactId>mccommons-inventories-spigot</artifactId>
-            <version>2.0-SNAPSHOT</version>
+            <version>2.0_1.12-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>de.exceptionflug</groupId>
             <artifactId>mccommons-config-remote-client</artifactId>
-            <version>2.0-SNAPSHOT</version>
+            <version>2.0_1.12-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>de.exceptionflug</groupId>
             <artifactId>mccommons-config-remote-model</artifactId>
-            <version>2.0-SNAPSHOT</version>
+            <version>2.0_1.12-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>de.exceptionflug</groupId>
             <artifactId>mccommons-holograms</artifactId>
-            <version>2.0-SNAPSHOT</version>
+            <version>2.0_1.12-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>de.exceptionflug</groupId>
             <artifactId>mccommons-scoreboards</artifactId>
-            <version>2.0-SNAPSHOT</version>
+            <version>2.0_1.12-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

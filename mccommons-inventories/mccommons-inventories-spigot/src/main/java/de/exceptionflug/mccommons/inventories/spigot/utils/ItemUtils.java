@@ -1,21 +1,18 @@
 package de.exceptionflug.mccommons.inventories.spigot.utils;
 
-import com.flowpowered.nbt.CompoundTag;
-import com.flowpowered.nbt.StringTag;
 import com.google.common.base.Preconditions;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import de.exceptionflug.mccommons.core.Providers;
 import de.exceptionflug.mccommons.core.providers.TextureProvider;
-import de.exceptionflug.mccommons.inventories.spigot.item.SpigotItemStackWrapper;
-import net.minecraft.server.v1_8_R3.NBTBase;
-import net.minecraft.server.v1_8_R3.NBTTagByte;
-import net.minecraft.server.v1_8_R3.NBTTagCompound;
-import net.minecraft.server.v1_8_R3.NBTTagList;
+import net.minecraft.server.v1_12_R1.NBTBase;
+import net.minecraft.server.v1_12_R1.NBTTagByte;
+import net.minecraft.server.v1_12_R1.NBTTagCompound;
+import net.minecraft.server.v1_12_R1.NBTTagList;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -268,7 +265,7 @@ public class ItemUtils {
     }
     
     public static ItemStack setNBTTags(ItemStack item, NBTTagPair... values) {
-        net.minecraft.server.v1_8_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
+        net.minecraft.server.v1_12_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
         NBTTagCompound tag = null;
         if (!nmsStack.hasTag()) {
             tag = new NBTTagCompound();
@@ -292,7 +289,7 @@ public class ItemUtils {
     }
     
     public static ItemStack removeGlow(ItemStack is) {
-        net.minecraft.server.v1_8_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(is);
+        net.minecraft.server.v1_12_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(is);
         NBTTagCompound tag = null;
         if (!nmsStack.hasTag()) {
             tag = new NBTTagCompound();
