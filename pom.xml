@@ -29,6 +29,10 @@
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
+            <id>bungeecord-repo</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+        <repository>
             <id>exceptionflug</id>
             <url>http://mvn.exceptionflug.de/repository/exceptionflug-public/</url>
         </repository>
