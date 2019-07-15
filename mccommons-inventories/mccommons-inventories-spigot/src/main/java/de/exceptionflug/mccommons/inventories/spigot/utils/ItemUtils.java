@@ -1,21 +1,13 @@
 package de.exceptionflug.mccommons.inventories.spigot.utils;
 
-import com.flowpowered.nbt.CompoundTag;
-import com.flowpowered.nbt.StringTag;
 import com.google.common.base.Preconditions;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import de.exceptionflug.mccommons.core.Providers;
 import de.exceptionflug.mccommons.core.providers.TextureProvider;
-import de.exceptionflug.mccommons.inventories.spigot.item.SpigotItemStackWrapper;
-import net.minecraft.server.v1_8_R3.NBTBase;
-import net.minecraft.server.v1_8_R3.NBTTagByte;
-import net.minecraft.server.v1_8_R3.NBTTagCompound;
-import net.minecraft.server.v1_8_R3.NBTTagList;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -23,6 +15,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
@@ -35,12 +29,30 @@ public class ItemUtils {
 
 
     private static Field profileField;
+    private static Method asNMSCopyMethod;
+    private static Method asCraftMirrorMethod;
+    private static Class<?> nmsTagCompoundClass;
+    private static Method nmsItemStackHasTagMethod;
+    private static Method nmsItemStackGetTagMethod;
+    private static Method nmsItemStackSetTagMethod;
+    private static Method nbtCompoundSetMethod;
+    private static Method nbtCompoundRemoveMethod;
 
     static {
         try {
             final Class craftMetaSkull = Class.forName("org.bukkit.craftbukkit."+ Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3]+".inventory.CraftMetaSkull");
             profileField = craftMetaSkull.getDeclaredField("profile");
             profileField.setAccessible(true);
+            Class<?> obcCraftItemStackClass = ReflectionUtil.getClass("{obc}.inventory.CraftItemStack");
+            asNMSCopyMethod = obcCraftItemStackClass.getMethod("asNMSCopy", ItemStack.class);
+            Class<?> nmsItemStackClass = ReflectionUtil.getClass("{nms}.ItemStack");
+            asCraftMirrorMethod = obcCraftItemStackClass.getMethod("asCraftMirror", nmsItemStackClass);
+            nmsTagCompoundClass = ReflectionUtil.getClass("{nms}.NBTTagCompound");
+            nmsItemStackHasTagMethod = nmsItemStackClass.getMethod("hasTag");
+            nmsItemStackGetTagMethod = nmsItemStackClass.getMethod("getTag");
+            nmsItemStackSetTagMethod = nmsItemStackClass.getMethod("setTag", nmsTagCompoundClass);
+            nbtCompoundSetMethod = nmsTagCompoundClass.getMethod("set", String.class, ReflectionUtil.getClass("{nms}.NBTBase"));
+            nbtCompoundRemoveMethod = nmsTagCompoundClass.getMethod("remove", String.class);
         } catch (final ReflectiveOperationException e) {
             e.printStackTrace();
         }
@@ -268,40 +280,66 @@ public class ItemUtils {
     }
     
     public static ItemStack setNBTTags(ItemStack item, NBTTagPair... values) {
-        net.minecraft.server.v1_8_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(item);
-        NBTTagCompound tag = null;
-        if (!nmsStack.hasTag()) {
-            tag = new NBTTagCompound();
-            nmsStack.setTag(tag);
+        try {
+            Object nmsStack = asNMSCopyMethod.invoke(null, item);
+            Object tag = null;
+            if (!((boolean)nmsItemStackHasTagMethod.invoke(nmsStack))) {
+                tag = nmsTagCompoundClass.newInstance();
+                nmsItemStackSetTagMethod.invoke(nmsStack, tag);
+            }
+            if (tag == null) {
+                tag = nmsItemStackGetTagMethod.invoke(nmsStack);
+            }
+            Object finalTag = tag;
+            Arrays.stream(values).forEach(nbtTagPair -> {
+                try {
+                    nbtCompoundSetMethod.invoke(finalTag, nbtTagPair.getKey(), nbtTagPair.getValue());
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            });
+            nmsItemStackSetTagMethod.invoke(nmsStack, tag);
+            return (ItemStack) asCraftMirrorMethod.invoke(null, nmsStack);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-        if (tag == null) {
-            tag = nmsStack.getTag();
-        }
-        NBTTagCompound finalTag = tag;
-        Arrays.stream(values).forEach(nbtTagPair -> finalTag.set(nbtTagPair.getKey(), nbtTagPair.getValue()));
-        nmsStack.setTag(tag);
-        return CraftItemStack.asCraftMirror(nmsStack);
     }
     
     public static ItemStack addGlow(ItemStack item) {
-        return setNBTTags(item, new NBTTagPair("ench", new NBTTagList()));
+        try {
+            return setNBTTags(item, new NBTTagPair("ench", ReflectionUtil.getClass("{nms}.NBTTagList").newInstance()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
     
     public static ItemStack unbreakable(ItemStack is) {
-        return setNBTTags(is, new NBTTagPair("Unbreakable", new NBTTagByte((byte) 1)));
+        try {
+            return setNBTTags(is, new NBTTagPair("Unbreakable", ReflectionUtil.getClass("{nms}.NBTTagByte").getConstructor(byte.class).newInstance((byte)1)));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
     
     public static ItemStack removeGlow(ItemStack is) {
-        net.minecraft.server.v1_8_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(is);
-        NBTTagCompound tag = null;
-        if (!nmsStack.hasTag()) {
-            tag = new NBTTagCompound();
-            nmsStack.setTag(tag);
+        try {
+            Object nmsStack = asNMSCopyMethod.invoke(null, is);
+            Object tag = null;
+            if (!((boolean)nmsItemStackHasTagMethod.invoke(nmsStack))) {
+                tag = nmsTagCompoundClass.newInstance();
+                nmsItemStackSetTagMethod.invoke(nmsStack, tag);
+            }
+            if (tag == null) tag = nmsItemStackGetTagMethod.invoke(nmsStack);
+            nbtCompoundRemoveMethod.invoke(tag, "Unbreakable");
+            nmsItemStackSetTagMethod.invoke(nmsStack, tag);
+            return (ItemStack) asCraftMirrorMethod.invoke(null, nmsStack);
+        } catch (final Exception e) {
+            e.printStackTrace();
+            return null;
         }
-        if (tag == null) tag = nmsStack.getTag();
-        tag.remove("Unbreakable");
-        nmsStack.setTag(tag);
-        return CraftItemStack.asCraftMirror(nmsStack);
     }
     
     public static ItemStack first(Inventory inv, Predicate<ItemStack> match) {
@@ -343,9 +381,9 @@ public class ItemUtils {
     public static class NBTTagPair {
         
         private final String key;
-        private final NBTBase value;
+        private final Object value;
 
-        public NBTTagPair(final String key, final NBTBase value) {
+        public NBTTagPair(final String key, final Object value) {
             this.key = key;
             this.value = value;
         }
@@ -354,7 +392,7 @@ public class ItemUtils {
             return key;
         }
 
-        public NBTBase getValue() {
+        public Object getValue() {
             return value;
         }
     }

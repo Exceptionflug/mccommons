@@ -1,20 +1,30 @@
 package de.exceptionflug.mccommons.inventories.spigot.converters;
 
 import com.flowpowered.nbt.CompoundTag;
-import com.flowpowered.nbt.stream.NBTInputStream;
 import com.flowpowered.nbt.stream.NBTOutputStream;
 import de.exceptionflug.mccommons.core.Converter;
-import net.minecraft.server.v1_8_R3.NBTCompressedStreamTools;
-import net.minecraft.server.v1_8_R3.NBTTagCompound;
+import de.exceptionflug.mccommons.inventories.spigot.utils.ReflectionUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Method;
 
-public class FlowNbtNmsNbtConverter implements Converter<CompoundTag, NBTTagCompound> {
+public class FlowNbtNmsNbtConverter implements Converter<CompoundTag, Object> {
+
+    private static Method nbtCompressedStreamToolAMethod;
+
+    static {
+        try {
+            nbtCompressedStreamToolAMethod = ReflectionUtil.getClass("{nms}.NBTCompressedStreamTools").getMethod("a", InputStream.class);
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
-    public NBTTagCompound convert(final CompoundTag src) {
+    public Object convert(final CompoundTag src) {
         byte[] data = null;
         try(final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             new NBTOutputStream(byteArrayOutputStream).writeTag(src);
@@ -23,8 +33,8 @@ public class FlowNbtNmsNbtConverter implements Converter<CompoundTag, NBTTagComp
             e.printStackTrace();
         }
         try(final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data)) {
-            return NBTCompressedStreamTools.a(byteArrayInputStream);
-        } catch (final IOException e) {
+            return nbtCompressedStreamToolAMethod.invoke(null, byteArrayInputStream);
+        } catch (final Exception e) {
             e.printStackTrace();
         }
         return null;

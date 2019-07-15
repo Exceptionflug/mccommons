@@ -9,17 +9,29 @@ import de.exceptionflug.mccommons.inventories.api.item.ItemStackWrapper;
 import de.exceptionflug.mccommons.inventories.api.item.ItemType;
 import de.exceptionflug.mccommons.inventories.spigot.utils.ReflectionUtil;
 import de.exceptionflug.mccommons.inventories.spigot.utils.ServerVersionProvider;
-import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 public class SpigotItemStackWrapper implements ItemStackWrapper {
 
     private final ItemStack handle;
+    private static Class<?> craftItemStackClass;
+    private static Class<?> nbtTagCompoundClass;
+    private static Class<?> itemStackNMSClass;
+
+    static {
+        try {
+            craftItemStackClass = ReflectionUtil.getClass("{obc}.inventory.CraftItemStack");
+            nbtTagCompoundClass = ReflectionUtil.getClass("{nms}.NBTTagCompound");
+            itemStackNMSClass = ReflectionUtil.getClass("{nms}.ItemStack");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public SpigotItemStackWrapper(final ItemStack handle) {
         this.handle = handle;
@@ -43,8 +55,9 @@ public class SpigotItemStackWrapper implements ItemStackWrapper {
     @Override
     public CompoundTag getNBT() {
         try {
-            return Converters.convert(((net.minecraft.server.v1_8_R3.ItemStack)ReflectionUtil.getFieldValue(CraftItemStack.class, handle, "handle")).getTag(), CompoundTag.class);
-        } catch (final IllegalAccessException | NoSuchFieldException e) {
+            Object handle = ReflectionUtil.getFieldValue(craftItemStackClass, this.handle, "handle");
+            return Converters.convert(itemStackNMSClass.getMethod("getTag").invoke(handle), CompoundTag.class);
+        } catch (final Exception e) {
             e.printStackTrace(); // Getting nbt from nms item is pain in the ass
         }
         return null;
@@ -88,8 +101,10 @@ public class SpigotItemStackWrapper implements ItemStackWrapper {
     @Override
     public void setNBT(final CompoundTag tag) {
         try {
-            ((net.minecraft.server.v1_8_R3.ItemStack)ReflectionUtil.getFieldValue(CraftItemStack.class, handle, "handle")).setTag(Converters.convert(tag, NBTTagCompound.class));
-        } catch (final IllegalAccessException | NoSuchFieldException e) {
+            Object handle = ReflectionUtil.getFieldValue(craftItemStackClass, this.handle, "handle");
+            Method setTag = itemStackNMSClass.getMethod("setTag", nbtTagCompoundClass);
+            setTag.invoke(handle, Converters.convert(tag, nbtTagCompoundClass));
+        } catch (final Exception e) {
             e.printStackTrace(); // Setting nbt to nms item is also pain in the ass
         }
     }
