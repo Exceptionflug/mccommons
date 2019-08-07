@@ -91,6 +91,7 @@ public class SpigotConfigSpigotYamlConfigWrapper implements SpigotConfig {
     @Override
     public void set(final String path, final Object obj) {
         if (obj instanceof Location) {
+            set(path + ".world", ((Location) obj).getWorld().getName());
             set(path + ".x", ((Location) obj).getX());
             set(path + ".y", ((Location) obj).getY());
             set(path + ".z", ((Location) obj).getZ());
