@@ -5,6 +5,7 @@ import de.exceptionflug.mccommons.core.Providers;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.WorldCreator;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -32,7 +33,7 @@ public class SpigotConfigSpigotYamlConfigWrapper implements SpigotConfig {
         try {
             fileConfiguration.load(file);
         } catch (final Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE,"[MCCommons] Unable to read "+file.getAbsolutePath()+":", e);
+            Bukkit.getLogger().log(Level.SEVERE, "[MCCommons] Unable to read " + file.getAbsolutePath() + ":", e);
             damaged = true;
         }
         reloadSupplier = null;
@@ -42,7 +43,7 @@ public class SpigotConfigSpigotYamlConfigWrapper implements SpigotConfig {
         try {
             fileConfiguration.load(new StringReader(data.getConfigData()));
         } catch (final Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE,"[MCCommons] Unable to read "+data.getRemotePath()+":", e);
+            Bukkit.getLogger().log(Level.SEVERE, "[MCCommons] Unable to read " + data.getRemotePath() + ":", e);
             damaged = true;
         }
         this.file = null;
@@ -52,26 +53,26 @@ public class SpigotConfigSpigotYamlConfigWrapper implements SpigotConfig {
 
     @Override
     public Location getLocation(final String path) {
-        final String worldName = getOrSetDefault(path+".world", "world");
-        final double x = getOrSetDefault(path+".x", 0D);
-        final double y = getOrSetDefault(path+".y", 60D);
-        final double z = getOrSetDefault(path+".z", 0D);
-        final double yaw = getOrSetDefault(path+".yaw", 0D);
-        final double pitch = getOrSetDefault(path+".pitch", 0D);
+        final String worldName = getOrSetDefault(path + ".world", "world");
+        final double x = getOrSetDefault(path + ".x", 0D);
+        final double y = getOrSetDefault(path + ".y", 60D);
+        final double z = getOrSetDefault(path + ".z", 0D);
+        final double yaw = getOrSetDefault(path + ".yaw", 0D);
+        final double pitch = getOrSetDefault(path + ".pitch", 0D);
         return new Location(Bukkit.getWorld(worldName), x, y, z, (float) yaw, (float) pitch);
     }
 
     @Override
     public SoundData getSoundData(final String path) {
-        final String soundName = getOrSetDefault(path+".sound", "CLICK");
-        final float volume = getOrSetDefault(path+".volume", 1F);
-        final float pitch = getOrSetDefault(path+".pitch", 1F);
+        final String soundName = getOrSetDefault(path + ".sound", "CLICK");
+        final float volume = getOrSetDefault(path + ".volume", 1F);
+        final float pitch = getOrSetDefault(path + ".pitch", 1F);
         Sound sound;
         try {
             sound = Sound.valueOf(soundName);
         } catch (final IllegalArgumentException e) {
             sound = Sound.CLICK;
-            Bukkit.getLogger().warning("[SpigotConfig] WARN: "+path+" has invalid sound "+soundName);
+            Bukkit.getLogger().warning("[SpigotConfig] WARN: " + path + " has invalid sound " + soundName);
         }
         return new SoundData(sound, volume, pitch);
     }
@@ -79,7 +80,7 @@ public class SpigotConfigSpigotYamlConfigWrapper implements SpigotConfig {
     @Override
     public PositionedSound getPositionedSound(final String path) {
         final SoundData sound = getSoundData(path);
-        return new PositionedSound(getLocation(path+".location"), sound.getSound(), sound.getVolume(), sound.getPitch());
+        return new PositionedSound(getLocation(path + ".location"), sound.getSound(), sound.getVolume(), sound.getPitch());
     }
 
     @Override
@@ -89,12 +90,12 @@ public class SpigotConfigSpigotYamlConfigWrapper implements SpigotConfig {
 
     @Override
     public void set(final String path, final Object obj) {
-        if(obj instanceof Location) {
-            set(path+".x", ((Location) obj).getX());
-            set(path+".y", ((Location) obj).getY());
-            set(path+".z", ((Location) obj).getZ());
-            set(path+".yaw", ((Location) obj).getYaw());
-            set(path+".pitch", ((Location) obj).getPitch());
+        if (obj instanceof Location) {
+            set(path + ".x", ((Location) obj).getX());
+            set(path + ".y", ((Location) obj).getY());
+            set(path + ".z", ((Location) obj).getZ());
+            set(path + ".yaw", ((Location) obj).getYaw());
+            set(path + ".pitch", ((Location) obj).getPitch());
             return;
         }
         fileConfiguration.set(path, obj);
@@ -103,11 +104,13 @@ public class SpigotConfigSpigotYamlConfigWrapper implements SpigotConfig {
 
     @Override
     public <T> T getOrSetDefault(String path, T def) {
+        if (def instanceof Location) {
+            return (T) new Location(Bukkit.createWorld(new WorldCreator(fileConfiguration.getString(path + ".world"))), fileConfiguration.getDouble(path + ".x"), fileConfiguration.getDouble(path + ".y"), fileConfiguration.getDouble(path + ".z"), (float) fileConfiguration.getDouble(path + ".yaw"), (float) fileConfiguration.getDouble(path + ".pitch"));
+        }
         final Object o = fileConfiguration.get(path);
-        if(o == null) {
-            if(def != null) {
-                fileConfiguration.set(path, def);
-                save();
+        if (o == null) {
+            if (def != null) {
+                set(path, def);
             }
             return def;
         }
@@ -117,7 +120,7 @@ public class SpigotConfigSpigotYamlConfigWrapper implements SpigotConfig {
     @Override
     public Set<String> getKeys(String path) {
         final ConfigurationSection configurationSection = fileConfiguration.getConfigurationSection(path);
-        if(configurationSection == null)
+        if (configurationSection == null)
             return Collections.emptySet();
         return configurationSection.getKeys(false);
     }
@@ -129,19 +132,19 @@ public class SpigotConfigSpigotYamlConfigWrapper implements SpigotConfig {
 
     @Override
     public void save() {
-        if(damaged) {
-            Bukkit.getLogger().warning("[MCCommons] Save process of "+file.getAbsolutePath()+" cancelled to protect unloaded configuration file!");
+        if (damaged) {
+            Bukkit.getLogger().warning("[MCCommons] Save process of " + file.getAbsolutePath() + " cancelled to protect unloaded configuration file!");
             return;
         }
         try {
-            fileConfiguration.options().header("MCCommons v"+ (Providers.has(JavaPlugin.class) ? Providers.get(JavaPlugin.class).getDescription().getVersion() : "2") +" configuration file; impl = "+getClass().getSimpleName());
-            if(configData != null) {
+            fileConfiguration.options().header("MCCommons v" + (Providers.has(JavaPlugin.class) ? Providers.get(JavaPlugin.class).getDescription().getVersion() : "2") + " configuration file; impl = " + getClass().getSimpleName());
+            if (configData != null) {
                 setConfigData(reloadSupplier.get());
                 return;
             }
             fileConfiguration.save(file);
         } catch (final IOException e) {
-            Bukkit.getLogger().log(Level.WARNING, "[MCCommons] Unable to save "+file.getAbsolutePath()+":", e);
+            Bukkit.getLogger().log(Level.WARNING, "[MCCommons] Unable to save " + file.getAbsolutePath() + ":", e);
         }
     }
 
@@ -151,7 +154,7 @@ public class SpigotConfigSpigotYamlConfigWrapper implements SpigotConfig {
             fileConfiguration.load(file);
             damaged = false;
         } catch (final Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE,"[MCCommons] Unable to read "+file.getAbsolutePath()+":", e);
+            Bukkit.getLogger().log(Level.SEVERE, "[MCCommons] Unable to read " + file.getAbsolutePath() + ":", e);
             damaged = true;
         }
     }
@@ -167,7 +170,7 @@ public class SpigotConfigSpigotYamlConfigWrapper implements SpigotConfig {
         try {
             fileConfiguration.load(new StringReader(configData.getConfigData()));
         } catch (final Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE,"[MCCommons] Unable to read "+configData.getRemotePath()+":", e);
+            Bukkit.getLogger().log(Level.SEVERE, "[MCCommons] Unable to read " + configData.getRemotePath() + ":", e);
             damaged = true;
         }
     }
