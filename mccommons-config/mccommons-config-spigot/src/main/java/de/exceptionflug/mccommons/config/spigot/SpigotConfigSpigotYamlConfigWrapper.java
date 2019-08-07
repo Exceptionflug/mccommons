@@ -104,7 +104,7 @@ public class SpigotConfigSpigotYamlConfigWrapper implements SpigotConfig {
 
     @Override
     public <T> T getOrSetDefault(String path, T def) {
-        if (def instanceof Location) {
+        if (def instanceof Location && fileConfiguration.isSet(path+".world")) {
             return (T) new Location(Bukkit.createWorld(new WorldCreator(fileConfiguration.getString(path + ".world"))), fileConfiguration.getDouble(path + ".x"), fileConfiguration.getDouble(path + ".y"), fileConfiguration.getDouble(path + ".z"), (float) fileConfiguration.getDouble(path + ".yaw"), (float) fileConfiguration.getDouble(path + ".pitch"));
         }
         final Object o = fileConfiguration.get(path);
