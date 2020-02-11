@@ -65,8 +65,8 @@ public class SpigotConfigSpigotYamlConfigWrapper implements SpigotConfig {
     @Override
     public SoundData getSoundData(final String path) {
         final String soundName = getOrSetDefault(path + ".sound", "CLICK");
-        final float volume = getOrSetDefault(path + ".volume", 1F);
-        final float pitch = getOrSetDefault(path + ".pitch", 1F);
+        final double volume = getOrSetDefault(path + ".volume", 1D);
+        final double pitch = getOrSetDefault(path + ".pitch", 1D);
         Sound sound;
         try {
             sound = Sound.valueOf(soundName);
@@ -74,7 +74,7 @@ public class SpigotConfigSpigotYamlConfigWrapper implements SpigotConfig {
             sound = Sound.CLICK;
             Bukkit.getLogger().warning("[SpigotConfig] WARN: " + path + " has invalid sound " + soundName);
         }
-        return new SoundData(sound, volume, pitch);
+        return new SoundData(sound, (float) volume, (float) pitch);
     }
 
     @Override

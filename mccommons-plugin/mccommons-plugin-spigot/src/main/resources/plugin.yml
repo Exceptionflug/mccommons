@@ -1,6 +1,7 @@
 name: MCCommons
 author: Exceptionflug
 version: 2.0
+api-version: 1.13
 softdepend:
   - ProtocolLib
 

@@ -7,6 +7,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import com.google.common.base.Preconditions;
 import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
 import de.exceptionflug.mccommons.core.Providers;
 import de.exceptionflug.mccommons.core.providers.LocaleProvider;
@@ -57,14 +58,25 @@ public class LocalizedConfigBoard {
     }
 
     public void format(final String... replacements) {
+        Preconditions.checkNotNull(replacements, "Replacements cannot be null");
         final Map<String, String> repMap = FormatUtils.createReplacementMap(replacements);
         for (final String key : repMap.keySet()) {
-            this.replacements.put(key, repMap::get);
+            if(key == null) {
+                continue;
+            }
+            String val;
+            if(repMap.get(key) == null) {
+                val = "null";
+            } else {
+                val = repMap.get(key);
+            }
+            this.replacements.put(key, abstractBoardHolder -> val);
         }
         update();
     }
 
     public void format(final String key, Function<AbstractBoardHolder, String> replacer) {
+        Preconditions.checkNotNull(key, "The key cannot be null.");
         replacements.put(key, replacer);
         update();
     }

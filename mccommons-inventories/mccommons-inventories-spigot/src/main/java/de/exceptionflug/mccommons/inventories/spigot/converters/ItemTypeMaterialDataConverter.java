@@ -19,7 +19,7 @@ public class ItemTypeMaterialDataConverter implements Converter<ItemType, Materi
         if(applicableMapping == null) {
             return null;
         }
-        if(Providers.get(ServerVersionProvider.class).getProtocolVersion() >= ProtocolVersions.MINECRAFT_1_14) {
+        if(Providers.get(ServerVersionProvider.class).getProtocolVersion() >= ProtocolVersions.MINECRAFT_1_13) {
             return new MaterialData(Material.valueOf(src.name()));
         }
         return new MaterialData(applicableMapping.getId(), (byte) applicableMapping.getData());

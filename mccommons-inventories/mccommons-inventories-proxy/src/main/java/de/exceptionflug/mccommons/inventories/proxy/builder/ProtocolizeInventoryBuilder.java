@@ -25,7 +25,7 @@ public class ProtocolizeInventoryBuilder implements InventoryBuilder {
 
     @Override
     public <T> T build(T prebuild, InventoryWrapper wrapper) {
-        boolean reopen = false;
+        boolean reopen = true;
         boolean register = prebuild == null;
         if(prebuild instanceof Inventory) {
             final Inventory inventory = (Inventory) prebuild;
