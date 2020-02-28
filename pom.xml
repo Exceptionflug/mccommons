@@ -21,6 +21,7 @@
         <module>mccommons-inventories</module>
         <module>mccommons-holograms</module>
         <module>mccommons-scoreboards</module>
+        <module>mccommons-commands</module>
     </modules>
 
     <repositories>
