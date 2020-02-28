@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Scoreboards {
 
     private static final Map<AbstractBoardHolder, Scoreboard> BOARD_HOLDER_MAP = new ConcurrentHashMap<>();
+    private static final Map<UUID, AbstractBoardHolder> BOARD_HOLDERS = new ConcurrentHashMap<>();
 
     public static Set<AbstractBoardHolder> getBoardHolders(final Scoreboard scoreboard) {
         final Set<AbstractBoardHolder> out = new HashSet<>();
@@ -19,8 +20,12 @@ public class Scoreboards {
         return out;
     }
 
+    public static AbstractBoardHolder getBoardHolder(Player player) {
+        return BOARD_HOLDERS.computeIfAbsent(player.getUniqueId(), uuid -> new PlayerBoardHolder(player.getUniqueId()));
+    }
+
     public static Scoreboard getCurrentBoard(final Player p) {
-        return BOARD_HOLDER_MAP.get(new PlayerBoardHolder(p.getUniqueId()));
+        return BOARD_HOLDER_MAP.get(BOARD_HOLDERS.computeIfAbsent(p.getUniqueId(), uuid -> new PlayerBoardHolder(p.getUniqueId())));
     }
 
     public static Scoreboard getCurrentBoard(final AbstractBoardHolder boardHolder) {

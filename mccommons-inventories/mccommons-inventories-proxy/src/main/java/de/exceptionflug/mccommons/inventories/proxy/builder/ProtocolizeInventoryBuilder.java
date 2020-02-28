@@ -25,13 +25,13 @@ public class ProtocolizeInventoryBuilder implements InventoryBuilder {
 
     @Override
     public <T> T build(T prebuild, InventoryWrapper wrapper) {
-        boolean reopen = true;
+//        boolean reopen = true;
         boolean register = prebuild == null;
         if(prebuild instanceof Inventory) {
             final Inventory inventory = (Inventory) prebuild;
             if(!ComponentSerializer.toString(inventory.getTitle()).equals(ComponentSerializer.toString(new TextComponent(wrapper.getTitle()))) || inventory.getType().getTypicalSize(Converters.convert(wrapper.getPlayer(), PlayerWrapper.class).getProtocolVersion()) != wrapper.getSize() || inventory.getType() != Converters.convert(wrapper.getInventoryType(), InventoryType.class)) {
                 prebuild = (T) makeInv(wrapper);
-                reopen = true;
+//                reopen = true;
             }
         } else {
             prebuild = (T) makeInv(wrapper);
@@ -70,7 +70,7 @@ public class ProtocolizeInventoryBuilder implements InventoryBuilder {
         if(register) {
             wrappers.add(wrapper);
         }
-        if(reopen)
+//        if(reopen)
             InventoryModule.sendInventory((ProxiedPlayer) wrapper.getPlayer(), inventory);
         return prebuild;
     }
