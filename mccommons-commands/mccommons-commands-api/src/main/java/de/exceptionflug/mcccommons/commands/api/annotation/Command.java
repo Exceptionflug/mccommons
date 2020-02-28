@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Command {
-	String[] value();
+    String[] value();
 
-	boolean inGameOnly() default false;
+    boolean inGameOnly() default false;
 }

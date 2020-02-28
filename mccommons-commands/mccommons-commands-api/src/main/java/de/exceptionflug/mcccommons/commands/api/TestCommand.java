@@ -8,20 +8,18 @@ import de.exceptionflug.mcccommons.commands.api.input.CommandInput;
 
 @InGameOnly
 @Command(value = {"ban", "bannane", "bamburg"})
-public class TestCommand implements de.exceptionflug.mcccommons.commands.api.Command {
+public class TestCommand extends MCCCommand {
 
-	private static String Test = "TEST";
+    private static String Test = "TEST";
 
-
-	@Override public void onCommand(final CommandInput input) {
-
-	}
-
-	@SubCommand("perma")
-	@InGameOnly
-	@CommandArgs(minArgsLength = 1, maxArgsLength = 2)
-	public void test(final CommandInput input) {
-	}
+    @SubCommand("perma")
+    @InGameOnly
+    @CommandArgs(minArgsLength = 1, maxArgsLength = 2)
+    public void test(final CommandInput input) {
+    }
 
 
+    @Override public void onCommand(final CommandInput input) {
+
+    }
 }

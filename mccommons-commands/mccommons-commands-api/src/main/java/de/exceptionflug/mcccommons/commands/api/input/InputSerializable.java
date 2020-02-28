@@ -2,8 +2,8 @@ package de.exceptionflug.mcccommons.commands.api.input;
 
 public interface InputSerializable<T> {
 
-	Class<T> getClazz();
+    Class<T> getClazz();
 
-	T serialize(final String input);
+    T serialize(final String input);
 
 }

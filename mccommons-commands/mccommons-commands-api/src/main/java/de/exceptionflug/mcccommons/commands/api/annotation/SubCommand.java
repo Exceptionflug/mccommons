@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface SubCommand {
-	String value();
+    String value();
 
-	@Nullable String permission() default "";
+    @Nullable String permission() default "";
 }

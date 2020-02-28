@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class AbstractCommandParser {
-	private final Class<? extends Command> clazz;
+    private final Class<? extends Command> clazz;
 
 
 }
