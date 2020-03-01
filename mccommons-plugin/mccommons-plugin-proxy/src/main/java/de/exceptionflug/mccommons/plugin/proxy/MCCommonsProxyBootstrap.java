@@ -1,5 +1,6 @@
 package de.exceptionflug.mccommons.plugin.proxy;
 
+import com.google.common.io.ByteStreams;
 import de.exceptionflug.mccommons.config.proxy.ProxyConfig;
 import de.exceptionflug.mccommons.config.proxy.ProxyConfigProxyYamlConfigWrapper;
 import de.exceptionflug.mccommons.config.remote.client.RemoteConfigClient;
@@ -25,18 +26,31 @@ import de.exceptionflug.mccommons.plugin.proxy.commands.ConfigReloadCommand;
 import de.exceptionflug.mccommons.plugin.proxy.converter.ItemStackConverter;
 import de.exceptionflug.mccommons.plugin.proxy.converter.PlayerConverter;
 import de.exceptionflug.protocolize.api.ClickType;
+import de.exceptionflug.protocolize.api.protocol.ProtocolAPI;
+import de.exceptionflug.protocolize.inventory.InventoryModule;
 import de.exceptionflug.protocolize.inventory.InventoryType;
 import de.exceptionflug.protocolize.items.ItemStack;
 import de.exceptionflug.protocolize.items.ItemType;
+import de.exceptionflug.protocolize.items.ItemsModule;
 import net.md_5.bungee.UserConnection;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.config.Configuration;
+import net.md_5.bungee.config.ConfigurationProvider;
+import net.md_5.bungee.config.YamlConfiguration;
 
-import java.io.File;
+import java.io.*;
+import java.util.logging.Level;
 
 public class MCCommonsProxyBootstrap {
+    private final Plugin plugin;
 
-    public void enable(final Plugin plugin) {
+    public MCCommonsProxyBootstrap(final Plugin plugin) {
+        this.plugin = plugin;
+    }
+
+
+    public void enableMCCommons(final Plugin plugin) {
         Providers.register(Plugin.class, this);
         Providers.register(InventoryBuilder.class, new ProtocolizeInventoryBuilder());
         Providers.register(AsyncProvider.class, new AsyncProvider() {
@@ -58,6 +72,7 @@ public class MCCommonsProxyBootstrap {
                 return plugin.getDataFolder();
             }
         });
+
         ConfigFactory.register(ConfigWrapper.class, ProxyConfigProxyYamlConfigWrapper::new);
         ConfigFactory.register(ProxyConfig.class, ProxyConfigProxyYamlConfigWrapper::new);
         ConfigFactory.registerRemote(ConfigWrapper.class, s -> new ProxyConfigProxyYamlConfigWrapper(s, configData -> ConfigFactory.getRemoteConfigClient().getConfigService().update(configData).blockingSubscribe(), () -> ConfigFactory.getRemoteConfigClient().getConfigService().getConfig(s.getRemotePath()).blockingFirst()));
@@ -69,8 +84,8 @@ public class MCCommonsProxyBootstrap {
         Converters.register(ItemType.class, de.exceptionflug.mccommons.inventories.api.item.ItemType.class, new ProtocolizeItemTypeConverter());
         Converters.register(de.exceptionflug.mccommons.inventories.api.item.ItemType.class, ItemType.class, new ItemTypeConverter());
         Converters.register(ItemStack.class, ItemStackWrapper.class, src -> new ProtocolizeItemStackWrapper((ItemStack) src));
-        Converters.register(ItemStackWrapper.class, ItemStack.class, src -> ((ItemStackWrapper)src).getHandle());
-        Converters.register(ProtocolizeItemStackWrapper.class, ItemStack.class, src -> ((ItemStackWrapper)src).getHandle());
+        Converters.register(ItemStackWrapper.class, ItemStack.class, src -> ((ItemStackWrapper) src).getHandle());
+        Converters.register(ProtocolizeItemStackWrapper.class, ItemStack.class, src -> ((ItemStackWrapper) src).getHandle());
         Converters.register(ClickType.class, de.exceptionflug.mccommons.inventories.api.ClickType.class, new ProtocolizeClickTypeConverter());
 
         ProxyServer.getInstance().getPluginManager().registerListener(plugin, new InventoryListener());

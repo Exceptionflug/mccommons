@@ -5,11 +5,12 @@ import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @UtilityClass
 public class InputSerializer {
-    public final List<InputSerializable> serializables = new ArrayList<>();
+    private final List<InputSerializable> serializables = new ArrayList<>();
 
     /**
      * Register a serializable to our list
@@ -35,5 +36,9 @@ public class InputSerializer {
         final InputSerializable serializable = findSerializable(clazz);
         Preconditions.checkNotNull(serializable, "No serializable found for '" + clazz.getSimpleName() + "'");
         return (T) serializable.serialize(input);
+    }
+
+    public List<InputSerializable> getSerializables() {
+        return Collections.unmodifiableList(serializables);
     }
 }

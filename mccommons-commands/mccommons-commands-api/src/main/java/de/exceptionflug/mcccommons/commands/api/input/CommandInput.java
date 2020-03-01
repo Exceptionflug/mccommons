@@ -2,21 +2,18 @@ package de.exceptionflug.mcccommons.commands.api.input;
 
 import com.google.common.base.Preconditions;
 import de.exceptionflug.mcccommons.commands.api.exception.CommandValidationException;
-import lombok.AccessLevel;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class CommandInput {
-
-    public static CommandInput of(@NonNull final String... arguments) {
-        return new CommandInput(arguments);
-    }
 
     private final java.lang.String[] arguments;
 
     public final int getArgCount() {
         return arguments.length;
+    }
+
+    public CommandInput(final String... arguments) {
+        this.arguments = arguments;
     }
 
     public <T> T get(final Class<T> clazz, final int index) {

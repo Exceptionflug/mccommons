@@ -1,4 +1,4 @@
-package de.exceptionflug.mcccommons.commands.api;
+package de.exceptionflug.mccommons.commands.spigot.command;
 
 import de.exceptionflug.mcccommons.commands.api.annotation.Command;
 import de.exceptionflug.mcccommons.commands.api.annotation.CommandArgs;
@@ -8,9 +8,9 @@ import de.exceptionflug.mcccommons.commands.api.input.CommandInput;
 
 @InGameOnly
 @Command(value = {"ban", "bannane", "bamburg"})
-public class TestCommand extends MCCCommand {
+public class SpigotCommandExample extends SpigotCommand {
 
-    private static String Test = "TEST";
+    private static String TEST = "TEST";
 
     @SubCommand("perma")
     @InGameOnly
@@ -18,8 +18,8 @@ public class TestCommand extends MCCCommand {
     public void test(final CommandInput input) {
     }
 
-
-    @Override public void onCommand(final CommandInput input) {
+    @Override
+    public void onCommand(final CommandInput input) {
 
     }
 }

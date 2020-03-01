@@ -1,11 +1,11 @@
 package de.exceptionflug.mcccommons.commands.api.command;
 
-import de.exceptionflug.mcccommons.commands.api.annotation.Command;
+import de.exceptionflug.mcccommons.commands.api.AbstractCommand;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class AbstractCommandParser {
-    private final Class<? extends Command> clazz;
+public abstract class AbstractCommandParser<C> {
+    private final AbstractCommand<?> mccCommand;
 
-
+    public abstract C toCommand();
 }
