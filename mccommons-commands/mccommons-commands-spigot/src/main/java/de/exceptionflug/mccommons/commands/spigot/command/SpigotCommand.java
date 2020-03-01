@@ -1,7 +1,9 @@
 package de.exceptionflug.mccommons.commands.spigot.command;
 
+import de.exceptionflug.mcccommons.commands.api.exception.CommandValidationException;
 import lombok.Builder;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Method;
@@ -27,6 +29,24 @@ public final class SpigotCommand extends org.bukkit.command.Command {
     }
 
     @Override public boolean execute(final CommandSender commandSender, final String s, final String[] strings) {
+
+	    if (inGameOnly && (!(commandSender instanceof Player))) {
+	    }
+
+
+
+
+	    try {
+
+	    } catch (final CommandValidationException ex) {
+
+
+
+	    } catch (final Throwable throwable) {
+
+
+	    }
+
         return false;
     }
 }

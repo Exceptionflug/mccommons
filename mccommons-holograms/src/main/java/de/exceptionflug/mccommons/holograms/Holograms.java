@@ -7,8 +7,9 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Holograms {
 

@@ -1,6 +1,8 @@
 package de.exceptionflug.mcccommons.commands.api;
 
-public final class CommandFramework {
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
+public class CommandFramework {
 
 }
