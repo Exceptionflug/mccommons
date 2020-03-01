@@ -20,6 +20,5 @@ public class SpigotCommandExample extends SpigotCommand {
 
     @Override
     public void onCommand(final CommandInput input) {
-
     }
 }

@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public abstract class CommandFramework {
+public abstract class AbstractCommandFramework {
     private final ConfigWrapper messageConfig;
 
     protected final List<AbstractCommand<?>> registeredCommands = new ArrayList<>();

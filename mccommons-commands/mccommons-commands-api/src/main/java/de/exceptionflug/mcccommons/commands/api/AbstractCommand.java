@@ -20,7 +20,7 @@ public abstract class AbstractCommand<S> {
         this.commandSender = sender;
     }
 
-    protected final AbstractCommandSender<S> getMCCCommandSender() {
+    protected final AbstractCommandSender<S> sender() {
         Preconditions.checkNotNull(commandSender, "CommandSender is not yet set!");
         return commandSender;
     }

@@ -3,13 +3,16 @@ package de.exceptionflug.mcccommons.commands.api.command;
 import com.google.common.base.Preconditions;
 import de.exceptionflug.mcccommons.commands.api.AbstractCommand;
 import de.exceptionflug.mcccommons.commands.api.input.CommandInput;
+import lombok.Builder;
+import lombok.Getter;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
-
+@Getter
+@Builder
 public final class SubCommand {
     //Command the SubCommand is child of
     private final AbstractCommand<?> superCommand;
@@ -22,13 +25,17 @@ public final class SubCommand {
     private String permission;
 
     private boolean isInGameOnly;
+    private final int minArguments;
+    private final int maxArguments;
 
 
-    public SubCommand(final AbstractCommand<?> superCommand,
-                      final String neededArgument,
-                      final Method toExecute,
-                      final boolean isInGameOnly,
-                      @Nullable final String permission) {
+    private SubCommand(final AbstractCommand<?> superCommand,
+                       final String neededArgument,
+                       final Method toExecute,
+                       final boolean isInGameOnly,
+                       final int minArguments,
+                       final int maxArguments,
+                       @Nullable final String permission) {
 
         Preconditions.checkArgument(
             toExecute.getParameterCount() == 1,
@@ -36,15 +43,12 @@ public final class SubCommand {
         );
 
         this.superCommand = superCommand;
-        this.neededArgument = neededArgument;
+        this.neededArgument = neededArgument.toLowerCase();
         this.subCommand = toExecute;
-
-        this.permission = null;
-        this.isInGameOnly = false;
-    }
-
-    public SubCommand(final AbstractCommand<?> superCommand, final String neededArgument, final Method toExecute) {
-        this(superCommand, neededArgument, toExecute, false, null);
+        this.isInGameOnly = isInGameOnly;
+        this.minArguments = minArguments;
+        this.maxArguments = maxArguments;
+        this.permission = permission;
     }
 
     public void executeSubCommand(final CommandInput commandInput) {

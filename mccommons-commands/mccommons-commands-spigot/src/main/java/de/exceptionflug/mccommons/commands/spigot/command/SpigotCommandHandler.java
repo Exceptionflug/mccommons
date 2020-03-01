@@ -2,7 +2,7 @@ package de.exceptionflug.mccommons.commands.spigot.command;
 
 import de.exceptionflug.mcccommons.commands.api.command.SubCommand;
 import de.exceptionflug.mcccommons.commands.api.exception.CommandValidationException;
-import de.exceptionflug.mcccommons.commands.api.input.CommandInput;
+import de.exceptionflug.mccommons.commands.spigot.impl.SpigotCommandSender;
 import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
 import lombok.Builder;
 import org.bukkit.command.CommandSender;
@@ -15,8 +15,12 @@ import java.util.Optional;
 @Builder
 public final class SpigotCommandHandler extends org.bukkit.command.Command {
 
+    private static final String NOT_FOR_CONSOLE = "[MCCommons] This command can't be run from console";
+
     private final List<SubCommand> subCommands;
     private final boolean inGameOnly;
+    private final int minArguments;
+    private final int maxArguments;
     private final Optional<String> permission;
     private final ConfigWrapper configWrapper;
     private final SpigotCommand mccCommand;
@@ -27,11 +31,15 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
                                  final boolean inGameOnly,
                                  final ConfigWrapper configWrapper,
                                  final SpigotCommand spigotCommand,
+                                 final int minArguments, //For the main command
+                                 final int maxArguments, //For the main command
                                  final @Nullable String permission
     ) {
         super(name);
         this.subCommands = subCommands;
         this.inGameOnly = inGameOnly;
+        this.minArguments = minArguments;
+        this.maxArguments = maxArguments;
         this.permission = Optional.ofNullable(permission);
         this.configWrapper = configWrapper;
         this.mccCommand = spigotCommand;
@@ -45,19 +53,55 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
 
         this.commandSender = sender;
 
-        if (inGameOnly && (!(sender instanceof Player))) {
-            tell("[MCCommons] This command can't be run from console");
-        }
+        mccCommand.setCommandSender(new SpigotCommandSender(sender));
 
         final int length = args.length;
 
         try {
-            if (length == 0) {
-                mccCommand.onCommand(new CommandInput(args));
+
+            // /ban perma linksKeineMitte -> [perma, linksKeineMitte] -> "ban linksKeineMitte"
+            final String joinedArguments = String.join(" ", args).toLowerCase();
+
+            for (final SubCommand subCommand : subCommands) {
+                if (!joinedArguments.startsWith(subCommand.getNeededArgument())) {
+                    continue; //Not the subcommand we search for
+                }
+
+                final String[] subCommandArguments = joinedArguments
+                    .replace(subCommand.getNeededArgument(), "")
+                    .split(" ");
+
+                if (subCommandArguments.length < subCommand.getMinArguments()) {
+                    //To few arguments
+                }
+
+                if (subCommandArguments.length > subCommand.getMaxArguments()) {
+                    //To many arguments
+                }
+
+                if (subCommand.isInGameOnly() && !(sender instanceof Player)) {
+                    tell(NOT_FOR_CONSOLE);
+                }
+
+
+
             }
 
 
-        } catch (final CommandValidationException ex) {
+            // ----------------------------------------------------------------------------------------------------
+            // No sub-command found. Give arguments to our main-command
+            // ----------------------------------------------------------------------------------------------------
+
+            if (inGameOnly && (!(sender instanceof Player))) {
+                tell(NOT_FOR_CONSOLE);
+            }
+
+            //
+
+
+
+
+        } catch (final CommandValidationException ex) { //Command break-up condition
             tell(ex.getMessages());
         } catch (final Throwable throwable) {
             tell(
