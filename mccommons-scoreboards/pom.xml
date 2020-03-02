@@ -34,10 +34,9 @@
         </dependency>
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
-            <artifactId>ProtocolLib-API</artifactId>
+            <artifactId>ProtocolLib</artifactId>
             <version>4.5.0</version>
-            <systemPath>${project.basedir}/../libs/ProtocolLib-4.5.0.jar</systemPath>
-            <scope>system</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.comphenix.packetwrapper</groupId>
