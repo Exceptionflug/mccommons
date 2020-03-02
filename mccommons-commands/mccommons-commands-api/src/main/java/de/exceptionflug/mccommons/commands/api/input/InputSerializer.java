@@ -1,4 +1,4 @@
-package de.exceptionflug.mcccommons.commands.api.input;
+package de.exceptionflug.mccommons.commands.api.input;
 
 import com.google.common.base.Preconditions;
 import lombok.NonNull;

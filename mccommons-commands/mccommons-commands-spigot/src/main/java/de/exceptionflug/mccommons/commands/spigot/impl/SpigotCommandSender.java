@@ -1,6 +1,6 @@
 package de.exceptionflug.mccommons.commands.spigot.impl;
 
-import de.exceptionflug.mcccommons.commands.api.command.AbstractCommandSender;
+import de.exceptionflug.mccommons.commands.api.command.AbstractCommandSender;
 import org.bukkit.command.CommandSender;
 
 public final class SpigotCommandSender extends AbstractCommandSender<CommandSender> {

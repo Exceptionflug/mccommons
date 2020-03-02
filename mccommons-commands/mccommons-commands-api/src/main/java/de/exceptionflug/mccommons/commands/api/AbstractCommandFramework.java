@@ -1,4 +1,4 @@
-package de.exceptionflug.mcccommons.commands.api;
+package de.exceptionflug.mccommons.commands.api;
 
 import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
 import lombok.AccessLevel;

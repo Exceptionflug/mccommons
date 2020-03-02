@@ -1,8 +1,8 @@
-package de.exceptionflug.mcccommons.commands.api.command;
+package de.exceptionflug.mccommons.commands.api.command;
 
 import com.google.common.base.Preconditions;
-import de.exceptionflug.mcccommons.commands.api.AbstractCommand;
-import de.exceptionflug.mcccommons.commands.api.input.CommandInput;
+import de.exceptionflug.mccommons.commands.api.AbstractCommand;
+import de.exceptionflug.mccommons.commands.api.input.CommandInput;
 import lombok.Builder;
 import lombok.Getter;
 

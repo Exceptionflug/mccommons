@@ -1,4 +1,4 @@
-package de.exceptionflug.mcccommons.commands.api.annotation;
+package de.exceptionflug.mccommons.commands.api.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,4 +1,4 @@
-package de.exceptionflug.mcccommons.commands.api.exception;
+package de.exceptionflug.mccommons.commands.api.exception;
 
 import lombok.NonNull;
 

@@ -1,10 +1,10 @@
-package de.exceptionflug.mcccommons.commands.api;
+package de.exceptionflug.mccommons.commands.api;
 
 
 import com.google.common.base.Preconditions;
-import de.exceptionflug.mcccommons.commands.api.command.AbstractCommandSender;
-import de.exceptionflug.mcccommons.commands.api.exception.CommandValidationException;
-import de.exceptionflug.mcccommons.commands.api.input.CommandInput;
+import de.exceptionflug.mccommons.commands.api.command.AbstractCommandSender;
+import de.exceptionflug.mccommons.commands.api.exception.CommandValidationException;
+import de.exceptionflug.mccommons.commands.api.input.CommandInput;
 import lombok.NonNull;
 
 import java.util.Optional;

@@ -1,7 +1,7 @@
-package de.exceptionflug.mcccommons.commands.api.input;
+package de.exceptionflug.mccommons.commands.api.input;
 
 import com.google.common.base.Preconditions;
-import de.exceptionflug.mcccommons.commands.api.exception.CommandValidationException;
+import de.exceptionflug.mccommons.commands.api.exception.CommandValidationException;
 import lombok.NonNull;
 
 public class CommandInput {

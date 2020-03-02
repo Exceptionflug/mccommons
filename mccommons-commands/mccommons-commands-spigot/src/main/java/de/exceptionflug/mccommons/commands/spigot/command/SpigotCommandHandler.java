@@ -1,8 +1,8 @@
 package de.exceptionflug.mccommons.commands.spigot.command;
 
-import de.exceptionflug.mcccommons.commands.api.command.SubCommand;
-import de.exceptionflug.mcccommons.commands.api.exception.CommandValidationException;
-import de.exceptionflug.mcccommons.commands.api.input.CommandInput;
+import de.exceptionflug.mccommons.commands.api.command.SubCommand;
+import de.exceptionflug.mccommons.commands.api.exception.CommandValidationException;
+import de.exceptionflug.mccommons.commands.api.input.CommandInput;
 import de.exceptionflug.mccommons.commands.spigot.impl.SpigotCommandSender;
 import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
 import de.exceptionflug.mccommons.config.spigot.Message;
@@ -52,7 +52,8 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
         return permission;
     }
 
-    @Override public boolean execute(final CommandSender sender, final String label, final String[] args) {
+    @Override
+    public boolean execute(final CommandSender sender, final String label, final String[] args) {
         this.commandSender = sender;
         this.args = args;
 
@@ -76,12 +77,12 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
 
             if (length < minArguments) {
                 //To few arguments
-                returnTell("Usage.TooFewArguments", "Zu wenige Argumente");
+                returnTell("Usage.TooFewArguments", "&cZu wenige Argumente");
             }
 
             if (length > maxArguments) {
                 //To many arguments
-                returnTell("Usage.TooFewMany", "Zu viele Argumente");
+                returnTell("Usage.TooFewMany", "&cZu viele Argumente");
             }
 
             checkPermission(permission.orElse(""));
@@ -92,9 +93,9 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
             if (ex.getMessages().length == 0) {
                 return false;
             }
-            tell(ex.getMessages());
+            tellPlain(ex.getMessages());
         } catch (final Throwable throwable) {
-            tell(
+            tellPlain(
                 "§cEs ist soeben ein Fehler beim Ausführen des Commands aufgetreten.",
                 "§cBitte melde dies umgehend dem Team: ",
                 " ",
@@ -179,7 +180,7 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
 
     /**
      * Breaks up the command
-     *
+     * <p>
      * and tells the player that this command requires a permission
      * the player doesn't have
      */
@@ -189,6 +190,7 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
 
     /**
      * Breaks up the command which a message
+     *
      * @param message Message to be send
      */
     private void returnTell(final String... message) {
@@ -200,9 +202,17 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
             return;
         }
         Message.send(commandSender, configWrapper, messageKey, defaultMessage);
+        throw new CommandValidationException();
     }
 
-    private void tell(final String... messages) {
+    private void tell(final String messageKey, final String defaultMessage) {
+        if (commandSender == null) {
+            return;
+        }
+        Message.send(commandSender, configWrapper, messageKey, defaultMessage);
+    }
+
+    private void tellPlain(final String... messages) {
         commandSender.sendMessage(messages);
     }
 }

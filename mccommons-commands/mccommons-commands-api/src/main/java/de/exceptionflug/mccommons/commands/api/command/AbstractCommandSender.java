@@ -1,4 +1,4 @@
-package de.exceptionflug.mcccommons.commands.api.command;
+package de.exceptionflug.mccommons.commands.api.command;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
-package de.exceptionflug.mcccommons.commands.api.input;
+package de.exceptionflug.mccommons.commands.api.input;
 
-import de.exceptionflug.mcccommons.commands.api.exception.CommandValidationException;
+import de.exceptionflug.mccommons.commands.api.exception.CommandValidationException;
 
 public abstract class InputSerializable<T> {
 

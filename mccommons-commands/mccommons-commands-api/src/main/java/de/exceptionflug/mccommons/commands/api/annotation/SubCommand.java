@@ -1,6 +1,6 @@
-package de.exceptionflug.mcccommons.commands.api.annotation;
+package de.exceptionflug.mccommons.commands.api.annotation;
 
-
+import javax.annotation.Nullable;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -8,9 +8,8 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface CommandArgs {
-    int maxArgsLength() default -1;
+public @interface SubCommand {
+    String value();
 
-
-    int minArgsLength() default -1;
+    @Nullable String permission() default "";
 }
