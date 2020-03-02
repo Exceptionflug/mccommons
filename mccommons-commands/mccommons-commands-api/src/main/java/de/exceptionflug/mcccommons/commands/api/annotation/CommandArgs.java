@@ -11,5 +11,6 @@ import java.lang.annotation.Target;
 public @interface CommandArgs {
     int maxArgsLength() default -1;
 
+
     int minArgsLength() default -1;
 }

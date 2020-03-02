@@ -18,7 +18,7 @@ public final class SubCommand {
     private final AbstractCommand<?> superCommand;
     //Argument which is needed to execute this command
     //Example /ban perma test -> Needed Argument: "test"
-    private final String neededArgument;
+    private final String neededInput;
     //Method which should be executed
     private final Method subCommand;
 
@@ -30,7 +30,7 @@ public final class SubCommand {
 
 
     private SubCommand(final AbstractCommand<?> superCommand,
-                       final String neededArgument,
+                       final String trigger,
                        final Method toExecute,
                        final boolean isInGameOnly,
                        final int minArguments,
@@ -43,12 +43,22 @@ public final class SubCommand {
         );
 
         this.superCommand = superCommand;
-        this.neededArgument = neededArgument.toLowerCase();
+        this.neededInput = trigger.toLowerCase();
         this.subCommand = toExecute;
         this.isInGameOnly = isInGameOnly;
         this.minArguments = minArguments;
         this.maxArguments = maxArguments;
         this.permission = permission;
+    }
+
+    public boolean isSubCommandTrigger(String argumentString) {
+        return argumentString.startsWith(neededInput);
+    }
+
+    public boolean isSubCommandTrigger(final String[] arguments) {
+        final String argumentString = String.join(" ", arguments).toLowerCase();
+
+        return isSubCommandTrigger(argumentString);
     }
 
     public void executeSubCommand(final CommandInput commandInput) {
