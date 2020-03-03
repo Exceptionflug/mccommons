@@ -2,8 +2,13 @@ package de.exceptionflug.mccommons.commands.api.command;
 
 import de.exceptionflug.mccommons.commands.api.AbstractCommand;
 import de.exceptionflug.mccommons.commands.api.annotation.Command;
+import de.exceptionflug.mccommons.commands.api.annotation.SubCommand;
+import lombok.SneakyThrows;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbstractCommandParser<C> {
     protected final AbstractCommand<?> mccCommand;
@@ -18,18 +23,18 @@ public abstract class AbstractCommandParser<C> {
     public abstract C toCommand();
 
     // ----------------------------------------------------------------------------------------------------
-    // Utility methods to make the
+    // Methods to make the work of the subclasses easier
     // ----------------------------------------------------------------------------------------------------
 
     protected boolean isAnnotationPresent(final Class<? extends Annotation> annotation) {
         return mccClazz.isAnnotationPresent(annotation);
     }
 
-    public <A extends Annotation> A getAnnotation(final Class<A> clazz) {
+    protected <A extends Annotation> A getAnnotation(final Class<A> clazz) {
         return mccClazz.getAnnotation(clazz);
     }
 
-    public Command getCommandAnnotation() {
+    protected Command getCommandAnnotation() {
         final Command commandAnnotation = getAnnotation(Command.class);
 
         if (commandAnnotation == null) {
@@ -39,5 +44,26 @@ public abstract class AbstractCommandParser<C> {
         }
 
         return commandAnnotation;
+    }
+
+    @SneakyThrows
+    protected Method getMainCommandMethod() {
+        return mccClazz.getMethod("onCommand");
+    }
+
+    protected List<Method> getSubCommandMethods() {
+        final List<Method> methods = new ArrayList<>();
+        for (final Method method : getClass().getMethods()) {
+            if (method.getName().equals("onCommand")) {
+                continue;
+            }
+
+            if (!method.isAnnotationPresent(SubCommand.class)) {
+                continue;
+            }
+
+            methods.add(method);
+        }
+        return methods;
     }
 }

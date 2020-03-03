@@ -21,13 +21,10 @@ public final class SubCommand {
     private final String neededInput;
     //Method which should be executed
     private final Method subCommand;
-
-    private String permission;
-
-    private boolean isInGameOnly;
     private final int minArguments;
     private final int maxArguments;
-
+    private final String permission;
+    private final boolean isInGameOnly;
 
     private SubCommand(final AbstractCommand<?> superCommand,
                        final String trigger,
@@ -51,7 +48,7 @@ public final class SubCommand {
         this.permission = permission;
     }
 
-    public boolean isSubCommandTrigger(String argumentString) {
+    public boolean isSubCommandTrigger(final String argumentString) {
         return argumentString.startsWith(neededInput);
     }
 
@@ -64,7 +61,7 @@ public final class SubCommand {
     public void executeSubCommand(final CommandInput commandInput) {
         try {
             subCommand.invoke(superCommand, commandInput);
-        } catch (IllegalAccessException | InvocationTargetException ex) {
+        } catch (final IllegalAccessException | InvocationTargetException ex) {
             System.err.println("Exception whilst executing subcommand: " + getClass().getName());
             ex.printStackTrace();
         }

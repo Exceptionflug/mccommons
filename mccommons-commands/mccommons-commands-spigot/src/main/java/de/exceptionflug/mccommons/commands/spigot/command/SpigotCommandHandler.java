@@ -1,5 +1,7 @@
 package de.exceptionflug.mccommons.commands.spigot.command;
 
+import de.exceptionflug.mccommons.commands.api.command.CommandSettings;
+import de.exceptionflug.mccommons.commands.api.command.MainCommand;
 import de.exceptionflug.mccommons.commands.api.command.SubCommand;
 import de.exceptionflug.mccommons.commands.api.exception.CommandValidationException;
 import de.exceptionflug.mccommons.commands.api.input.CommandInput;
@@ -10,9 +12,9 @@ import lombok.Builder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 @Builder
 public final class SpigotCommandHandler extends org.bukkit.command.Command {
@@ -20,36 +22,35 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
     private static final String NOT_FOR_CONSOLE = "[MCCommons] This command can't be run from console";
 
     private final List<SubCommand> subCommands;
-    private final boolean inGameOnly;
-    private final int minArguments;
-    private final int maxArguments;
-    private final Optional<String> permission;
     private final ConfigWrapper configWrapper;
     private final SpigotCommand mccCommand;
+    private final MainCommand mainCommand;
+    private final CommandSettings commandSettings;
     private CommandSender commandSender;
     private String[] args;
 
-    private SpigotCommandHandler(final String name,
+    private SpigotCommandHandler(final CommandSettings commandSettings,
+                                 final MainCommand mainCommand,
                                  final List<SubCommand> subCommands,
-                                 final boolean inGameOnly,
                                  final ConfigWrapper configWrapper,
-                                 final SpigotCommand spigotCommand,
-                                 final int minArguments, //For the main command
-                                 final int maxArguments, //For the main command
-                                 final @Nullable String permission
+                                 final SpigotCommand spigotCommand
     ) {
-        super(name);
+        //Will be changed
+        super(null);
+
+        final String[] names = commandSettings.getName();
+        final int length = names.length;
+        final List<String> aliases = new ArrayList<>(Arrays.asList(names)).subList(1, length - 1);
+
+        setLabel(names[0]);
+
+        setAliases(aliases);
+
+        this.commandSettings = commandSettings;
+        this.mainCommand = mainCommand;
         this.subCommands = subCommands;
-        this.inGameOnly = inGameOnly;
-        this.minArguments = minArguments;
-        this.maxArguments = maxArguments;
-        this.permission = Optional.ofNullable(permission);
         this.configWrapper = configWrapper;
         this.mccCommand = spigotCommand;
-    }
-
-    public Optional<String> permission() {
-        return permission;
     }
 
     @Override
@@ -63,29 +64,21 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
 
         try {
 
-            // ----------------------------------------------------------------------------------------------------
-            // No sub-command found. Give arguments to our main-command
-            // ----------------------------------------------------------------------------------------------------
+            //checking global rules
+
+            checkConsole(commandSettings.isInGameOnly());
+
+            checkPermission(commandSettings.getPermission().orElse(""));
 
             executeSubcommandIfPossible();
 
-            if (inGameOnly) {
-                returnConsole();
-            }
+
+            //checking maincommand-rules
+
+
+            checkConsole(mainCommand.isInGameOnly());
 
             final CommandInput input = new CommandInput(args);
-
-            if (length < minArguments) {
-                //To few arguments
-                returnTell("Usage.TooFewArguments", "&cZu wenige Argumente");
-            }
-
-            if (length > maxArguments) {
-                //To many arguments
-                returnTell("Usage.TooFewMany", "&cZu viele Argumente");
-            }
-
-            checkPermission(permission.orElse(""));
 
             mccCommand.onCommand(input);
 
@@ -122,13 +115,12 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
 
             if (subCommandArguments.length < subCommand.getMinArguments()) {
                 //To many arguments
-
-                returnTell("Usage.TooFewArguments", "Zu wenige Argumente");
+                returnTooFewArguments();
             }
 
             if (subCommandArguments.length > subCommand.getMaxArguments()) {
                 //To many arguments
-                returnTell("Usage.TooManyArguments", "Zu viele Argumente");
+                returnTooManyArguments();
             }
 
             if (subCommand.isInGameOnly()) {
@@ -137,7 +129,7 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
 
             //Checking permission
 
-            final String permission = subCommand.getPermission().orElse(permission().orElse(""));
+            final String permission = subCommand.getPermission().orElse("");
 
             checkPermission(permission);
 
@@ -148,18 +140,34 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
         }
     }
 
+
+    private void checkConsole(final boolean condition) {
+        if (!condition) {
+            returnConsole();
+        }
+    }
+
     /**
      * Check the permission of the sender or break up the command.
      *
      * @param permission
      */
     private void checkPermission(final String permission) {
-        if (permission.isEmpty()) {
+        if (permission == null || permission.isEmpty()) {
             return;
         }
         if (!commandSender.hasPermission(permission)) {
             returnNoPerm();
         }
+    }
+
+
+    private void returnTooFewArguments() {
+        returnTell("Usage.TooFewArguments", "&cZu wenige Argumente.");
+    }
+
+    private void returnTooManyArguments() {
+        returnTell("Usage.TooManyArguments", "&cZu viele Argumente.");
     }
 
     /**
@@ -174,7 +182,7 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
         }
 
         if (!(commandSender instanceof Player)) {
-            returnTell(NOT_FOR_CONSOLE);
+            returnTellPlain(NOT_FOR_CONSOLE);
         }
     }
 
@@ -193,11 +201,11 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
      *
      * @param message Message to be send
      */
-    private void returnTell(final String... message) {
+    private void returnTellPlain(final String... message) {
         throw new CommandValidationException(message);
     }
 
-    private void returnTell(String messageKey, final String defaultMessage) {
+    private void returnTell(final String messageKey, final String defaultMessage) {
         if (commandSender == null) {
             return;
         }

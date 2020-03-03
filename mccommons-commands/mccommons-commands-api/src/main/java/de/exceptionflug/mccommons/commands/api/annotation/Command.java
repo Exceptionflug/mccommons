@@ -10,5 +10,7 @@ import java.lang.annotation.Target;
 public @interface Command {
     String[] value();
 
+    String permission() default "";
+
     boolean inGameOnly() default false;
 }

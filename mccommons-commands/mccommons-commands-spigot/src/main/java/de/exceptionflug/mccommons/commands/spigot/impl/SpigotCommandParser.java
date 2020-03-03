@@ -3,8 +3,13 @@ package de.exceptionflug.mccommons.commands.spigot.impl;
 import com.google.common.base.Preconditions;
 import de.exceptionflug.mccommons.commands.api.AbstractCommand;
 import de.exceptionflug.mccommons.commands.api.annotation.Command;
+import de.exceptionflug.mccommons.commands.api.annotation.InGameOnly;
 import de.exceptionflug.mccommons.commands.api.command.AbstractCommandParser;
+import de.exceptionflug.mccommons.commands.api.command.CommandSettings;
+import de.exceptionflug.mccommons.commands.api.command.MainCommand;
 import de.exceptionflug.mccommons.commands.spigot.command.SpigotCommandHandler;
+
+import java.lang.reflect.Method;
 
 public final class SpigotCommandParser extends AbstractCommandParser<SpigotCommandHandler> {
 
@@ -23,10 +28,31 @@ public final class SpigotCommandParser extends AbstractCommandParser<SpigotComma
             "Can not register command: Annotation @Command is not present"
         );
 
+        //General stuff
+        final Command command = getCommandAnnotation();
 
-        final de.exceptionflug.mccommons.commands.api.annotation.Command command =
-            mccClazz.getAnnotation(de.exceptionflug.mccommons.commands.api.annotation.Command.class);
+        final CommandSettings.CommandSettingsBuilder commandSettingsBuilder = CommandSettings.builder();
 
+        commandSettingsBuilder.inGameOnly(command.inGameOnly());
+        commandSettingsBuilder.permission(command.permission());
+        commandSettingsBuilder.name(command.value());
+
+        builder.commandSettings(commandSettingsBuilder.build());
+
+        //Main command
+
+        final MainCommand.MainCommandBuilder mainCommandBuilder = MainCommand.builder();
+        final Method mainCommandMethod = getMainCommandMethod();
+
+
+        mainCommandBuilder.inGameOnly(mainCommandMethod.isAnnotationPresent(InGameOnly.class));
+        //        mainCommandBuilder.permission()
+
+        //Subcommand
+
+        for (final Method method : getSubCommandMethods()) {
+
+        }
 
         return builder.build();
     }

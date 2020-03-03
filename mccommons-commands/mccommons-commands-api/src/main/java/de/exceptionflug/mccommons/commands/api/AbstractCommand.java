@@ -29,12 +29,13 @@ public abstract class AbstractCommand<S> {
         return null;
     }
 
-    protected void returnTell(String... message) {
+    protected void returnTell(final String... message) {
         throw new CommandValidationException(message);
     }
 
-    protected void tell(String... message) {
+    protected void tell(final String... message) {
         //TODO
+        commandSender.tell(message);
     }
 
 

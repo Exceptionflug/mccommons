@@ -35,21 +35,22 @@ public class Commands {
     //TODO check: Does this work?
     public boolean isRegistered(final String command) {
         final String[] splitted = command.split(" ");
+
         return Bukkit.getServer().getHelpMap().getHelpTopic(splitted[0]) == null;
     }
 
     @SneakyThrows
+    @SuppressWarnings("unchecked")
     private void removeCommand(final String command) {
-        Class<?> serverClass = Class.forName("org.bukkit.craftbukkit." + VERSION + ".CraftServer");
+        final Class<?> serverClass = Class.forName("org.bukkit.craftbukkit." + VERSION + ".CraftServer");
 
-        Field field = serverClass.getDeclaredField("commandMap");
+        final Field field = serverClass.getDeclaredField("commandMap");
         field.setAccessible(true);
-        SimpleCommandMap commandMap = (SimpleCommandMap) field.get(Bukkit.getServer());
+        final SimpleCommandMap commandMap = (SimpleCommandMap) field.get(Bukkit.getServer());
 
-        Field field2 = SimpleCommandMap.class.getDeclaredField("knownCommands");
+        final Field field2 = SimpleCommandMap.class.getDeclaredField("knownCommands");
         field2.setAccessible(true);
-        @SuppressWarnings({"unchecked", "rawtypes"})
-        Map<String, Command> knownCommands = (Map) field2.get(commandMap);
+        final Map<String, Command> knownCommands = (Map) field2.get(commandMap);
 
         knownCommands.remove(command.toLowerCase());
     }

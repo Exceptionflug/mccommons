@@ -7,12 +7,12 @@ import de.exceptionflug.mccommons.commands.api.annotation.SubCommand;
 import de.exceptionflug.mccommons.commands.api.input.CommandInput;
 
 @Command(value = {"ban", "bannane", "bamburg"})
-public class SpigotCommandExample extends SpigotCommand {
+public final class SpigotCommandExample extends SpigotCommand {
 
-    private static String TEST = "TEST";
+    private static final String TEST = "TEST";
 
-    @SubCommand("perma")
     @InGameOnly
+    @SubCommand(value = "perma")
     @CommandArgs(minArgsLength = 1, maxArgsLength = 2)
     public void test(final CommandInput input) {
 

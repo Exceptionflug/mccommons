@@ -4,16 +4,16 @@ import com.google.common.base.Preconditions;
 import de.exceptionflug.mccommons.commands.api.exception.CommandValidationException;
 import lombok.NonNull;
 
-public class CommandInput {
+public final class CommandInput {
 
     private final java.lang.String[] arguments;
 
-    public final int getArgCount() {
-        return arguments.length;
-    }
-
     public CommandInput(final String... arguments) {
         this.arguments = arguments;
+    }
+
+    public final int getArgCount() {
+        return arguments.length;
     }
 
     public <T> T get(final Class<T> clazz, final int index) {
@@ -49,4 +49,6 @@ public class CommandInput {
             throw new CommandValidationException(errorMessage);
         }
     }
+
+
 }
