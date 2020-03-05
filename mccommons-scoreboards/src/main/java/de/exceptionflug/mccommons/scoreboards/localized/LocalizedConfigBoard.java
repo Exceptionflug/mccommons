@@ -201,7 +201,9 @@ public class LocalizedConfigBoard {
                         localizedString = config.getLocalizedString(Providers.get(LocaleProvider.class).provide(event.getPlayer().getUniqueId()), "Objectives." + split[1] + ".scores." + split[2], ".entry", "&6Entry");
                     }
                     scoreboardScore.setScoreName(FormatUtils.formatAmpersandColorCodes(FormatUtils.format(localizedString, lastState.computeIfAbsent(event.getPlayer().getUniqueId(), uuid -> any))));
-                    scoreboardScore.sendPacket(event.getPlayer());
+                    if(event.getPlayer().isOnline()) {
+                        scoreboardScore.sendPacket(event.getPlayer());
+                    }
                     event.setCancelled(true);
                 }
             } else {
@@ -213,7 +215,9 @@ public class LocalizedConfigBoard {
                         return;
                     final String localizedString = config.getLocalizedString(Providers.get(LocaleProvider.class).provide(event.getPlayer().getUniqueId()), "Objectives." + objective.getName(), ".displayName", "&eObjective");
                     objective.setDisplayName(FormatUtils.formatAmpersandColorCodes(FormatUtils.format(localizedString, lastState.computeIfAbsent(event.getPlayer().getUniqueId(), uuid -> any))));
-                    objective.sendPacket(event.getPlayer());
+                    if(event.getPlayer().isOnline()) {
+                        objective.sendPacket(event.getPlayer());
+                    }
                     event.setCancelled(true);
                 }
             }

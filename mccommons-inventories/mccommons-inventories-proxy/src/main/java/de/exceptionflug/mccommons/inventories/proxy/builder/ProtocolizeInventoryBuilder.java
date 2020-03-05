@@ -1,5 +1,6 @@
 package de.exceptionflug.mccommons.inventories.proxy.builder;
 
+import com.google.common.collect.Sets;
 import de.exceptionflug.mccommons.core.Converters;
 import de.exceptionflug.mccommons.inventories.api.InventoryBuilder;
 import de.exceptionflug.mccommons.inventories.api.InventoryItem;
@@ -21,7 +22,7 @@ import java.util.*;
 public class ProtocolizeInventoryBuilder implements InventoryBuilder {
 
     private final Map<UUID, Map.Entry<InventoryWrapper, Long>> buildMap = new LinkedHashMap<>();
-    private final Set<InventoryWrapper> wrappers = new HashSet<>();
+    private final Set<InventoryWrapper> wrappers = Sets.newConcurrentHashSet();
 
     @Override
     public <T> T build(T prebuild, InventoryWrapper wrapper) {
