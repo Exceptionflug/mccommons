@@ -221,7 +221,9 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
     }
 
     private void tellPlain(final String... messages) {
-        commandSender.sendMessage(messages);
+        for (final String message : messages) {
+            commandSender.sendMessage(message);
+        }
     }
 }
 

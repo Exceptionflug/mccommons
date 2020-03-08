@@ -22,9 +22,9 @@ public class Commands {
 
     public void removeCommands(final String... cmds) {
         Arrays.stream(cmds)
-                .map(Commands::getCommand)
-                .filter(Objects::nonNull)
-                .forEach(command -> ProxyServer.getInstance().getPluginManager().unregisterCommand(command));
+            .map(Commands::getCommand)
+            .filter(Objects::nonNull)
+            .forEach(command -> ProxyServer.getInstance().getPluginManager().unregisterCommand(command));
     }
 
     public boolean isRegistered(final String command) {
@@ -32,19 +32,18 @@ public class Commands {
     }
 
     @SneakyThrows
-    @SuppressWarnings("unchecked")
     private void removeCommand(final String command) {
-        Command cmd = getCommand(command);
-        if(cmd == null) {
+        final Command cmd = getCommand(command);
+        if (cmd == null) {
             return;
         }
         ProxyServer.getInstance().getPluginManager().unregisterCommand(cmd);
     }
 
-    private Command getCommand(String i) {
+    private Command getCommand(final String name) {
         Command out = null;
-        for(Map.Entry<String, Command> entry : ProxyServer.getInstance().getPluginManager().getCommands()) {
-            if(entry.getValue().getName().equalsIgnoreCase(i)) {
+        for (final Map.Entry<String, Command> entry : ProxyServer.getInstance().getPluginManager().getCommands()) {
+            if (entry.getValue().getName().equalsIgnoreCase(name)) {
                 out = entry.getValue();
             }
         }
