@@ -11,7 +11,7 @@ import java.util.List;
 
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class AbstractCommandFramework {
-    private final ConfigWrapper messageConfig;
+    protected final ConfigWrapper messageConfig;
 
     protected final List<AbstractCommand<?>> registeredCommands = new ArrayList<>();
 

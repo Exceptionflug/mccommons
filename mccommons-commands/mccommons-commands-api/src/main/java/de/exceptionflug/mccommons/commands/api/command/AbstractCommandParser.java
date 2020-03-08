@@ -1,14 +1,15 @@
 package de.exceptionflug.mccommons.commands.api.command;
 
 import de.exceptionflug.mccommons.commands.api.AbstractCommand;
-import de.exceptionflug.mccommons.commands.api.annotation.Command;
 import de.exceptionflug.mccommons.commands.api.annotation.SubCommand;
+import de.exceptionflug.mccommons.commands.api.annotation.*;
 import lombok.SneakyThrows;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class AbstractCommandParser<C> {
     protected final AbstractCommand<?> mccCommand;
@@ -65,5 +66,38 @@ public abstract class AbstractCommandParser<C> {
             methods.add(method);
         }
         return methods;
+    }
+
+    protected Optional<String> getPermissionOfMethod(final Method method) {
+        if (!method.isAnnotationPresent(Permission.class)) {
+            return Optional.empty();
+        }
+
+        final Permission permission = method.getAnnotation(Permission.class);
+
+        return Optional.of(permission.value());
+    }
+
+    protected boolean isInGameOnly(final Method method) {
+        return method.isAnnotationPresent(InGameOnly.class);
+    }
+
+    protected int maxArguments(final Method method) {
+        if (!method.isAnnotationPresent(CommandArgs.class)) {
+            return -1;
+        }
+
+        final CommandArgs commandArgs = method.getAnnotation(CommandArgs.class);
+
+        return commandArgs.maxArgsLength();
+    }
+
+    protected int minArguments(final Method method) {
+        if (!method.isAnnotationPresent(CommandArgs.class)) {
+            return -1;
+        }
+
+        final CommandArgs commandArgs = method.getAnnotation(CommandArgs.class);
+        return commandArgs.minArgsLength();
     }
 }

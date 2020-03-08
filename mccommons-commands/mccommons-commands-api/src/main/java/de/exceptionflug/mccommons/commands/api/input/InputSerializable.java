@@ -6,7 +6,7 @@ public abstract class InputSerializable<T> {
 
     public abstract Class<T> getClazz();
 
-    protected abstract T serialize(final String input);
+    public abstract T serialize(final String input);
 
     protected void handleError(final Throwable throwable, final String input) {
         System.err.println("Exception while parsing " + getClazz().getName() + " from " + input);

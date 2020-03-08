@@ -6,6 +6,7 @@ import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.command.SimpleCommandMap;
 
 import java.lang.reflect.Field;
@@ -35,8 +36,13 @@ public class Commands {
     //TODO check: Does this work?
     public boolean isRegistered(final String command) {
         final String[] splitted = command.split(" ");
+        final PluginCommand pluginCommand = Bukkit.getServer().getPluginCommand(splitted[0]);
 
-        return Bukkit.getServer().getHelpMap().getHelpTopic(splitted[0]) == null;
+        if (pluginCommand == null) {
+            return false;
+        }
+
+        return pluginCommand.isRegistered();
     }
 
     @SneakyThrows

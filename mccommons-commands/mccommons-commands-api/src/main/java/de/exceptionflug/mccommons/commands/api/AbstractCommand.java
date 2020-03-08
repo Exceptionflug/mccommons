@@ -16,6 +16,7 @@ public abstract class AbstractCommand<S> {
     public abstract void onCommand(final CommandInput input);
 
     public final void setCommandSender(@NonNull final AbstractCommandSender<S> sender) {
+
         Preconditions.checkArgument(commandSender == null, "CommandSender is already set!");
         this.commandSender = sender;
     }
