@@ -1,18 +1,18 @@
 package de.exceptionflug.mccommons.commands.api.command;
 
-import com.google.common.base.Preconditions;
 import de.exceptionflug.mccommons.commands.api.AbstractCommand;
 import de.exceptionflug.mccommons.commands.api.input.CommandInput;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
 @Getter
 @Builder
+@Data
 public final class SubCommand {
     //Command the SubCommand is child of
     private final AbstractCommand<?> superCommand;
@@ -26,27 +26,6 @@ public final class SubCommand {
     private final String permission;
     private final boolean isInGameOnly;
 
-    private SubCommand(final AbstractCommand<?> superCommand,
-                       final String trigger,
-                       final Method toExecute,
-                       final boolean isInGameOnly,
-                       final int minArguments,
-                       final int maxArguments,
-                       @Nullable final String permission) {
-
-        Preconditions.checkArgument(
-            toExecute.getParameterCount() == 1,
-            "Method to execute must take one parameter which is an CommandInput!"
-        );
-
-        this.superCommand = superCommand;
-        this.neededInput = trigger.toLowerCase();
-        this.subCommand = toExecute;
-        this.isInGameOnly = isInGameOnly;
-        this.minArguments = minArguments;
-        this.maxArguments = maxArguments;
-        this.permission = permission;
-    }
 
     public boolean isSubCommandTrigger(final String argumentString) {
         return argumentString.startsWith(neededInput);

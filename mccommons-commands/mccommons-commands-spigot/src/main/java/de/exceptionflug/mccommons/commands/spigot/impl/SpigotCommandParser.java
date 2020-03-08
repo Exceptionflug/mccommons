@@ -8,6 +8,7 @@ import de.exceptionflug.mccommons.commands.api.command.AbstractCommandParser;
 import de.exceptionflug.mccommons.commands.api.command.CommandSettings;
 import de.exceptionflug.mccommons.commands.api.command.MainCommand;
 import de.exceptionflug.mccommons.commands.api.command.SubCommand;
+import de.exceptionflug.mccommons.commands.spigot.command.SpigotCommand;
 import de.exceptionflug.mccommons.commands.spigot.command.SpigotCommandHandler;
 
 import java.lang.reflect.Method;
@@ -24,6 +25,7 @@ public final class SpigotCommandParser extends AbstractCommandParser<SpigotComma
     @Override
     public SpigotCommandHandler toCommand() {
         final SpigotCommandHandler.SpigotCommandHandlerBuilder builder = SpigotCommandHandler.builder();
+        builder.mccCommand((SpigotCommand) mccCommand);
 
         //Parsing the command
 

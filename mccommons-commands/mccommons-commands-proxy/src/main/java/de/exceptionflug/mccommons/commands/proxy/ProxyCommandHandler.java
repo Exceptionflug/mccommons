@@ -8,7 +8,6 @@ import de.exceptionflug.mccommons.commands.api.input.CommandInput;
 import de.exceptionflug.mccommons.commands.proxy.impl.ProxyCommandSender;
 import de.exceptionflug.mccommons.config.proxy.Message;
 import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
-import lombok.Builder;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
@@ -17,9 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Builder
 public class ProxyCommandHandler extends Command {
-
 
     private static final String NOT_FOR_CONSOLE = "[MCCommons] This command can't be run from console";
 
@@ -38,17 +35,22 @@ public class ProxyCommandHandler extends Command {
                                 final ProxyCommand proxyCommand
     ) {
         //Will be changed
-        super(commandSettings.getName()[0]);
-        final String[] names = commandSettings.getName();
-        final int length = names.length;
-        final List<String> aliases = new ArrayList<>(Arrays.asList(names)).subList(1, length - 1);
-
+        super(commandSettings.getName()[0],
+            null,
+            new ArrayList<>(
+                Arrays.asList(commandSettings.getName()))
+                .subList(1, commandSettings.getName().length - 1)
+                .toArray(new String[0]));
 
         this.commandSettings = commandSettings;
         this.mainCommand = mainCommand;
         this.subCommands = subCommands;
         this.configWrapper = configWrapper;
         this.mccCommand = proxyCommand;
+    }
+
+    public static ProxyCommandHandlerBuilder builder() {
+        return new ProxyCommandHandlerBuilder();
     }
 
     @Override
@@ -220,6 +222,52 @@ public class ProxyCommandHandler extends Command {
     private void tellPlain(final String... messages) {
         for (final String message : messages) {
             commandSender.sendMessage(message);
+        }
+    }
+
+    public static class ProxyCommandHandlerBuilder {
+        private List<SubCommand> subCommands;
+        private ConfigWrapper configWrapper;
+        private ProxyCommand mccCommand;
+        private MainCommand mainCommand;
+        private CommandSettings commandSettings;
+        private CommandSender commandSender;
+        private String[] args;
+
+        ProxyCommandHandlerBuilder() {
+        }
+
+        public ProxyCommandHandlerBuilder subCommands(final List<SubCommand> subCommands) {
+            this.subCommands = subCommands;
+            return this;
+        }
+
+        public ProxyCommandHandlerBuilder configWrapper(final ConfigWrapper configWrapper) {
+            this.configWrapper = configWrapper;
+            return this;
+        }
+
+        public ProxyCommandHandlerBuilder mccCommand(final ProxyCommand mccCommand) {
+            this.mccCommand = mccCommand;
+            return this;
+        }
+
+        public ProxyCommandHandlerBuilder mainCommand(final MainCommand mainCommand) {
+            this.mainCommand = mainCommand;
+            return this;
+        }
+
+        public ProxyCommandHandlerBuilder commandSettings(final CommandSettings commandSettings) {
+            this.commandSettings = commandSettings;
+            return this;
+        }
+
+        public ProxyCommandHandler build() {
+            return new ProxyCommandHandler(commandSettings, mainCommand, subCommands, configWrapper, mccCommand);
+        }
+
+        @Override public String toString() {
+            return "ProxyCommandHandler.ProxyCommandHandlerBuilder(subCommands=" + this.subCommands + ", configWrapper=" + this.configWrapper + ", mccCommand=" + this.mccCommand + ", mainCommand=" + this.mainCommand + ", commandSettings=" + this.commandSettings + ", commandSender=" + this.commandSender + ", args=" + Arrays.deepToString(this.args) + ")";
         }
     }
 }

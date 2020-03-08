@@ -8,7 +8,6 @@ import de.exceptionflug.mccommons.commands.api.input.CommandInput;
 import de.exceptionflug.mccommons.commands.spigot.impl.SpigotCommandSender;
 import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
 import de.exceptionflug.mccommons.config.spigot.Message;
-import lombok.Builder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -16,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Builder
 public final class SpigotCommandHandler extends org.bukkit.command.Command {
 
     private static final String NOT_FOR_CONSOLE = "[MCCommons] This command can't be run from console";
@@ -26,8 +24,8 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
     private final SpigotCommand mccCommand;
     private final MainCommand mainCommand;
     private final CommandSettings commandSettings;
-    private CommandSender commandSender;
-    private String[] args;
+    private CommandSender commandSender = null;
+    private String[] args = null;
 
     private SpigotCommandHandler(final CommandSettings commandSettings,
                                  final MainCommand mainCommand,
@@ -51,6 +49,10 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
         this.subCommands = subCommands;
         this.configWrapper = configWrapper;
         this.mccCommand = spigotCommand;
+    }
+
+    public static SpigotCommandHandlerBuilder builder() {
+        return new SpigotCommandHandlerBuilder();
     }
 
     @Override
@@ -223,6 +225,62 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
     private void tellPlain(final String... messages) {
         for (final String message : messages) {
             commandSender.sendMessage(message);
+        }
+    }
+
+    public static class SpigotCommandHandlerBuilder {
+        private List<SubCommand> subCommands;
+        private ConfigWrapper configWrapper;
+        private SpigotCommand mccCommand;
+        private MainCommand mainCommand;
+        private CommandSettings commandSettings;
+        private CommandSender commandSender;
+        private String[] args;
+
+        SpigotCommandHandlerBuilder() {
+        }
+
+        public SpigotCommandHandlerBuilder subCommands(final List<SubCommand> subCommands) {
+            this.subCommands = subCommands;
+            return this;
+        }
+
+        public SpigotCommandHandlerBuilder configWrapper(final ConfigWrapper configWrapper) {
+            this.configWrapper = configWrapper;
+            return this;
+        }
+
+        public SpigotCommandHandlerBuilder mccCommand(final SpigotCommand mccCommand) {
+            this.mccCommand = mccCommand;
+            return this;
+        }
+
+        public SpigotCommandHandlerBuilder mainCommand(final MainCommand mainCommand) {
+            this.mainCommand = mainCommand;
+            return this;
+        }
+
+        public SpigotCommandHandlerBuilder commandSettings(final CommandSettings commandSettings) {
+            this.commandSettings = commandSettings;
+            return this;
+        }
+
+        public SpigotCommandHandlerBuilder commandSender(final CommandSender commandSender) {
+            this.commandSender = commandSender;
+            return this;
+        }
+
+        public SpigotCommandHandlerBuilder args(final String[] args) {
+            this.args = args;
+            return this;
+        }
+
+        public SpigotCommandHandler build() {
+            return new SpigotCommandHandler(commandSettings, mainCommand, subCommands, configWrapper, mccCommand);
+        }
+
+        @Override public String toString() {
+            return "SpigotCommandHandler.SpigotCommandHandlerBuilder(subCommands=" + this.subCommands + ", configWrapper=" + this.configWrapper + ", mccCommand=" + this.mccCommand + ", mainCommand=" + this.mainCommand + ", commandSettings=" + this.commandSettings + ", commandSender=" + this.commandSender + ", args=" + Arrays.deepToString(this.args) + ")";
         }
     }
 }

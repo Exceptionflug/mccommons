@@ -8,6 +8,7 @@ import de.exceptionflug.mccommons.commands.api.command.AbstractCommandParser;
 import de.exceptionflug.mccommons.commands.api.command.CommandSettings;
 import de.exceptionflug.mccommons.commands.api.command.MainCommand;
 import de.exceptionflug.mccommons.commands.api.command.SubCommand;
+import de.exceptionflug.mccommons.commands.proxy.ProxyCommand;
 import de.exceptionflug.mccommons.commands.proxy.ProxyCommandHandler;
 
 import java.lang.reflect.Method;
@@ -25,8 +26,8 @@ public class ProxyCommandParser extends AbstractCommandParser<ProxyCommandHandle
     public ProxyCommandHandler toCommand() {
         final ProxyCommandHandler.ProxyCommandHandlerBuilder builder = ProxyCommandHandler.builder();
 
+        builder.mccCommand((ProxyCommand) mccCommand);
         //Parsing the command
-
         Preconditions.checkArgument(
             isAnnotationPresent(Command.class),
             "Can not register command: Annotation @Command is not present"
