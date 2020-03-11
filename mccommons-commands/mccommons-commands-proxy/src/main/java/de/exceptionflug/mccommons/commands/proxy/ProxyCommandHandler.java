@@ -8,13 +8,16 @@ import de.exceptionflug.mccommons.commands.api.input.CommandInput;
 import de.exceptionflug.mccommons.commands.proxy.impl.ProxyCommandSender;
 import de.exceptionflug.mccommons.config.proxy.Message;
 import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
+import de.exceptionflug.mccommons.core.Providers;
+import de.exceptionflug.mccommons.core.providers.LocaleProvider;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
 
 public class ProxyCommandHandler extends Command {
 
@@ -35,18 +38,22 @@ public class ProxyCommandHandler extends Command {
                                 final ProxyCommand proxyCommand
     ) {
         //Will be changed
-        super(commandSettings.getName()[0],
-            null,
-            new ArrayList<>(
-                Arrays.asList(commandSettings.getName()))
-                .subList(1, commandSettings.getName().length - 1)
-                .toArray(new String[0]));
+        super(commandSettings.getName()[0], null, aliases(commandSettings.getName()));
 
         this.commandSettings = commandSettings;
         this.mainCommand = mainCommand;
         this.subCommands = subCommands;
         this.configWrapper = configWrapper;
         this.mccCommand = proxyCommand;
+    }
+
+    private static String[] aliases(final String[] name) {
+        if (name.length > 1) {
+            final String[] out = new String[name.length - 1];
+            System.arraycopy(name, 1, out, 0, out.length);
+            return out;
+        }
+        return new String[0];
     }
 
     public static ProxyCommandHandlerBuilder builder() {
@@ -58,7 +65,7 @@ public class ProxyCommandHandler extends Command {
         this.commandSender = sender;
         this.args = args;
 
-        mccCommand.setCommandSender(new ProxyCommandSender(sender));
+        mccCommand.setSender(new ProxyCommandSender(sender));
 
         final int length = args.length;
 
@@ -78,7 +85,7 @@ public class ProxyCommandHandler extends Command {
 
             checkConsole(mainCommand.isInGameOnly());
 
-            final CommandInput input = new CommandInput(args);
+            final CommandInput input = new CommandInput(getLocale(), args);
 
             mccCommand.onCommand(input);
 
@@ -132,13 +139,20 @@ public class ProxyCommandHandler extends Command {
 
             checkPermission(permission);
 
-            subCommand.executeSubCommand(new CommandInput(subCommandArguments));
+            subCommand.executeSubCommand(new CommandInput(getLocale(), subCommandArguments));
 
             //Break up the command-execution as our subcommand was found.
             throw new CommandValidationException();
         }
     }
 
+    public Locale getLocale() {
+        if (!(commandSender instanceof ProxiedPlayer)) {
+            return Locale.GERMAN;
+        }
+        final UUID uuid = ((ProxiedPlayer) commandSender).getUniqueId();
+        return Providers.get(LocaleProvider.class).provide(uuid);
+    }
 
     private void checkConsole(final boolean condition) {
         if (!condition) {

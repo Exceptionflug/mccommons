@@ -8,14 +8,18 @@ import de.exceptionflug.mccommons.commands.api.input.CommandInput;
 import de.exceptionflug.mccommons.commands.spigot.impl.SpigotCommandSender;
 import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
 import de.exceptionflug.mccommons.config.spigot.Message;
+import de.exceptionflug.mccommons.core.Providers;
+import de.exceptionflug.mccommons.core.providers.LocaleProvider;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public final class SpigotCommandHandler extends org.bukkit.command.Command {
+    private static final LocaleProvider localeProvider = Providers.get(LocaleProvider.class);
 
     private static final String NOT_FOR_CONSOLE = "[MCCommons] This command can't be run from console";
 
@@ -25,7 +29,7 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
     private final MainCommand mainCommand;
     private final CommandSettings commandSettings;
     private CommandSender commandSender = null;
-    private String[] args = null;
+    private String[] args = new String[0];
 
     private SpigotCommandHandler(final CommandSettings commandSettings,
                                  final MainCommand mainCommand,
@@ -38,9 +42,11 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
 
         final String[] names = commandSettings.getName();
         final int length = names.length;
-        final List<String> aliases = new ArrayList<>(Arrays.asList(names)).subList(1, length - 1);
+
+        final List<String> aliases = length > 1 ? new ArrayList<>(Arrays.asList(names)).subList(1, length - 1) : new ArrayList<>();
 
         setLabel(names[0]);
+        setName(names[0]);
 
         setAliases(aliases);
 
@@ -49,6 +55,7 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
         this.subCommands = subCommands;
         this.configWrapper = configWrapper;
         this.mccCommand = spigotCommand;
+
     }
 
     public static SpigotCommandHandlerBuilder builder() {
@@ -60,7 +67,7 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
         this.commandSender = sender;
         this.args = args;
 
-        mccCommand.setCommandSender(new SpigotCommandSender(sender));
+        mccCommand.setSender(new SpigotCommandSender(sender));
 
         final int length = args.length;
 
@@ -77,10 +84,9 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
 
             //checking maincommand-rules
 
-
             checkConsole(mainCommand.isInGameOnly());
 
-            final CommandInput input = new CommandInput(args);
+            final CommandInput input = new CommandInput(getLocale(), args);
 
             mccCommand.onCommand(input);
 
@@ -135,13 +141,19 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
 
             checkPermission(permission);
 
-            subCommand.executeSubCommand(new CommandInput(subCommandArguments));
+            subCommand.executeSubCommand(new CommandInput(getLocale(), subCommandArguments));
 
             //Break up the command-execution as our subcommand was found.
             throw new CommandValidationException();
         }
     }
 
+    private Locale getLocale() {
+        if (commandSender == null || !(commandSender instanceof Player)) {
+            return Locale.GERMAN;
+        }
+        return localeProvider.provide(((Player) commandSender).getUniqueId());
+    }
 
     private void checkConsole(final boolean condition) {
         if (!condition) {

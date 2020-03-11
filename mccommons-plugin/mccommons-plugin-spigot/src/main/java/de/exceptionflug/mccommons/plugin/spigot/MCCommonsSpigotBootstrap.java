@@ -1,6 +1,7 @@
 package de.exceptionflug.mccommons.plugin.spigot;
 
 import com.flowpowered.nbt.CompoundTag;
+import de.exceptionflug.mccommons.commands.spigot.command.SpigotCommandFramework;
 import de.exceptionflug.mccommons.config.remote.client.RemoteConfigClient;
 import de.exceptionflug.mccommons.config.shared.ConfigFactory;
 import de.exceptionflug.mccommons.config.shared.ConfigItemStack;
@@ -26,6 +27,7 @@ import de.exceptionflug.mccommons.inventories.spigot.utils.ReflectionUtil;
 import de.exceptionflug.mccommons.inventories.spigot.utils.ServerVersionProvider;
 import de.exceptionflug.mccommons.plugin.spigot.commands.ConfigReloadCommand;
 import de.exceptionflug.mccommons.plugin.spigot.commands.HologramReloadCommand;
+import de.exceptionflug.mccommons.plugin.spigot.commands.SchafeCommand;
 import de.exceptionflug.mccommons.plugin.spigot.converter.ItemStackConverter;
 import de.exceptionflug.mccommons.plugin.spigot.converter.PlayerConverter;
 import org.bukkit.Bukkit;
@@ -77,18 +79,23 @@ public class MCCommonsSpigotBootstrap {
             Converters.register(CompoundTag.class, ReflectionUtil.getClass("{nms}.NBTTagCompound"), new FlowNbtNmsNbtConverter());
             Converters.register(ReflectionUtil.getClass("{nms}.NBTTagCompound"), CompoundTag.class, new NmsNbtFlowNbtConverter());
             Converters.register(ItemStack.class, ItemStackWrapper.class, src -> new SpigotItemStackWrapper((ItemStack) src));
-            Converters.register(ItemStackWrapper.class, ItemStack.class, src -> ((ItemStackWrapper)src).getHandle());
-            Converters.register(SpigotItemStackWrapper.class, ItemStack.class, src -> ((ItemStackWrapper)src).getHandle());
+            Converters.register(ItemStackWrapper.class, ItemStack.class, src -> ((ItemStackWrapper) src).getHandle());
+            Converters.register(SpigotItemStackWrapper.class, ItemStack.class, src -> ((ItemStackWrapper) src).getHandle());
             Converters.register(ClickType.class, de.exceptionflug.mccommons.inventories.api.ClickType.class, new SpigotClickTypeConverter());
             Converters.register(InventoryType.class, org.bukkit.event.inventory.InventoryType.class, new SpigotInventoryTypeConverter());
             Converters.register(ReflectionUtil.getClass("{obc}.inventory.CraftItemStack"), ItemStack.class, new CraftItemStackConverter());
+
+            final ConfigWrapper rapper = ConfigFactory.create(new File("plugins/mccommons/commands/CommandFramework.yml"), SpigotConfig.class);
+            final SpigotCommandFramework commandFramework = new SpigotCommandFramework(rapper);
+
+            commandFramework.registerCommand(new SchafeCommand());
 
             Bukkit.getPluginManager().registerEvents(new InventoryListener(), plugin);
             plugin.getCommand("mcrl").setExecutor(new ConfigReloadCommand());
             plugin.getCommand("hrl").setExecutor(new HologramReloadCommand());
 
             Holograms.init(plugin);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
 

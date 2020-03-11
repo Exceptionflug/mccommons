@@ -3,6 +3,8 @@ package de.exceptionflug.mccommons.commands.api.command;
 import de.exceptionflug.mccommons.commands.api.AbstractCommand;
 import de.exceptionflug.mccommons.commands.api.annotation.SubCommand;
 import de.exceptionflug.mccommons.commands.api.annotation.*;
+import de.exceptionflug.mccommons.commands.api.input.CommandInput;
+import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
 import lombok.SneakyThrows;
 
 import java.lang.annotation.Annotation;
@@ -14,10 +16,12 @@ import java.util.Optional;
 public abstract class AbstractCommandParser<C> {
     protected final AbstractCommand<?> mccCommand;
     protected final Class<? extends AbstractCommand> mccClazz;
+    protected final ConfigWrapper configWrapper;
 
-    protected AbstractCommandParser(final AbstractCommand<?> mccCommand) {
+    protected AbstractCommandParser(final AbstractCommand<?> mccCommand, final ConfigWrapper configWrapper) {
         this.mccCommand = mccCommand;
         this.mccClazz = mccCommand.getClass();
+        this.configWrapper = configWrapper;
     }
 
 
@@ -49,7 +53,7 @@ public abstract class AbstractCommandParser<C> {
 
     @SneakyThrows
     protected Method getMainCommandMethod() {
-        return mccClazz.getMethod("onCommand");
+        return mccClazz.getMethod("onCommand", CommandInput.class);
     }
 
     protected List<Method> getSubCommandMethods() {

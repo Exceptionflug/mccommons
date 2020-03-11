@@ -6,28 +6,30 @@ import de.exceptionflug.mccommons.commands.api.input.InputSerializable;
 import de.exceptionflug.mccommons.commands.api.input.InputSerializer;
 import de.exceptionflug.mccommons.commands.spigot.impl.SpigotCommandParser;
 import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
+import de.exceptionflug.mccommons.config.spigot.Message;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.Locale;
 import java.util.UUID;
 
-public class SpigotCommandFramework extends AbstractCommandFramework {
-
+public final class SpigotCommandFramework extends AbstractCommandFramework {
 
     private static volatile SpigotCommandFramework instance;
 
     public SpigotCommandFramework(final ConfigWrapper messageConfig) {
         super(messageConfig);
+        registerDefaultInputSerializables();
     }
 
     @Override
     public void registerCommand(@NonNull final AbstractCommand<?> command) {
         registeredCommands.add(command);
-        Commands.registerCommand(new SpigotCommandParser(command).toCommand());
+        Commands.registerCommand(new SpigotCommandParser(command, messageConfig).toCommand());
     }
 
-    public void registerDefaultInputSerializables() {
+    private void registerDefaultInputSerializables() {
 
         InputSerializer.registerSerializable(new InputSerializable<Player>() {
             @Override
@@ -36,7 +38,7 @@ public class SpigotCommandFramework extends AbstractCommandFramework {
             }
 
             @Override
-            public Player serialize(final String input) {
+            public Player serialize(final String input, final Locale locale) {
                 final Player player;
                 if (input.length() == 36) {
                     final UUID targetUUID = UUID.fromString(input);
@@ -46,13 +48,10 @@ public class SpigotCommandFramework extends AbstractCommandFramework {
                 }
 
                 if (player == null) {
+                    throwException(Message.getMessage(messageConfig, locale, "PlayerNotOnline", "&cDieser Spieler ist nicht online."));
                 }
                 return player;
             }
         });
-
-
     }
-
-
 }

@@ -10,6 +10,7 @@ import de.exceptionflug.mccommons.commands.api.command.MainCommand;
 import de.exceptionflug.mccommons.commands.api.command.SubCommand;
 import de.exceptionflug.mccommons.commands.proxy.ProxyCommand;
 import de.exceptionflug.mccommons.commands.proxy.ProxyCommandHandler;
+import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -18,8 +19,8 @@ import java.util.Optional;
 
 public class ProxyCommandParser extends AbstractCommandParser<ProxyCommandHandler> {
 
-    public ProxyCommandParser(final AbstractCommand<?> mccCommand) {
-        super(mccCommand);
+    public ProxyCommandParser(final AbstractCommand<?> mccCommand, final ConfigWrapper configWrapper) {
+        super(mccCommand, configWrapper);
     }
 
     @Override

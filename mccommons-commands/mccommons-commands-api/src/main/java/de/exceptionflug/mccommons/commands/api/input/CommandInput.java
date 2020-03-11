@@ -4,11 +4,15 @@ import com.google.common.base.Preconditions;
 import de.exceptionflug.mccommons.commands.api.exception.CommandValidationException;
 import lombok.NonNull;
 
+import java.util.Locale;
+
 public final class CommandInput {
 
+    private final Locale senderLocale;
     private final java.lang.String[] arguments;
 
-    public CommandInput(final String... arguments) {
+    public CommandInput(final Locale senderLocale, final String... arguments) {
+        this.senderLocale = senderLocale;
         this.arguments = arguments;
     }
 
@@ -16,8 +20,8 @@ public final class CommandInput {
         return arguments.length;
     }
 
-    public <T> T get(final Class<T> clazz, final int index) {
-        return InputSerializer.serialize(clazz, arguments[index]);
+    public <T> T find(final Class<T> clazz, final int index) {
+        return InputSerializer.serialize(clazz, arguments[index], senderLocale);
     }
 
     /**
@@ -25,7 +29,7 @@ public final class CommandInput {
      * @param errorMessage  Message that should be told to our players
      * @return
      */
-    public final int parseInt(final int argumentIndex, @NonNull final java.lang.String... errorMessage) {
+    public final int findInt(final int argumentIndex, @NonNull final java.lang.String... errorMessage) {
         Preconditions.checkArgument(argumentIndex > arguments.length - 1, "Can't parse Int: ArrayIndex would be out of bounds!");
 
         try {
@@ -40,7 +44,7 @@ public final class CommandInput {
      * @param errorMessage  Message that should be told to our players
      * @return
      */
-    public final double parseDouble(final int argumentIndex, @NonNull final java.lang.String... errorMessage) {
+    public final double findDouble(final int argumentIndex, @NonNull final java.lang.String... errorMessage) {
         Preconditions.checkArgument(argumentIndex > arguments.length - 1, "Can't parse Double: ArrayIndex would be out of bounds!");
 
         try {
@@ -49,6 +53,4 @@ public final class CommandInput {
             throw new CommandValidationException(errorMessage);
         }
     }
-
-
 }
