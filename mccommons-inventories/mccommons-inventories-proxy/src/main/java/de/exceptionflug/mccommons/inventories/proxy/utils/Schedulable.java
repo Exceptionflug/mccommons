@@ -30,7 +30,7 @@ public interface Schedulable {
             @Override
             public void run() {
                 count.getAndIncrement();
-                if(count.get() <= times)
+                if (count.get() <= times)
                     runnable.accept(count.get());
             }
         }, delay, tickPeriod, unit);

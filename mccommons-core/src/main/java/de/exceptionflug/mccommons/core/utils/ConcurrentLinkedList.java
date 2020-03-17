@@ -12,14 +12,15 @@ public class ConcurrentLinkedList<T> extends AbstractSequentialList<T> implement
     private int size = -1;
 
     @Override
-    public ListIterator<T> listIterator(int index) {
+    public ListIterator<T> listIterator(final int index) {
         return new ListItr(index);
     }
 
     @Override
     public int size() {
-        if(size == -1)
+        if (size == -1) {
             size = root.elementsAfter();
+        }
         return size;
     }
 
@@ -28,8 +29,9 @@ public class ConcurrentLinkedList<T> extends AbstractSequentialList<T> implement
         Node cursor = root;
         do {
             cursor = cursor.next;
-            if(cursor == null)
-                throw new IndexOutOfBoundsException("Requested index "+index+" but size is "+size());
+            if (cursor == null) {
+                throw new IndexOutOfBoundsException("Requested index " + index + " but size is " + size());
+            }
         } while ((i += 1) != index);
         return cursor;
     }
@@ -38,34 +40,36 @@ public class ConcurrentLinkedList<T> extends AbstractSequentialList<T> implement
         remove(0);
     }
 
-    public void addLast(T t) {
+    public void addLast(final T t) {
         add(t);
     }
 
     public T getLast() {
-        return node(size()-1).getItem();
+        return node(size() - 1).getItem();
     }
 
     class Node implements Serializable {
 
         private static final long serialVersionUID = 923460414702730917L;
-        private T item;
         public volatile Node next;
         public volatile Node prev;
+        private T item;
 
         public Node(final T t) {
             item = t;
         }
 
-        public Node() {}
+        public Node() {
+        }
 
         public int elementsAfter() {
             int i = 1;
             Node cursor = next;
-            if(next == null)
+            if (next == null) {
                 return 0;
+            }
             while ((cursor = cursor.next) != null) {
-                i ++;
+                i++;
             }
             return i;
         }
@@ -73,10 +77,11 @@ public class ConcurrentLinkedList<T> extends AbstractSequentialList<T> implement
         public int elementsBefore() {
             int i = 0;
             Node cursor = prev;
-            if(prev == null)
+            if (prev == null) {
                 return 0;
+            }
             while ((cursor = cursor.prev) != null) {
-                i ++;
+                i++;
             }
             return i;
         }
@@ -100,7 +105,7 @@ public class ConcurrentLinkedList<T> extends AbstractSequentialList<T> implement
 
         ListItr(final int index) {
             next = (index == size()) ? null : node(index);
-            prev = (index == 0) ? null : next != null ? next.prev : node(index-1);
+            prev = (index == 0) ? null : next != null ? next.prev : node(index - 1);
             nextIndex = index;
         }
 
@@ -111,26 +116,28 @@ public class ConcurrentLinkedList<T> extends AbstractSequentialList<T> implement
 
         @Override
         public T next() {
-            if(!hasNext())
+            if (!hasNext()) {
                 throw new NoSuchElementException();
+            }
             lastReturned = next;
             next = next.next;
             prev = next;
-            nextIndex ++;
+            nextIndex++;
             return lastReturned.getItem();
         }
 
         @Override
         public boolean hasPrevious() {
-            return nextIndex-1 >= 0;
+            return nextIndex - 1 >= 0;
         }
 
         @Override
         public T previous() {
-            if(!hasPrevious())
+            if (!hasPrevious()) {
                 throw new NoSuchElementException();
+            }
             lastReturned = prev;
-            nextIndex --;
+            nextIndex--;
             next = prev;
             prev = (nextIndex < 0) ? null : prev.prev;
             return lastReturned.getItem();
@@ -143,48 +150,54 @@ public class ConcurrentLinkedList<T> extends AbstractSequentialList<T> implement
 
         @Override
         public int previousIndex() {
-            return nextIndex-1;
+            return nextIndex - 1;
         }
 
         @Override
         public void remove() {
             final Node following = lastReturned.next;
             final Node trailing = lastReturned.prev;
-            if(following != null)
+            if (following != null) {
                 following.prev = trailing;
-            if(trailing != null)
+            }
+            if (trailing != null) {
                 trailing.next = following;
-            size --;
+            }
+            size--;
         }
 
         @Override
-        public void set(T t) {
+        public void set(final T t) {
             final Node newNode = new Node(t);
             final Node following = lastReturned.next;
             final Node trailing = lastReturned.prev;
-            if(following != null)
+            if (following != null) {
                 newNode.next = following;
-            if(trailing != null)
+            }
+            if (trailing != null) {
                 newNode.prev = trailing;
-            if(following != null)
+            }
+            if (following != null) {
                 following.prev = newNode;
-            if(trailing != null)
+            }
+            if (trailing != null) {
                 trailing.next = newNode;
+            }
         }
 
         @Override
-        public void add(T t) {
+        public void add(final T t) {
             final Node newNode = new Node(t);
             final int prevIndex = nextIndex - 1;
             final Node prev = prevIndex < 0 ? root : node(prevIndex);
             prev.next = newNode;
             newNode.prev = prev;
 
-            if(next != null) {
+            if (next != null) {
                 next.prev = newNode;
                 newNode.next = next;
             }
-            size ++;
+            size++;
         }
     }
 
