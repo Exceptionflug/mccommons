@@ -1,6 +1,8 @@
 package de.exceptionflug.mccommons.commands.spigot.impl;
 
 import de.exceptionflug.mccommons.commands.api.command.AbstractCommandSender;
+import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
+import de.exceptionflug.mccommons.config.spigot.Message;
 import de.exceptionflug.mccommons.core.Providers;
 import de.exceptionflug.mccommons.core.providers.LocaleProvider;
 import org.bukkit.command.CommandSender;
@@ -11,8 +13,11 @@ import java.util.UUID;
 
 public final class SpigotCommandSender extends AbstractCommandSender<CommandSender> {
 
-    public SpigotCommandSender(final CommandSender handle) {
+    private final ConfigWrapper configWrapper;
+
+    public SpigotCommandSender(final CommandSender handle, ConfigWrapper configWrapper) {
         super(handle);
+        this.configWrapper = configWrapper;
     }
 
     @Override
@@ -25,7 +30,13 @@ public final class SpigotCommandSender extends AbstractCommandSender<CommandSend
     }
 
     @Override
-    public void tell(final String... message) {
+    public void tellPlain(final String... message) {
         handle.sendMessage(message);
     }
+
+    @Override
+    public void tell(String msgKey, String defaultMessage, String... replacements) {
+        Message.send(getHandle(), configWrapper, msgKey, defaultMessage, replacements);
+    }
+
 }

@@ -10,6 +10,6 @@ public final class SchafeCommand extends SpigotCommand {
     @Override
     public void onCommand(final CommandInput input) {
         System.out.println("Schafe züchten");
-        tell("Schafe züchten macht spaß");
+        tellPlain("Schafe züchten macht spaß");
     }
 }

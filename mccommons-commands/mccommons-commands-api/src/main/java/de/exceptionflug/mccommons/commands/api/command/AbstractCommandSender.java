@@ -12,5 +12,7 @@ public abstract class AbstractCommandSender<S> {
 
     public abstract Locale getLocale();
 
-    public abstract void tell(final String... messages);
+    public abstract void tellPlain(final String... messages);
+
+    public abstract void tell(String msgKey, String defaultMessage, String... replacements);
 }

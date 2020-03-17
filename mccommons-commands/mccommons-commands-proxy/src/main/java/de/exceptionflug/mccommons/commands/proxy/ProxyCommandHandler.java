@@ -65,7 +65,8 @@ public class ProxyCommandHandler extends Command {
         this.commandSender = sender;
         this.args = args;
 
-        mccCommand.setSender(new ProxyCommandSender(sender));
+        mccCommand.setSender(new ProxyCommandSender(sender, configWrapper));
+        mccCommand.setMsgConfig(configWrapper);
 
         final int length = args.length;
 

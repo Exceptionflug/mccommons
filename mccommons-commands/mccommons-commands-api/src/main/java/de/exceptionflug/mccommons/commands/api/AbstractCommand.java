@@ -5,13 +5,16 @@ import com.google.common.base.Preconditions;
 import de.exceptionflug.mccommons.commands.api.command.AbstractCommandSender;
 import de.exceptionflug.mccommons.commands.api.exception.CommandValidationException;
 import de.exceptionflug.mccommons.commands.api.input.CommandInput;
+import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
 import lombok.NonNull;
 
+import java.security.MessageDigest;
 import java.util.Optional;
 
 public abstract class AbstractCommand<S> {
 
     private AbstractCommandSender<S> commandSender;
+    protected ConfigWrapper msgConfig;
 
     public abstract void onCommand(final CommandInput input);
 
@@ -25,16 +28,21 @@ public abstract class AbstractCommand<S> {
         this.commandSender = sender;
     }
 
+    public void setMsgConfig(ConfigWrapper msgConfig) {
+        this.msgConfig = msgConfig;
+    }
+
     public Optional<String> getPermission() {
         return Optional.empty();
     }
 
-    protected void returnTell(final String... message) {
+    protected void returnTellPlain(final String... message) {
         throw new CommandValidationException(message);
     }
 
-    protected void tell(final String... message) {
-        //TODO
-        commandSender.tell(message);
+    protected abstract void tell(String messageKey, String defaultMessage, String... replacements);
+
+    protected void tellPlain(final String... message) {
+        commandSender.tellPlain(message);
     }
 }

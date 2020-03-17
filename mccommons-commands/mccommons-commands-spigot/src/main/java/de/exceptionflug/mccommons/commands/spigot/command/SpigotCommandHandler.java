@@ -67,7 +67,8 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
         this.commandSender = sender;
         this.args = args;
 
-        mccCommand.setSender(new SpigotCommandSender(sender));
+        mccCommand.setSender(new SpigotCommandSender(sender, configWrapper));
+        mccCommand.setMsgConfig(configWrapper);
 
         final int length = args.length;
 
