@@ -92,6 +92,10 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
             mccCommand.onCommand(input);
 
         } catch (final CommandValidationException ex) { //Command break-up condition
+            if(ex.getMessages() == null) {
+                tell(ex.getMessageKey(), ex.getDefaultMessage(), ex.getReplacements());
+                return false;
+            }
             if (ex.getMessages().length == 0) {
                 return false;
             }
@@ -228,11 +232,11 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
         throw new CommandValidationException();
     }
 
-    private void tell(final String messageKey, final String defaultMessage) {
+    private void tell(final String messageKey, final String defaultMessage, final String... replacements) {
         if (commandSender == null) {
             return;
         }
-        Message.send(commandSender, configWrapper, messageKey, defaultMessage);
+        Message.send(commandSender, configWrapper, messageKey, defaultMessage, replacements);
     }
 
     private void tellPlain(final String... messages) {

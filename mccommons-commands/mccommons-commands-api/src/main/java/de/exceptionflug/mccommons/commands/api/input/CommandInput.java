@@ -26,31 +26,35 @@ public final class CommandInput {
 
     /**
      * @param argumentIndex Index to search our Integer in our arguments
-     * @param errorMessage  Message that should be told to our players
-     * @return
+     * @param errorMsgKey the message key of the localized message
+     * @param errorDefaultMsg the default message of the localized message
+     * @param replacements replacements for placeholders
+     * @return the found int
      */
-    public final int findInt(final int argumentIndex, @NonNull final java.lang.String... errorMessage) {
+    public final int findInt(final int argumentIndex, @NonNull final String errorMsgKey, @NonNull final String errorDefaultMsg, @NonNull final String... replacements) {
         Preconditions.checkArgument(argumentIndex > arguments.length - 1, "Can't parse Int: ArrayIndex would be out of bounds!");
 
         try {
             return Integer.parseInt(arguments[argumentIndex]);
         } catch (final NumberFormatException ex) {
-            throw new CommandValidationException(errorMessage);
+            throw new CommandValidationException(errorMsgKey, errorDefaultMsg, replacements);
         }
     }
 
     /**
      * @param argumentIndex Index to search our Integer in our arguments
-     * @param errorMessage  Message that should be told to our players
+     * @param errorMsgKey the message key of the localized message
+     * @param errorDefaultMsg the default message of the localized message
+     * @param replacements replacements for placeholders
      * @return
      */
-    public final double findDouble(final int argumentIndex, @NonNull final java.lang.String... errorMessage) {
+    public final double findDouble(final int argumentIndex, @NonNull final String errorMsgKey, @NonNull final String errorDefaultMsg, @NonNull final String... replacements) {
         Preconditions.checkArgument(argumentIndex > arguments.length - 1, "Can't parse Double: ArrayIndex would be out of bounds!");
 
         try {
             return Double.parseDouble(arguments[argumentIndex]);
         } catch (final NumberFormatException ex) {
-            throw new CommandValidationException(errorMessage);
+            throw new CommandValidationException(errorMsgKey, errorDefaultMsg, replacements);
         }
     }
 }

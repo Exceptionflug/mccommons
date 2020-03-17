@@ -91,6 +91,10 @@ public class ProxyCommandHandler extends Command {
             mccCommand.onCommand(input);
 
         } catch (final CommandValidationException ex) { //Command break-up condition
+            if(ex.getMessages() == null) {
+                tell(ex.getMessageKey(), ex.getDefaultMessage(), ex.getReplacements());
+                return;
+            }
             if (ex.getMessages().length == 0) {
                 return;
             }
@@ -227,11 +231,11 @@ public class ProxyCommandHandler extends Command {
         throw new CommandValidationException();
     }
 
-    private void tell(final String messageKey, final String defaultMessage) {
+    private void tell(final String messageKey, final String defaultMessage, final String... replacements) {
         if (commandSender == null) {
             return;
         }
-        Message.send(commandSender, configWrapper, messageKey, defaultMessage);
+        Message.send(commandSender, configWrapper, messageKey, defaultMessage, replacements);
     }
 
     private void tellPlain(final String... messages) {
