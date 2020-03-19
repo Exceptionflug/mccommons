@@ -8,7 +8,6 @@ import de.exceptionflug.mccommons.commands.api.input.CommandInput;
 import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
 import lombok.NonNull;
 
-import java.security.MessageDigest;
 import java.util.Optional;
 
 public abstract class AbstractCommand<S> {
