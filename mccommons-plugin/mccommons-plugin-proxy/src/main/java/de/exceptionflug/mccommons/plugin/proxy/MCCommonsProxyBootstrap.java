@@ -43,7 +43,7 @@ public class MCCommonsProxyBootstrap {
 
 
     public void enableMCCommons() {
-        Providers.register(Plugin.class, this);
+        Providers.register(Plugin.class, plugin);
         Providers.register(InventoryBuilder.class, new ProtocolizeInventoryBuilder());
         Providers.register(AsyncProvider.class, new AsyncProvider() {
             @Override

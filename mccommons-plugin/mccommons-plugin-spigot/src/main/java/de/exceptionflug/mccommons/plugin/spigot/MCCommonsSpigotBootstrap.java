@@ -42,7 +42,7 @@ public class MCCommonsSpigotBootstrap {
     public void enable(final JavaPlugin plugin) {
         try {
             Providers.register(InventoryBuilder.class, new SpigotInventoryBuilder());
-            Providers.register(JavaPlugin.class, this);
+            Providers.register(JavaPlugin.class, plugin);
             Providers.register(RemoteClientProvider.class, new RemoteClientProvider() {
                 @Override
                 public RemoteConfigClient get() {

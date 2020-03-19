@@ -116,6 +116,12 @@
       </exclusions>
     </dependency>
     <dependency>
+      <groupId>com.comphenix.protocol</groupId>
+      <artifactId>ProtocolLib</artifactId>
+      <version>4.5.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>de.exceptionflug</groupId>
       <artifactId>mccommons-core</artifactId>
       <version>2.0-SNAPSHOT</version>
@@ -138,13 +144,6 @@
           <groupId>org.hamcrest</groupId>
         </exclusion>
       </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>com.comphenix.protocol</groupId>
-      <artifactId>ProtocolLib-API</artifactId>
-      <version>4.5.0</version>
-      <scope>system</scope>
-      <systemPath>${project.basedir}/../libs/ProtocolLib-4.5.0.jar</systemPath>
     </dependency>
   </dependencies>
 </project>
