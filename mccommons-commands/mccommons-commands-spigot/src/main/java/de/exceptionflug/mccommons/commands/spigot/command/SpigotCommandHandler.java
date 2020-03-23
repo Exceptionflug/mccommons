@@ -126,12 +126,22 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
                 continue; //Not the subcommand we search for
             }
 
+            System.out.println("JoinedArguments: " + joinedArguments);
+            System.out.println("Pre: " + joinedArguments.replace(subCommand.getNeededInput(), ""));
             final String[] subCommandArguments = joinedArguments
                 .replace(subCommand.getNeededInput(), "")
+                .substring(1)
                 .split(" ");
 
+
+            //Removing empties
+
+            System.out.println("SubCommand-Arguments: " + Arrays.toString(subCommandArguments));
+            System.out.println("MinArgs: " + subCommand.getMinArguments() + " Given: " + subCommandArguments.length);
+            System.out.println("MaxArgs: " + subCommand.getMaxArguments());
             if (subCommand.getMinArguments() != -1 && subCommandArguments.length < subCommand.getMinArguments()) {
                 //To many arguments
+
                 returnTooFewArguments();
             }
 

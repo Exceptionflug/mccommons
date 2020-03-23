@@ -126,6 +126,7 @@ public class ProxyCommandHandler extends Command {
 
             final String[] subCommandArguments = joinedArguments
                 .replace(subCommand.getNeededInput(), "")
+                .substring(1)
                 .split(" ");
 
             if (subCommand.getMinArguments() != -1 && subCommandArguments.length < subCommand.getMinArguments()) {

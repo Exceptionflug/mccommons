@@ -78,7 +78,7 @@ public class ProxyCommandParser extends AbstractCommandParser<ProxyCommandHandle
             subCommandBuilder.superCommand(mccCommand);
             subCommandBuilder.isInGameOnly(isInGameOnly(method));
             subCommandBuilder.minArguments(minArguments(method));
-            subCommandBuilder.minArguments(maxArguments(method));
+            subCommandBuilder.maxArguments(maxArguments(method));
             subCommandBuilder.neededInput(subCommand.value());
 
             subCommands.add(subCommandBuilder.build());

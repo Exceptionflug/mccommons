@@ -48,18 +48,21 @@ public class MCCommonsSpigotBootstrap {
                     return new RemoteConfigClient(configWrapper.getOrSetDefault("RemoteServer.url", "http://localhost:8881"), configWrapper.getOrSetDefault("RemoteServer.url", "x7834HgsTSds9"));
                 }
             });
+
             Providers.register(AsyncProvider.class, new AsyncProvider() {
                 @Override
                 public void async(final Runnable runnable) {
                     Bukkit.getScheduler().runTaskAsynchronously(plugin, runnable);
                 }
             });
+
             Providers.register(WorkingDirectoryProvider.class, new WorkingDirectoryProvider() {
                 @Override
                 public File getWorkingDirectory() {
                     return plugin.getDataFolder();
                 }
             });
+
             Providers.register(ServerVersionProvider.class, new ServerVersionProvider());
             ConfigFactory.register(SpigotConfig.class, SpigotConfigSpigotYamlConfigWrapper::new);
             ConfigFactory.register(ConfigWrapper.class, SpigotConfigSpigotYamlConfigWrapper::new);
@@ -71,6 +74,7 @@ public class MCCommonsSpigotBootstrap {
             } catch (final ClassNotFoundException e) {
                 e.printStackTrace();
             }
+
             Converters.register(ConfigItemStack.class, ItemStack.class, new ItemStackConverter());
             Converters.register(ItemType.class, MaterialData.class, new ItemTypeMaterialDataConverter());
             Converters.register(MaterialData.class, ItemType.class, new MaterialDataItemTypeConverter());
