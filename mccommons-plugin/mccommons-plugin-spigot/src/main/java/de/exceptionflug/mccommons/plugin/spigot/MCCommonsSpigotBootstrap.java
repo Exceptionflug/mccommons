@@ -1,7 +1,6 @@
 package de.exceptionflug.mccommons.plugin.spigot;
 
 import com.flowpowered.nbt.CompoundTag;
-import de.exceptionflug.mccommons.commands.spigot.command.SpigotCommandFramework;
 import de.exceptionflug.mccommons.config.remote.client.RemoteConfigClient;
 import de.exceptionflug.mccommons.config.shared.ConfigFactory;
 import de.exceptionflug.mccommons.config.shared.ConfigItemStack;
@@ -26,7 +25,6 @@ import de.exceptionflug.mccommons.inventories.spigot.listener.InventoryListener;
 import de.exceptionflug.mccommons.inventories.spigot.utils.ReflectionUtil;
 import de.exceptionflug.mccommons.inventories.spigot.utils.ServerVersionProvider;
 import de.exceptionflug.mccommons.plugin.spigot.commands.ConfigReloadCommand;
-import de.exceptionflug.mccommons.plugin.spigot.commands.ExampleCommand;
 import de.exceptionflug.mccommons.plugin.spigot.commands.HologramReloadCommand;
 import de.exceptionflug.mccommons.plugin.spigot.converter.ItemStackConverter;
 import de.exceptionflug.mccommons.plugin.spigot.converter.PlayerConverter;
