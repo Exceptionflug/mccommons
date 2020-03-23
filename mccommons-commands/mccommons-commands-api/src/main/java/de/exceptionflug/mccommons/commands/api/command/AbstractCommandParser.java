@@ -58,7 +58,7 @@ public abstract class AbstractCommandParser<C> {
 
     protected List<Method> getSubCommandMethods() {
         final List<Method> methods = new ArrayList<>();
-        for (final Method method : getClass().getMethods()) {
+        for (final Method method : mccClazz.getMethods()) {
             if (method.getName().equals("onCommand")) {
                 continue;
             }

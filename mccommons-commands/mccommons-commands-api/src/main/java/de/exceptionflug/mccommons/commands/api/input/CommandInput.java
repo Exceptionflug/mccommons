@@ -2,7 +2,6 @@ package de.exceptionflug.mccommons.commands.api.input;
 
 import com.google.common.base.Preconditions;
 import de.exceptionflug.mccommons.commands.api.exception.CommandValidationException;
-import lombok.Getter;
 import lombok.NonNull;
 
 import java.util.Locale;
@@ -17,7 +16,7 @@ public final class CommandInput {
         this.arguments = arguments;
     }
 
-    public String findString(final int index){
+    public String getString(final int index) {
         return arguments[index];
     }
 
@@ -30,10 +29,10 @@ public final class CommandInput {
     }
 
     /**
-     * @param argumentIndex Index to search our Integer in our arguments
-     * @param errorMsgKey the message key of the localized message
+     * @param argumentIndex   Index to search our Integer in our arguments
+     * @param errorMsgKey     the message key of the localized message
      * @param errorDefaultMsg the default message of the localized message
-     * @param replacements replacements for placeholders
+     * @param replacements    replacements for placeholders
      * @return the found int
      */
     public final int findInt(final int argumentIndex, @NonNull final String errorMsgKey, @NonNull final String errorDefaultMsg, @NonNull final String... replacements) {
@@ -45,10 +44,10 @@ public final class CommandInput {
     }
 
     /**
-     * @param argumentIndex Index to search our Integer in our arguments
-     * @param errorMsgKey the message key of the localized message
+     * @param argumentIndex   Index to search our Integer in our arguments
+     * @param errorMsgKey     the message key of the localized message
      * @param errorDefaultMsg the default message of the localized message
-     * @param replacements replacements for placeholders
+     * @param replacements    replacements for placeholders
      * @return
      */
     public final double findDouble(final int argumentIndex, @NonNull final String errorMsgKey, @NonNull final String errorDefaultMsg, @NonNull final String... replacements) {
