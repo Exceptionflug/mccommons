@@ -89,9 +89,6 @@ public class MCCommonsSpigotBootstrap {
             plugin.getCommand("mcrl").setExecutor(new ConfigReloadCommand());
             plugin.getCommand("hrl").setExecutor(new HologramReloadCommand());
 
-            final SpigotCommandFramework commandFramework = new SpigotCommandFramework(ConfigFactory.create(new File("plugins/Mcc/cmds.yml"), SpigotConfig.class));
-            commandFramework.registerCommand(new ExampleCommand());
-
             Holograms.init(plugin);
         } catch (final Exception e) {
             e.printStackTrace();
