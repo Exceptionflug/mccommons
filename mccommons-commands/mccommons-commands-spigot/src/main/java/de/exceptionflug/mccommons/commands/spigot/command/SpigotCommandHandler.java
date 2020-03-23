@@ -85,6 +85,16 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
 
             //checking maincommand-rules
 
+
+            if (mainCommand.getMinArguments() != -1 && length < mainCommand.getMinArguments()) {
+                //To many arguments
+                returnTooFewArguments();
+            }
+
+            if (mainCommand.getMaxArguments() != -1 && length > mainCommand.getMaxArguments()) {
+                //To many arguments
+                returnTooManyArguments();
+            }
             checkConsole(mainCommand.isInGameOnly());
 
             final CommandInput input = new CommandInput(getLocale(), args);
@@ -92,7 +102,7 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
             mccCommand.onCommand(input);
 
         } catch (final CommandValidationException ex) { //Command break-up condition
-            if(ex.getMessages() == null) {
+            if (ex.getMessages() == null) {
                 tell(ex.getMessageKey(), ex.getDefaultMessage(), ex.getReplacements());
                 return false;
             }
@@ -101,7 +111,7 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
             }
             tellPlain(ex.getMessages());
         } catch (final Throwable throwable) {
-           mccCommand.handleException(throwable);
+            mccCommand.handleException(throwable);
         }
 
         return false;
@@ -120,12 +130,12 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
                 .replace(subCommand.getNeededInput(), "")
                 .split(" ");
 
-            if (subCommandArguments.length < subCommand.getMinArguments()) {
+            if (subCommand.getMinArguments() != -1 && subCommandArguments.length < subCommand.getMinArguments()) {
                 //To many arguments
                 returnTooFewArguments();
             }
 
-            if (subCommandArguments.length > subCommand.getMaxArguments()) {
+            if (subCommand.getMaxArguments() != -1 && subCommandArguments.length > subCommand.getMaxArguments()) {
                 //To many arguments
                 returnTooManyArguments();
             }
@@ -176,11 +186,11 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
 
 
     private void returnTooFewArguments() {
-        returnTell("Usage.TooFewArguments", "&cZu wenige Argumente.");
+        returnTell("Usage.TooFewArguments", "§cZu wenige Argumente.");
     }
 
     private void returnTooManyArguments() {
-        returnTell("Usage.TooManyArguments", "&cZu viele Argumente.");
+        returnTell("Usage.TooManyArguments", "§cZu viele Argumente.");
     }
 
     /**

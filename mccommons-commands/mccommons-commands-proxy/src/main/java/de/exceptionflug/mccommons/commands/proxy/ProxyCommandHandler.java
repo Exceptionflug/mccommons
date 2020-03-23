@@ -83,6 +83,16 @@ public class ProxyCommandHandler extends Command {
 
             //checking maincommand-rules
 
+            if (mainCommand.getMinArguments() != -1 && length < mainCommand.getMinArguments()) {
+                //To many arguments
+                returnTooFewArguments();
+            }
+
+            if (mainCommand.getMaxArguments() != -1 && length > mainCommand.getMaxArguments()) {
+                //To many arguments
+                returnTooManyArguments();
+            }
+
 
             checkConsole(mainCommand.isInGameOnly());
 
@@ -91,7 +101,7 @@ public class ProxyCommandHandler extends Command {
             mccCommand.onCommand(input);
 
         } catch (final CommandValidationException ex) { //Command break-up condition
-            if(ex.getMessages() == null) {
+            if (ex.getMessages() == null) {
                 tell(ex.getMessageKey(), ex.getDefaultMessage(), ex.getReplacements());
                 return;
             }
@@ -100,13 +110,7 @@ public class ProxyCommandHandler extends Command {
             }
             tellPlain(ex.getMessages());
         } catch (final Throwable throwable) {
-            tellPlain(
-                "§cEs ist soeben ein Fehler beim Ausführen des Commands aufgetreten.",
-                "§cBitte melde dies umgehend dem Team: ",
-                " ",
-                "§7Ausnahme: §e" + throwable.getClass().getName(),
-                "§7Nachricht: §e" + throwable.getMessage()
-            );
+            mccCommand.handleException(throwable);
         }
 
     }
@@ -124,12 +128,12 @@ public class ProxyCommandHandler extends Command {
                 .replace(subCommand.getNeededInput(), "")
                 .split(" ");
 
-            if (subCommandArguments.length < subCommand.getMinArguments()) {
+            if (subCommand.getMinArguments() != -1 && subCommandArguments.length < subCommand.getMinArguments()) {
                 //To many arguments
                 returnTooFewArguments();
             }
 
-            if (subCommandArguments.length > subCommand.getMaxArguments()) {
+            if (subCommand.getMaxArguments() != -1 && subCommandArguments.length > subCommand.getMaxArguments()) {
                 //To many arguments
                 returnTooManyArguments();
             }
@@ -181,11 +185,11 @@ public class ProxyCommandHandler extends Command {
 
 
     private void returnTooFewArguments() {
-        returnTell("Usage.TooFewArguments", "&cZu wenige Argumente.");
+        returnTell("Usage.TooFewArguments", "§cZu wenige Argumente.");
     }
 
     private void returnTooManyArguments() {
-        returnTell("Usage.TooManyArguments", "&cZu viele Argumente.");
+        returnTell("Usage.TooManyArguments", "§cZu viele Argumente.");
     }
 
     /**
