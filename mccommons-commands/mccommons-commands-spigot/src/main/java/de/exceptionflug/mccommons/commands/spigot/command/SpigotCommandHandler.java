@@ -101,13 +101,7 @@ public final class SpigotCommandHandler extends org.bukkit.command.Command {
             }
             tellPlain(ex.getMessages());
         } catch (final Throwable throwable) {
-            tellPlain(
-                "§cEs ist soeben ein Fehler beim Ausführen des Commands aufgetreten.",
-                "§cBitte melde dies umgehend dem Team: ",
-                " ",
-                "§7Ausnahme: §e" + throwable.getClass().getName(),
-                "§7Nachricht: §e" + throwable.getMessage()
-            );
+           mccCommand.handleException(throwable);
         }
 
         return false;

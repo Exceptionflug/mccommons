@@ -2,6 +2,7 @@ package de.exceptionflug.mccommons.commands.api.input;
 
 import com.google.common.base.Preconditions;
 import de.exceptionflug.mccommons.commands.api.exception.CommandValidationException;
+import lombok.Getter;
 import lombok.NonNull;
 
 import java.util.Locale;
@@ -14,6 +15,10 @@ public final class CommandInput {
     public CommandInput(final Locale senderLocale, final String... arguments) {
         this.senderLocale = senderLocale;
         this.arguments = arguments;
+    }
+
+    public String findString(final int index){
+        return arguments[index];
     }
 
     public final int getArgCount() {
@@ -32,8 +37,6 @@ public final class CommandInput {
      * @return the found int
      */
     public final int findInt(final int argumentIndex, @NonNull final String errorMsgKey, @NonNull final String errorDefaultMsg, @NonNull final String... replacements) {
-        Preconditions.checkArgument(argumentIndex > arguments.length - 1, "Can't parse Int: ArrayIndex would be out of bounds!");
-
         try {
             return Integer.parseInt(arguments[argumentIndex]);
         } catch (final NumberFormatException ex) {

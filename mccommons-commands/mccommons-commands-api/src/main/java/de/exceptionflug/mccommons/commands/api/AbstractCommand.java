@@ -35,6 +35,16 @@ public abstract class AbstractCommand<S> {
         return Optional.empty();
     }
 
+    public void handleException(final Throwable throwable) {
+        tellPlain(
+            "§cEs ist soeben ein Fehler beim Ausführen des Commands aufgetreten.",
+            "§cBitte melde dies umgehend dem Team: ",
+            " ",
+            "§7Ausnahme: §e" + throwable.getClass().getName(),
+            "§7Nachricht: §e" + throwable.getMessage()
+        );
+    }
+
     protected void returnTellPlain(final String... message) {
         throw new CommandValidationException(message);
     }
