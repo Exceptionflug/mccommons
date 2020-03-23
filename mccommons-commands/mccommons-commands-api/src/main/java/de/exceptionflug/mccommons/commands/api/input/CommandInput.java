@@ -20,6 +20,14 @@ public final class CommandInput {
         return arguments[index];
     }
 
+    public String findString(final int index, @NonNull final String errorMsgKey, @NonNull final String errorDefaultMsg, @NonNull final String... replacements) {
+        if (arguments.length > index + 1) {
+            throw new CommandValidationException(errorMsgKey, errorDefaultMsg, replacements);
+        }
+        return arguments[index];
+    }
+
+
     public final int getArgCount() {
         return arguments.length;
     }

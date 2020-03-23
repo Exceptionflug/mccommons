@@ -17,11 +17,11 @@ public final class CommandValidationException extends RuntimeException {
     private final String[] replacements;
 
     public CommandValidationException(@NonNull final String... message) {
+        super(null, null, true, false);
         this.messages = message;
         this.messageKey = null;
         this.defaultMessage = null;
         this.replacements = null;
-
     }
 
     public CommandValidationException(String messageKey, String defaultMessage, String... replacements) {
