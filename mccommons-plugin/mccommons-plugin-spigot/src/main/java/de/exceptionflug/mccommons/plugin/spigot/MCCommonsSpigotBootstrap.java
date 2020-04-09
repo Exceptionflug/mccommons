@@ -27,7 +27,6 @@ import de.exceptionflug.mccommons.inventories.spigot.utils.ReflectionUtil;
 import de.exceptionflug.mccommons.inventories.spigot.utils.ServerVersionProvider;
 import de.exceptionflug.mccommons.plugin.spigot.commands.ConfigReloadCommand;
 import de.exceptionflug.mccommons.plugin.spigot.commands.HologramReloadCommand;
-import de.exceptionflug.mccommons.plugin.spigot.commands.SchafeCommand;
 import de.exceptionflug.mccommons.plugin.spigot.converter.ItemStackConverter;
 import de.exceptionflug.mccommons.plugin.spigot.converter.PlayerConverter;
 import org.bukkit.Bukkit;
@@ -87,8 +86,6 @@ public class MCCommonsSpigotBootstrap {
 
             final ConfigWrapper rapper = ConfigFactory.create(new File("plugins/mccommons/commands/CommandFramework.yml"), SpigotConfig.class);
             final SpigotCommandFramework commandFramework = new SpigotCommandFramework(rapper);
-
-            commandFramework.registerCommand(new SchafeCommand());
 
             Bukkit.getPluginManager().registerEvents(new InventoryListener(), plugin);
             plugin.getCommand("mcrl").setExecutor(new ConfigReloadCommand());
