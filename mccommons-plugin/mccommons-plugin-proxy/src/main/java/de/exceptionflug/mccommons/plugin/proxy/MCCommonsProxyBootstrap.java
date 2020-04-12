@@ -41,7 +41,6 @@ public class MCCommonsProxyBootstrap {
         this.plugin = plugin;
     }
 
-
     public void enableMCCommons() {
         Providers.register(Plugin.class, plugin);
         Providers.register(InventoryBuilder.class, new ProtocolizeInventoryBuilder());

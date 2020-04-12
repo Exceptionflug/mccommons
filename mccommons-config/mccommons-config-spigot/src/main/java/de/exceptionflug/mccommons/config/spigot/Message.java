@@ -14,6 +14,7 @@ import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.github.paperspigot.Title;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -60,13 +61,12 @@ public final class Message {
                         sender.sendMessage(Arrays.stream(textComponent).map(it -> it.toLegacyText()).collect(Collectors.joining()));
                     }
                 } else if (messageMode == MessageMode.TITLE) {
-                    throw new UnsupportedOperationException("Titles are currently not supported on spigot.");
-//                    final Title title = ProxyServer.getInstance().createTitle();
-//                    title.fadeIn(config.getOrSetDefault(messageKey+".title.fadeIn", 20));
-//                    title.fadeOut(config.getOrSetDefault(messageKey+".title.fadeOut", 20));
-//                    title.stay(config.getOrSetDefault(messageKey+".title.stay", 60));
-//                    title.title(TextComponent.fromLegacyText(FormatUtils.format(config.getOrSetDefault(messageKey+".title.text", messageKey+".title.text"), replacements)));
-//                    title.subTitle(TextComponent.fromLegacyText(FormatUtils.format(config.getOrSetDefault(messageKey+".title.subTitle", messageKey+".title.subTitle"), replacements)));
+                    Title title = new Title(TextComponent.fromLegacyText(FormatUtils.format(config.getOrSetDefault(messageKey+".title.text", messageKey+".title.text"), replacements)),
+                            TextComponent.fromLegacyText(FormatUtils.format(config.getOrSetDefault(messageKey+".title.subTitle", messageKey+".title.subTitle"), replacements)),
+                            config.getOrSetDefault(messageKey+".title.fadeIn", 20),
+                            config.getOrSetDefault(messageKey+".title.stay", 60),
+                            config.getOrSetDefault(messageKey+".title.fadeOut", 20));
+                    player.sendTitle(title);
                 } else if (messageMode == MessageMode.SOUND) {
                     for (final String key : config.getKeys(messageKey + ".sounds")) {
                         final Sound sound = Sound.valueOf(config.getOrSetDefault(messageKey + ".sounds." + key + ".sound", "CLICK"));

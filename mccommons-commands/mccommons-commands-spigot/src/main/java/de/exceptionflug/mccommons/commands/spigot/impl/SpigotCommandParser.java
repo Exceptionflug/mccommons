@@ -70,6 +70,7 @@ public final class SpigotCommandParser extends AbstractCommandParser<SpigotComma
         //Subcommand
 
         final List<SubCommand> subCommands = new ArrayList<>();
+
         for (final Method method : getSubCommandMethods()) {
             final SubCommand.SubCommandBuilder subCommandBuilder = SubCommand.builder();
 
@@ -80,7 +81,7 @@ public final class SpigotCommandParser extends AbstractCommandParser<SpigotComma
             subCommandBuilder.superCommand(mccCommand);
             subCommandBuilder.isInGameOnly(isInGameOnly(method));
             subCommandBuilder.minArguments(minArguments(method));
-            subCommandBuilder.minArguments(maxArguments(method));
+            subCommandBuilder.maxArguments(maxArguments(method));
             subCommandBuilder.neededInput(subCommand.value());
 
             subCommands.add(subCommandBuilder.build());

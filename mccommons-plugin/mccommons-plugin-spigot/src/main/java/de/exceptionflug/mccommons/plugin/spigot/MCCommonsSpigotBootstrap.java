@@ -1,7 +1,6 @@
 package de.exceptionflug.mccommons.plugin.spigot;
 
 import com.flowpowered.nbt.CompoundTag;
-import de.exceptionflug.mccommons.commands.spigot.command.SpigotCommandFramework;
 import de.exceptionflug.mccommons.config.remote.client.RemoteConfigClient;
 import de.exceptionflug.mccommons.config.shared.ConfigFactory;
 import de.exceptionflug.mccommons.config.shared.ConfigItemStack;
@@ -49,18 +48,21 @@ public class MCCommonsSpigotBootstrap {
                     return new RemoteConfigClient(configWrapper.getOrSetDefault("RemoteServer.url", "http://localhost:8881"), configWrapper.getOrSetDefault("RemoteServer.url", "x7834HgsTSds9"));
                 }
             });
+
             Providers.register(AsyncProvider.class, new AsyncProvider() {
                 @Override
                 public void async(final Runnable runnable) {
                     Bukkit.getScheduler().runTaskAsynchronously(plugin, runnable);
                 }
             });
+
             Providers.register(WorkingDirectoryProvider.class, new WorkingDirectoryProvider() {
                 @Override
                 public File getWorkingDirectory() {
                     return plugin.getDataFolder();
                 }
             });
+
             Providers.register(ServerVersionProvider.class, new ServerVersionProvider());
             ConfigFactory.register(SpigotConfig.class, SpigotConfigSpigotYamlConfigWrapper::new);
             ConfigFactory.register(ConfigWrapper.class, SpigotConfigSpigotYamlConfigWrapper::new);
@@ -72,6 +74,7 @@ public class MCCommonsSpigotBootstrap {
             } catch (final ClassNotFoundException e) {
                 e.printStackTrace();
             }
+
             Converters.register(ConfigItemStack.class, ItemStack.class, new ItemStackConverter());
             Converters.register(ItemType.class, MaterialData.class, new ItemTypeMaterialDataConverter());
             Converters.register(MaterialData.class, ItemType.class, new MaterialDataItemTypeConverter());
@@ -83,9 +86,6 @@ public class MCCommonsSpigotBootstrap {
             Converters.register(ClickType.class, de.exceptionflug.mccommons.inventories.api.ClickType.class, new SpigotClickTypeConverter());
             Converters.register(InventoryType.class, org.bukkit.event.inventory.InventoryType.class, new SpigotInventoryTypeConverter());
             Converters.register(ReflectionUtil.getClass("{obc}.inventory.CraftItemStack"), ItemStack.class, new CraftItemStackConverter());
-
-            final ConfigWrapper rapper = ConfigFactory.create(new File("plugins/mccommons/commands/CommandFramework.yml"), SpigotConfig.class);
-            final SpigotCommandFramework commandFramework = new SpigotCommandFramework(rapper);
 
             Bukkit.getPluginManager().registerEvents(new InventoryListener(), plugin);
             plugin.getCommand("mcrl").setExecutor(new ConfigReloadCommand());

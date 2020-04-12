@@ -16,6 +16,18 @@ public final class CommandInput {
         this.arguments = arguments;
     }
 
+    public String getString(final int index) {
+        return arguments[index];
+    }
+
+    public String findString(final int index, @NonNull final String errorMsgKey, @NonNull final String errorDefaultMsg, @NonNull final String... replacements) {
+        if (arguments.length > index + 1) {
+            throw new CommandValidationException(errorMsgKey, errorDefaultMsg, replacements);
+        }
+        return arguments[index];
+    }
+
+
     public final int getArgCount() {
         return arguments.length;
     }
@@ -25,15 +37,13 @@ public final class CommandInput {
     }
 
     /**
-     * @param argumentIndex Index to search our Integer in our arguments
-     * @param errorMsgKey the message key of the localized message
+     * @param argumentIndex   Index to search our Integer in our arguments
+     * @param errorMsgKey     the message key of the localized message
      * @param errorDefaultMsg the default message of the localized message
-     * @param replacements replacements for placeholders
+     * @param replacements    replacements for placeholders
      * @return the found int
      */
     public final int findInt(final int argumentIndex, @NonNull final String errorMsgKey, @NonNull final String errorDefaultMsg, @NonNull final String... replacements) {
-        Preconditions.checkArgument(argumentIndex > arguments.length - 1, "Can't parse Int: ArrayIndex would be out of bounds!");
-
         try {
             return Integer.parseInt(arguments[argumentIndex]);
         } catch (final NumberFormatException ex) {
@@ -42,10 +52,10 @@ public final class CommandInput {
     }
 
     /**
-     * @param argumentIndex Index to search our Integer in our arguments
-     * @param errorMsgKey the message key of the localized message
+     * @param argumentIndex   Index to search our Integer in our arguments
+     * @param errorMsgKey     the message key of the localized message
      * @param errorDefaultMsg the default message of the localized message
-     * @param replacements replacements for placeholders
+     * @param replacements    replacements for placeholders
      * @return
      */
     public final double findDouble(final int argumentIndex, @NonNull final String errorMsgKey, @NonNull final String errorDefaultMsg, @NonNull final String... replacements) {

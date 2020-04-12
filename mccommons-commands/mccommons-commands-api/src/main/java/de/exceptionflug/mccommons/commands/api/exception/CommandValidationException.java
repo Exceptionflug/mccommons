@@ -17,6 +17,7 @@ public final class CommandValidationException extends RuntimeException {
     private final String[] replacements;
 
     public CommandValidationException(@NonNull final String... message) {
+        super(null, null, true, false);
         this.messages = message;
         this.messageKey = null;
         this.defaultMessage = null;
@@ -24,6 +25,7 @@ public final class CommandValidationException extends RuntimeException {
     }
 
     public CommandValidationException(String messageKey, String defaultMessage, String... replacements) {
+        super(null, null, true, false);
         this.messageKey = messageKey;
         this.defaultMessage = defaultMessage;
         this.replacements = replacements;
