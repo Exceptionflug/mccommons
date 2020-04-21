@@ -2,11 +2,9 @@ package de.exceptionflug.mccommons.plugin.proxy;
 
 import de.exceptionflug.mccommons.config.proxy.ProxyConfig;
 import de.exceptionflug.mccommons.config.proxy.ProxyConfigProxyYamlConfigWrapper;
-import de.exceptionflug.mccommons.config.remote.client.RemoteConfigClient;
 import de.exceptionflug.mccommons.config.shared.ConfigFactory;
 import de.exceptionflug.mccommons.config.shared.ConfigItemStack;
 import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
-import de.exceptionflug.mccommons.config.shared.RemoteClientProvider;
 import de.exceptionflug.mccommons.core.Converters;
 import de.exceptionflug.mccommons.core.Providers;
 import de.exceptionflug.mccommons.core.providers.AsyncProvider;
@@ -50,13 +48,6 @@ public class MCCommonsProxyBootstrap {
                 ProxyServer.getInstance().getScheduler().runAsync(plugin, runnable);
             }
         });
-        Providers.register(RemoteClientProvider.class, new RemoteClientProvider() {
-            @Override
-            public RemoteConfigClient get() {
-                final ConfigWrapper configWrapper = ConfigFactory.create("MCCommons", ProxyMCCommonsPlugin.class, ProxyConfig.class);
-                return new RemoteConfigClient(configWrapper.getOrSetDefault("RemoteServer.url", "http://localhost:8881"), configWrapper.getOrSetDefault("RemoteServer.url", "x7834HgsTSds9"));
-            }
-        });
         Providers.register(WorkingDirectoryProvider.class, new WorkingDirectoryProvider() {
             @Override
             public File getWorkingDirectory() {
@@ -66,9 +57,6 @@ public class MCCommonsProxyBootstrap {
 
         ConfigFactory.register(ConfigWrapper.class, ProxyConfigProxyYamlConfigWrapper::new);
         ConfigFactory.register(ProxyConfig.class, ProxyConfigProxyYamlConfigWrapper::new);
-        ConfigFactory.registerRemote(ConfigWrapper.class, s -> new ProxyConfigProxyYamlConfigWrapper(s, configData -> ConfigFactory.getRemoteConfigClient().getConfigService().update(configData).blockingSubscribe(), () -> ConfigFactory.getRemoteConfigClient().getConfigService().getConfig(s.getRemotePath()).blockingFirst()));
-        ConfigFactory.registerRemote(ProxyConfig.class, s -> new ProxyConfigProxyYamlConfigWrapper(s, configData -> ConfigFactory.getRemoteConfigClient().getConfigService().update(configData).blockingSubscribe(), () -> ConfigFactory.getRemoteConfigClient().getConfigService().getConfig(s.getRemotePath()).blockingFirst()));
-
         Converters.register(ConfigItemStack.class, ItemStack.class, new ItemStackConverter());
         Converters.register(UserConnection.class, PlayerWrapper.class, new PlayerConverter());
         Converters.register(de.exceptionflug.mccommons.inventories.api.InventoryType.class, InventoryType.class, new ProtocolizeInventoryTypeConverter());

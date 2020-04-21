@@ -11,8 +11,8 @@
     </parent>
 
     <groupId>de.exceptionflug</groupId>
-    <artifactId>mccommons-plugin-proxy</artifactId>
-    <version>2.0-SNAPSHOT</version>
+    <artifactId>mccommons-lib-proxy</artifactId>
+    <version>2.0.1</version>
 
     <build>
         <finalName>${project.name}-${project.version}</finalName>
@@ -84,11 +84,6 @@
         </dependency>
         <dependency>
             <groupId>de.exceptionflug</groupId>
-            <artifactId>mccommons-config-remote-client</artifactId>
-            <version>2.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>de.exceptionflug</groupId>
             <artifactId>mccommons-core</artifactId>
             <version>2.0-SNAPSHOT</version>
         </dependency>
@@ -116,11 +111,5 @@
             <version>2.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>de.exceptionflug</groupId>
-            <artifactId>mccommons-config-remote-model</artifactId>
-            <version>2.0-SNAPSHOT</version>
-        </dependency>
     </dependencies>
-
 </project>
