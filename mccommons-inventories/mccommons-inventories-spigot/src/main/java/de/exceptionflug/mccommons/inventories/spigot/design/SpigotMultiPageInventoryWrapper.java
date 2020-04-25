@@ -50,13 +50,18 @@ public class SpigotMultiPageInventoryWrapper extends MultiPageInventoryWrapper<P
     }
 
     @Override
+    protected void runLater(Runnable runnable, int ticks) {
+        later(runnable, ticks);
+    }
+
+    @Override
     public void onException(final Exception exception, final InventoryItem inventoryItem) {
-        if(inventoryItem != null) {
-            getPlayer().sendMessage("§cAn internal exception occurred while handling action §6"+inventoryItem.getActionHandler()+" §cof §6"+getClass().getSimpleName()+"§c at page §6"+getCurrentPageIndex());
-            Bukkit.getLogger().log(Level.SEVERE, "[MCCommons] An internal exception occurred while handling action "+inventoryItem.getActionHandler()+" of "+getClass().getName(), exception);
+        if (inventoryItem != null) {
+            getPlayer().sendMessage("§cAn internal exception occurred while handling action §6" + inventoryItem.getActionHandler() + " §cof §6" + getClass().getSimpleName() + "§c at page §6" + getCurrentPageIndex());
+            Bukkit.getLogger().log(Level.SEVERE, "[MCCommons] An internal exception occurred while handling action " + inventoryItem.getActionHandler() + " of " + getClass().getName(), exception);
         } else {
-            getPlayer().sendMessage("§cAn internal exception occurred §cat §6"+getClass().getSimpleName()+"§c at page §6"+getCurrentPageIndex());
-            Bukkit.getLogger().log(Level.SEVERE, "[MCCommons] An internal exception occurred at "+getClass().getName(), exception);
+            getPlayer().sendMessage("§cAn internal exception occurred §cat §6" + getClass().getSimpleName() + "§c at page §6" + getCurrentPageIndex());
+            Bukkit.getLogger().log(Level.SEVERE, "[MCCommons] An internal exception occurred at " + getClass().getName(), exception);
         }
     }
 

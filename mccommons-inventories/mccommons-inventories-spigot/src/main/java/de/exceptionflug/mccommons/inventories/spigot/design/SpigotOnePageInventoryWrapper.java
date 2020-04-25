@@ -45,6 +45,11 @@ public class SpigotOnePageInventoryWrapper extends OnePageInventoryWrapper<Playe
         super(player, type, configWrapper, locale, update);
     }
 
+    @Override
+    protected void runLater(Runnable runnable, int delay) {
+        later(runnable, delay);
+    }
+
     public SpigotOnePageInventoryWrapper(Player player, ConfigWrapper configWrapper, Locale locale, boolean update) {
         super(player, configWrapper, locale, update);
     }
