@@ -18,11 +18,11 @@ import java.util.logging.Level;
 public class SpigotOnePageInventoryWrapper extends OnePageInventoryWrapper<Player, ItemStack, Inventory> implements Schedulable {
 
     protected SpigotOnePageInventoryWrapper(Player player, ConfigWrapper configWrapper) {
-        super(player, configWrapper, Providers.get(LocaleProvider.class).provide(player.getUniqueId()));
+        super(player, configWrapper, player == null ? Locale.GERMAN : Providers.get(LocaleProvider.class).provide(player.getUniqueId()));
     }
 
     protected SpigotOnePageInventoryWrapper(Player player, InventoryType type, ConfigWrapper configWrapper) {
-        super(player, type, configWrapper, Providers.get(LocaleProvider.class).provide(player.getUniqueId()));
+        super(player, type, configWrapper, player == null ? Locale.GERMAN : Providers.get(LocaleProvider.class).provide(player.getUniqueId()));
     }
 
     protected SpigotOnePageInventoryWrapper(Player player, ConfigWrapper configWrapper, Locale locale) {
@@ -34,11 +34,11 @@ public class SpigotOnePageInventoryWrapper extends OnePageInventoryWrapper<Playe
     }
 
     protected SpigotOnePageInventoryWrapper(Player player, InventoryType type, ConfigWrapper configWrapper, boolean update) {
-        super(player, type, configWrapper, Providers.get(LocaleProvider.class).provide(player.getUniqueId()), update);
+        super(player, type, configWrapper, player == null ? Locale.GERMAN : Providers.get(LocaleProvider.class).provide(player.getUniqueId()), update);
     }
 
     protected SpigotOnePageInventoryWrapper(Player player, ConfigWrapper configWrapper, boolean update) {
-        super(player, configWrapper, Providers.get(LocaleProvider.class).provide(player.getUniqueId()), update);
+        super(player, configWrapper, player == null ? Locale.GERMAN : Providers.get(LocaleProvider.class).provide(player.getUniqueId()), update);
     }
 
     protected SpigotOnePageInventoryWrapper(Player player, InventoryType type, ConfigWrapper configWrapper, Locale locale, boolean update) {
@@ -56,13 +56,12 @@ public class SpigotOnePageInventoryWrapper extends OnePageInventoryWrapper<Playe
 
     @Override
     public void onException(final Exception exception, final InventoryItem inventoryItem) {
-        if(inventoryItem != null) {
-            getPlayer().sendMessage("§cAn internal exception occurred while handling action §6"+inventoryItem.getActionHandler()+" §cof §6"+getClass().getSimpleName());
-            Bukkit.getLogger().log(Level.SEVERE, "[MCCommons] An internal exception occurred while handling action "+inventoryItem.getActionHandler()+" of "+getClass().getName(), exception);
+        if (inventoryItem != null) {
+            getPlayer().sendMessage("§cAn internal exception occurred while handling action §6" + inventoryItem.getActionHandler() + " §cof §6" + getClass().getSimpleName());
+            Bukkit.getLogger().log(Level.SEVERE, "[MCCommons] An internal exception occurred while handling action " + inventoryItem.getActionHandler() + " of " + getClass().getName(), exception);
         } else {
-            getPlayer().sendMessage("§cAn internal exception occurred §cat §6"+getClass().getSimpleName());
-            Bukkit.getLogger().log(Level.SEVERE, "[MCCommons] An internal exception occurred at "+getClass().getName(), exception);
+            getPlayer().sendMessage("§cAn internal exception occurred §cat §6" + getClass().getSimpleName());
+            Bukkit.getLogger().log(Level.SEVERE, "[MCCommons] An internal exception occurred at " + getClass().getName(), exception);
         }
     }
-
 }
