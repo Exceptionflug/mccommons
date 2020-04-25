@@ -17,7 +17,7 @@
 
     <modules>
         <module>mccommons-plugin-spigot</module>
-        <module>mccommons-lib-proxy</module>
+        <module>mccommons-plugin-proxy</module>
     </modules>
 
 </project>
