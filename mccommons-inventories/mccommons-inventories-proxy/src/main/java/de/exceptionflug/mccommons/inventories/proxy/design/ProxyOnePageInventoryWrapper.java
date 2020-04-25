@@ -13,6 +13,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 public class ProxyOnePageInventoryWrapper extends
@@ -68,6 +69,11 @@ public class ProxyOnePageInventoryWrapper extends
     }
 
     @Override
+    protected void runLater(Runnable runnable, int ticks) {
+        later(runnable, ticks / 20, TimeUnit.SECONDS);
+    }
+
+    @Override
     public void onException(final Exception exception, final InventoryItem inventoryItem) {
         if (inventoryItem != null) {
             getPlayer().sendMessage(
@@ -85,5 +91,4 @@ public class ProxyOnePageInventoryWrapper extends
                     exception);
         }
     }
-
 }

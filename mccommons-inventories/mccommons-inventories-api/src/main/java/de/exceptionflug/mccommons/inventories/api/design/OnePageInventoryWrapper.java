@@ -3,6 +3,7 @@ package de.exceptionflug.mccommons.inventories.api.design;
 import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
 import de.exceptionflug.mccommons.core.Converters;
 import de.exceptionflug.mccommons.core.Providers;
+import de.exceptionflug.mccommons.core.providers.AsyncProvider;
 import de.exceptionflug.mccommons.core.providers.LocaleProvider;
 import de.exceptionflug.mccommons.core.utils.FormatUtils;
 import de.exceptionflug.mccommons.inventories.api.*;
@@ -15,11 +16,12 @@ import java.util.Locale;
 /**
  * A simple one page inventory. This implementation is the simplest of an {@link InventoryWrapper}. This inventory can hold {@link InventoryItem}s
  * which can call {@link ActionHandler}s. You can configure items by configuration file and set there action handler.
+ *
  * @param <P>
  * @param <I>
  * @param <INV>
  */
-public class OnePageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryWrapper<P, I, INV> {
+public abstract class OnePageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryWrapper<P, I, INV> {
 
     private final ConfigWrapper config;
     private boolean customTitle;
@@ -59,27 +61,28 @@ public class OnePageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryWra
         setTitle(configWrapper.getLocalizedString(locale, "Inventory", ".title", "&6Inventory"));
         registerActionHandler("noAction", click -> CallResult.DENY_GRABBING);
         registerActionHandlers();
-        if(update)
-            updateInventory();
+
+        if (update)
+            runLater(this::updateInventory, 2);
     }
 
     @Override
     public void updateInventory() {
-        if(!customTitle) {
+        if (!customTitle) {
             setTitle(FormatUtils.format(config.getLocalizedString(getLocale(), "Inventory", ".title", "&6Inventory"), replacer));
             customTitle = false;
         }
-        if(placeHolder == null)
+        if (placeHolder == null)
             placeHolder = Converters.convert(config.getItemStack("Placeholder.itemStack", replacer), ItemStackWrapper.class);
         final List<Integer> placeholderSlots = config.getOrSetDefault("Placeholder.slots", new ArrayList<>());
-        for(final int slot : placeholderSlots) {
+        for (final int slot : placeholderSlots) {
             set(slot, (I) placeHolder.getHandle(), "noAction");
         }
-        for(final String key : config.getKeys("Items")) {
-            final int slot = config.getOrSetDefault("Items."+key+".slot", 0);
-            final String actionHandler = config.getOrSetDefault("Items."+key+".actionHandler", "noAction");
-            final List<Object> args = config.getOrSetDefault("Items."+key+".actionArguments", new ArrayList<>());
-            set(slot, config.getItemStack("Items."+key+".itemStack", getLocale(), replacer), actionHandler, new Arguments(args));
+        for (final String key : config.getKeys("Items")) {
+            final int slot = config.getOrSetDefault("Items." + key + ".slot", 0);
+            final String actionHandler = config.getOrSetDefault("Items." + key + ".actionHandler", "noAction");
+            final List<Object> args = config.getOrSetDefault("Items." + key + ".actionArguments", new ArrayList<>());
+            set(slot, config.getItemStack("Items." + key + ".itemStack", getLocale(), replacer), actionHandler, new Arguments(args));
         }
     }
 
@@ -102,4 +105,5 @@ public class OnePageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryWra
         this.placeHolder = placeHolder;
     }
 
+    protected abstract void runLater(final Runnable runnable, final int ticks);
 }

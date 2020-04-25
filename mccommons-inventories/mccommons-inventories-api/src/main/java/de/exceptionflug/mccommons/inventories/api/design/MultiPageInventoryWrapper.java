@@ -6,7 +6,10 @@ import de.exceptionflug.mccommons.core.Converters;
 import de.exceptionflug.mccommons.core.Providers;
 import de.exceptionflug.mccommons.core.providers.LocaleProvider;
 import de.exceptionflug.mccommons.core.utils.FormatUtils;
-import de.exceptionflug.mccommons.inventories.api.*;
+import de.exceptionflug.mccommons.inventories.api.Arguments;
+import de.exceptionflug.mccommons.inventories.api.CallResult;
+import de.exceptionflug.mccommons.inventories.api.InventoryItem;
+import de.exceptionflug.mccommons.inventories.api.InventoryType;
 import de.exceptionflug.mccommons.inventories.api.item.ItemStackWrapper;
 
 import java.util.*;
@@ -16,7 +19,7 @@ import java.util.function.Supplier;
  * Multi page inventories are inventories which can automatically create new pages accessable through automatically positioned next and previous page items.
  * A new page will be created when the add() method is invoked and there is no space left for a new item.
  */
-public class MultiPageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryWrapper<P, I, INV> {
+public abstract class MultiPageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryWrapper<P, I, INV> {
 
     final ConfigWrapper config;
     private final List<ChildInventoryWrapper<P, I, INV>> childs = new LinkedList<>();
@@ -64,18 +67,18 @@ public class MultiPageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryW
         registerActionHandler("noAction", click -> CallResult.DENY_GRABBING);
 
         registerActionHandler("nextPage", click -> {
-            if(currentPage == childs.size())
+            if (currentPage == childs.size())
                 return CallResult.DENY_GRABBING;
-            currentPage ++;
+            currentPage++;
             updateInventory();
             build();
             return CallResult.DENY_GRABBING;
         });
 
         registerActionHandler("previousPage", click -> {
-            if(currentPage == 1)
+            if (currentPage == 1)
                 return CallResult.DENY_GRABBING;
-            currentPage --;
+            currentPage--;
             updateInventory();
             build();
             return CallResult.DENY_GRABBING;
@@ -89,31 +92,31 @@ public class MultiPageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryW
         placeholderSlots = config.getOrSetDefault("Placeholder.slots", new ArrayList<>());
 
         registerActionHandlers();
-        if(update)
-            updateInventory();
+        if (update)
+            runLater(this::updateInventory, 2);
     }
 
     @Override
     public void updateInventory() {
-        if(!customTitle) {
+        if (!customTitle) {
             setTitle(FormatUtils.format(config.getLocalizedString(getLocale(), "Inventory", ".title", "&6Inventory"), replacer));
             customTitle = false;
         }
-        if(placeHolder == null)
+        if (placeHolder == null)
             placeHolder = Converters.convert(config.getItemStack("Placeholder.itemStack", replacer), ItemStackWrapper.class);
-        for(final int slot : placeholderSlots) {
+        for (final int slot : placeholderSlots) {
             set(slot, (I) placeHolder.getHandle(), "noAction");
         }
-        for(final String key : config.getKeys("Items")) {
-            final int slot = config.getOrSetDefault("Items."+key+".slot", 0);
-            final String actionHandler = config.getOrSetDefault("Items."+key+".actionHandler", "noAction");
-            final List<Object> args = config.getOrSetDefault("Items."+key+".actionArguments", new ArrayList<>());
-            set(slot, config.getItemStack("Items."+key+".itemStack", getLocale(), replacer), actionHandler, new Arguments(args));
+        for (final String key : config.getKeys("Items")) {
+            final int slot = config.getOrSetDefault("Items." + key + ".slot", 0);
+            final String actionHandler = config.getOrSetDefault("Items." + key + ".actionHandler", "noAction");
+            final List<Object> args = config.getOrSetDefault("Items." + key + ".actionArguments", new ArrayList<>());
+            set(slot, config.getItemStack("Items." + key + ".itemStack", getLocale(), replacer), actionHandler, new Arguments(args));
         }
-        if(currentPage > 1) {
+        if (currentPage > 1) {
             previousPageItemSlots.forEach(i -> set(i, previousPageItem, "previousPage"));
         }
-        if(childs.size() > currentPage) {
+        if (childs.size() > currentPage) {
             nextPageItemSlots.forEach(i -> set(i, nextPageItem, "nextPage"));
         }
     }
@@ -130,7 +133,7 @@ public class MultiPageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryW
     public void newPage() {
         childs.add(new ChildInventoryWrapper<>(getPlayer(), getInventoryType(), getLocale(), config, this));
         updateInventory();
-        currentPage ++;
+        currentPage++;
         updateInventory();
     }
 
@@ -144,14 +147,14 @@ public class MultiPageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryW
     public int getNextFreeSlot() {
         int itemCount = 0;
         for (int i = 0; i < getSize(); i++) {
-            if(nextPageItemSlots.contains(i) || previousPageItemSlots.contains(i) || placeholderSlots.contains(i))
+            if (nextPageItemSlots.contains(i) || previousPageItemSlots.contains(i) || placeholderSlots.contains(i))
                 continue;
             final InventoryItem item = get(i);
-            if(item == null) {
+            if (item == null) {
                 return i;
             } else {
-                itemCount ++;
-                if(itemCount >= itemsPerPage) {
+                itemCount++;
+                if (itemCount >= itemsPerPage) {
                     return -1;
                 }
             }
@@ -188,7 +191,7 @@ public class MultiPageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryW
     }
 
     public AbstractBaseInventoryWrapper<P, I, INV> getCurrentPage() {
-        return childs.get(currentPage-1);
+        return childs.get(currentPage - 1);
     }
 
     @Override
@@ -207,15 +210,15 @@ public class MultiPageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryW
     @Override
     public void add(final I stack, final String actionHandler, final Arguments args) {
         final int slot = getNextFreeSlot();
-        if(slot == -1) {
-            if(childs.size() > currentPage) {
+        if (slot == -1) {
+            if (childs.size() > currentPage) {
                 currentPage = childs.size();
                 add(stack, actionHandler, args);
                 return;
             }
             newPage();
-            if(getNextFreeSlot() == -1) {
-                throw new RuntimeException("[MCCommons] Inventory has no space for additional items. Inventory size is "+getSize()+" and type is "+getInventoryType().name()+". There are "+getInventoryItemMap().size()+" items preconfigured in a new page. Max items per page are "+itemsPerPage+".");
+            if (getNextFreeSlot() == -1) {
+                throw new RuntimeException("[MCCommons] Inventory has no space for additional items. Inventory size is " + getSize() + " and type is " + getInventoryType().name() + ". There are " + getInventoryItemMap().size() + " items preconfigured in a new page. Max items per page are " + itemsPerPage + ".");
             }
             add(stack, actionHandler, args);
         } else {
@@ -256,4 +259,5 @@ public class MultiPageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryW
         childs.forEach(it -> it.setTitle(title));
     }
 
+    protected abstract void runLater(final Runnable runnable, final int ticks);
 }
