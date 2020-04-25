@@ -19,7 +19,7 @@ public abstract class AbstractBaseInventoryWrapper<P, I, INV> implements Invento
 
     private final Map<String, ActionHandler> actionHandlerMap = new HashMap<>();
     private final Map<Integer, InventoryItem> inventoryItemMap = new HashMap<>();
-    protected P player;
+    private final P player;
     private final Locale locale;
     private final int id = ID_COUNTER.incrementAndGet();
     protected Supplier<String[]> replacer = () -> new String[0];
