@@ -14,6 +14,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 public abstract class AbstractProxyAsyncFetchMultiPageInventoryWrapper<T> extends AbstractAsyncFetchMultiPageInventoryWrapper<ProxiedPlayer, ItemStack, Inventory, T> implements Schedulable {
@@ -69,6 +70,11 @@ public abstract class AbstractProxyAsyncFetchMultiPageInventoryWrapper<T> extend
             getPlayer().sendMessage("§cAn internal exception occurred §cat §6"+getClass().getSimpleName()+" §cat page §6"+getCurrentPageIndex());
             ProxyServer.getInstance().getLogger().log(Level.SEVERE, "[MCCommons] An internal exception occurred at "+getClass().getName(), exception);
         }
+    }
+
+    @Override
+    protected void runLater(Runnable runnable, int ticks) {
+        later(runnable, ticks / 20, TimeUnit.SECONDS);
     }
 
 }

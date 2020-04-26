@@ -50,6 +50,11 @@ public abstract class AbstractSpigotAsyncFetchMultiPageInventoryWrapper<T> exten
     }
 
     @Override
+    protected void runLater(Runnable runnable, int delay) {
+        later(runnable, delay);
+    }
+
+    @Override
     public void async0(final Runnable runnable) {
         async(runnable);
     }
