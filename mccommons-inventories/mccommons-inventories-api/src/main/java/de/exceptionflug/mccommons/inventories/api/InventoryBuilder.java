@@ -15,4 +15,6 @@ public interface InventoryBuilder {
     void uncache(final InventoryWrapper wrapper);
     void open(final InventoryWrapper wrapper);
 
+    void addWrapper(final InventoryWrapper wrapper);
+
 }
