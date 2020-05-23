@@ -16,7 +16,7 @@ import java.util.function.Supplier;
  * Multi page inventories are inventories which can automatically create new pages accessable through automatically positioned next and previous page items.
  * A new page will be created when the add() method is invoked and there is no space left for a new item.
  */
-public abstract class MultiPageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryWrapper<P, I, INV> {
+public class MultiPageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryWrapper<P, I, INV> {
 
     final ConfigWrapper config;
     private final List<ChildInventoryWrapper<P, I, INV>> childs = new LinkedList<>();
@@ -90,7 +90,7 @@ public abstract class MultiPageInventoryWrapper<P, I, INV> extends AbstractBaseI
 
         registerActionHandlers();
         if(update)
-            runLater(this::updateInventory, 1);
+            updateInventory();
     }
 
     @Override
@@ -255,7 +255,5 @@ public abstract class MultiPageInventoryWrapper<P, I, INV> extends AbstractBaseI
         super.setTitle(title);
         childs.forEach(it -> it.setTitle(title));
     }
-
-    protected abstract void runLater(final Runnable runnable, final int ticks);
 
 }

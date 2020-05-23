@@ -19,7 +19,7 @@ import java.util.Locale;
  * @param <I>
  * @param <INV>
  */
-public abstract class OnePageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryWrapper<P, I, INV> {
+public class OnePageInventoryWrapper<P, I, INV> extends AbstractBaseInventoryWrapper<P, I, INV> {
 
     private final ConfigWrapper config;
     private boolean customTitle;
@@ -60,7 +60,7 @@ public abstract class OnePageInventoryWrapper<P, I, INV> extends AbstractBaseInv
         registerActionHandler("noAction", click -> CallResult.DENY_GRABBING);
         registerActionHandlers();
         if(update)
-           runLater(this::updateInventory, 1);
+            updateInventory();
     }
 
     @Override
@@ -102,6 +102,4 @@ public abstract class OnePageInventoryWrapper<P, I, INV> extends AbstractBaseInv
         this.placeHolder = placeHolder;
     }
 
-
-    protected abstract void runLater(final Runnable runnable, final int delay);
 }

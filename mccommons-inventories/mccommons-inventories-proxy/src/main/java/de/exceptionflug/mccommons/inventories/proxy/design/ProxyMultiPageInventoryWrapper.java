@@ -13,7 +13,6 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 public class ProxyMultiPageInventoryWrapper extends MultiPageInventoryWrapper<ProxiedPlayer, ItemStack, Inventory> implements Schedulable {
@@ -47,11 +46,6 @@ public class ProxyMultiPageInventoryWrapper extends MultiPageInventoryWrapper<Pr
 
     protected ProxyMultiPageInventoryWrapper(ProxiedPlayer player, InventoryType type, ConfigWrapper config, Locale locale, boolean update) {
         super(player, type, config, locale, update);
-    }
-
-    @Override
-    protected void runLater(Runnable runnable, int ticks) {
-        later(runnable, ticks / 20, TimeUnit.SECONDS);
     }
 
     @Override

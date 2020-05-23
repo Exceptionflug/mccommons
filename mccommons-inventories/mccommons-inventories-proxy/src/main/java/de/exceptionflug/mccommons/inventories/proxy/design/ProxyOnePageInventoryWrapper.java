@@ -13,17 +13,16 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 public class ProxyOnePageInventoryWrapper extends OnePageInventoryWrapper<ProxiedPlayer, ItemStack, Inventory> implements Schedulable {
 
     protected ProxyOnePageInventoryWrapper(ProxiedPlayer player, ConfigWrapper configWrapper) {
-        super(player, configWrapper, player == null ? Locale.GERMAN : Providers.get(LocaleProvider.class).provide(player.getUniqueId()));
+        super(player, configWrapper, Providers.get(LocaleProvider.class).provide(player.getUniqueId()));
     }
 
     protected ProxyOnePageInventoryWrapper(ProxiedPlayer player, InventoryType type, ConfigWrapper configWrapper) {
-        super(player, type, configWrapper,  player == null ? Locale.GERMAN : Providers.get(LocaleProvider.class).provide(player.getUniqueId()));
+        super(player, type, configWrapper, Providers.get(LocaleProvider.class).provide(player.getUniqueId()));
     }
 
     protected ProxyOnePageInventoryWrapper(ProxiedPlayer player, ConfigWrapper configWrapper, Locale locale) {
@@ -35,11 +34,11 @@ public class ProxyOnePageInventoryWrapper extends OnePageInventoryWrapper<Proxie
     }
 
     protected ProxyOnePageInventoryWrapper(ProxiedPlayer player, InventoryType type, ConfigWrapper configWrapper, boolean update) {
-        super(player, type, configWrapper, player == null ? Locale.GERMAN : Providers.get(LocaleProvider.class).provide(player.getUniqueId()), update);
+        super(player, type, configWrapper, Providers.get(LocaleProvider.class).provide(player.getUniqueId()),update);
     }
 
     protected ProxyOnePageInventoryWrapper(ProxiedPlayer player, ConfigWrapper configWrapper, boolean update) {
-        super(player, configWrapper,  player == null ? Locale.GERMAN : Providers.get(LocaleProvider.class).provide(player.getUniqueId()), update);
+        super(player, configWrapper, Providers.get(LocaleProvider.class).provide(player.getUniqueId()), update);
     }
 
     protected ProxyOnePageInventoryWrapper(ProxiedPlayer player, ConfigWrapper configWrapper, Locale locale, boolean update) {
@@ -51,18 +50,13 @@ public class ProxyOnePageInventoryWrapper extends OnePageInventoryWrapper<Proxie
     }
 
     @Override
-    protected void runLater(Runnable runnable, int ticks) {
-        later(runnable, ticks / 20, TimeUnit.SECONDS);
-    }
-
-    @Override
     public void onException(final Exception exception, final InventoryItem inventoryItem) {
-        if (inventoryItem != null) {
-            getPlayer().sendMessage("§cAn internal exception occurred while handling action §6" + inventoryItem.getActionHandler() + " §cof §6" + getClass().getSimpleName());
-            ProxyServer.getInstance().getLogger().log(Level.SEVERE, "[MCCommons] An internal exception occurred while handling action " + inventoryItem.getActionHandler() + " of " + getClass().getName(), exception);
+        if(inventoryItem != null) {
+            getPlayer().sendMessage("§cAn internal exception occurred while handling action §6"+inventoryItem.getActionHandler()+" §cof §6"+getClass().getSimpleName());
+            ProxyServer.getInstance().getLogger().log(Level.SEVERE, "[MCCommons] An internal exception occurred while handling action "+inventoryItem.getActionHandler()+" of "+getClass().getName(), exception);
         } else {
-            getPlayer().sendMessage("§cAn internal exception occurred §cat §6" + getClass().getSimpleName());
-            ProxyServer.getInstance().getLogger().log(Level.SEVERE, "[MCCommons] An internal exception occurred at " + getClass().getName(), exception);
+            getPlayer().sendMessage("§cAn internal exception occurred §cat §6"+getClass().getSimpleName());
+            ProxyServer.getInstance().getLogger().log(Level.SEVERE, "[MCCommons] An internal exception occurred at "+getClass().getName(), exception);
         }
     }
 
