@@ -72,9 +72,4 @@ public abstract class AbstractProxyAsyncFetchMultiPageInventoryWrapper<T> extend
         }
     }
 
-    @Override
-    protected void runLater(Runnable runnable, int ticks) {
-        later(runnable, ticks / 20, TimeUnit.SECONDS);
-    }
-
 }
