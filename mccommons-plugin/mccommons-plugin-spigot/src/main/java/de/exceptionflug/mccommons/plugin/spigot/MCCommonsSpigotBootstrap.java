@@ -1,7 +1,6 @@
 package de.exceptionflug.mccommons.plugin.spigot;
 
 import com.flowpowered.nbt.CompoundTag;
-import de.exceptionflug.mccommons.config.remote.client.RemoteConfigClient;
 import de.exceptionflug.mccommons.config.shared.ConfigFactory;
 import de.exceptionflug.mccommons.config.shared.ConfigItemStack;
 import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
@@ -41,13 +40,6 @@ public class MCCommonsSpigotBootstrap {
         try {
             Providers.register(InventoryBuilder.class, new SpigotInventoryBuilder());
             Providers.register(JavaPlugin.class, plugin);
-            Providers.register(RemoteClientProvider.class, new RemoteClientProvider() {
-                @Override
-                public RemoteConfigClient get() {
-                    final ConfigWrapper configWrapper = ConfigFactory.create("MCCommons", SpigotMCCommonsPlugin.class, SpigotConfig.class);
-                    return new RemoteConfigClient(configWrapper.getOrSetDefault("RemoteServer.url", "http://localhost:8881"), configWrapper.getOrSetDefault("RemoteServer.url", "x7834HgsTSds9"));
-                }
-            });
 
             Providers.register(AsyncProvider.class, new AsyncProvider() {
                 @Override
@@ -66,8 +58,6 @@ public class MCCommonsSpigotBootstrap {
             Providers.register(ServerVersionProvider.class, new ServerVersionProvider());
             ConfigFactory.register(SpigotConfig.class, SpigotConfigSpigotYamlConfigWrapper::new);
             ConfigFactory.register(ConfigWrapper.class, SpigotConfigSpigotYamlConfigWrapper::new);
-            ConfigFactory.registerRemote(ConfigWrapper.class, s -> new SpigotConfigSpigotYamlConfigWrapper(s, configData -> ConfigFactory.getRemoteConfigClient().getConfigService().update(configData).blockingSubscribe(), () -> ConfigFactory.getRemoteConfigClient().getConfigService().getConfig(s.getRemotePath()).blockingFirst()));
-            ConfigFactory.registerRemote(SpigotConfig.class, s -> new SpigotConfigSpigotYamlConfigWrapper(s, configData -> ConfigFactory.getRemoteConfigClient().getConfigService().update(configData).blockingSubscribe(), () -> ConfigFactory.getRemoteConfigClient().getConfigService().getConfig(s.getRemotePath()).blockingFirst()));
 
             try {
                 Converters.register(ReflectionUtil.getClass("{obc}.entity.CraftPlayer"), PlayerWrapper.class, new PlayerConverter());
