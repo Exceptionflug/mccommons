@@ -1,6 +1,7 @@
 package de.exceptionflug.mccommons.inventories.api.item;
 
 import com.flowpowered.nbt.CompoundTag;
+import de.exceptionflug.protocolize.items.ItemType;
 
 import java.util.List;
 

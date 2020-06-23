@@ -1,14 +1,15 @@
 package de.exceptionflug.mccommons.inventories.spigot.item;
 
 import com.flowpowered.nbt.CompoundTag;
+import de.exceptionflug.mccommons.core.Converter;
 import de.exceptionflug.mccommons.core.Converters;
 import de.exceptionflug.mccommons.core.Providers;
-import de.exceptionflug.mccommons.inventories.api.item.AbstractCustomItemIDMapping;
-import de.exceptionflug.mccommons.inventories.api.item.ItemIDMapping;
 import de.exceptionflug.mccommons.inventories.api.item.ItemStackWrapper;
-import de.exceptionflug.mccommons.inventories.api.item.ItemType;
 import de.exceptionflug.mccommons.inventories.spigot.utils.ReflectionUtil;
 import de.exceptionflug.mccommons.inventories.spigot.utils.ServerVersionProvider;
+import de.exceptionflug.protocolize.items.AbstractCustomItemIDMapping;
+import de.exceptionflug.protocolize.items.ItemIDMapping;
+import de.exceptionflug.protocolize.items.ItemType;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -18,7 +19,7 @@ import java.util.List;
 
 public class SpigotItemStackWrapper implements ItemStackWrapper {
 
-    private final ItemStack handle;
+    private ItemStack handle;
     private static Class<?> craftItemStackClass;
     private static Class<?> nbtTagCompoundClass;
     private static Class<?> itemStackNMSClass;
@@ -49,7 +50,7 @@ public class SpigotItemStackWrapper implements ItemStackWrapper {
 
     @Override
     public ItemType getType() {
-        return ItemType.getType(handle.getTypeId(), handle.getDurability(), Providers.get(ServerVersionProvider.class).getProtocolVersion(), this);
+        return ItemType.getType(handle.getTypeId(), handle.getDurability(), Providers.get(ServerVersionProvider.class).getProtocolVersion(), null);
     }
 
     @Override
@@ -80,8 +81,11 @@ public class SpigotItemStackWrapper implements ItemStackWrapper {
             throw new UnsupportedOperationException(type.name()+" is not allowed on version "+ReflectionUtil.getVersion());
         handle.setType(Material.getMaterial(applicableMapping.getId()));
         handle.setDurability((short) applicableMapping.getData());
-        if(applicableMapping instanceof AbstractCustomItemIDMapping)
-            ((AbstractCustomItemIDMapping) applicableMapping).apply(this, Providers.get(ServerVersionProvider.class).getProtocolVersion());
+        if(applicableMapping instanceof AbstractCustomItemIDMapping) {
+            de.exceptionflug.protocolize.items.ItemStack convert = Converters.convert(handle, de.exceptionflug.protocolize.items.ItemStack.class);
+            ((AbstractCustomItemIDMapping) applicableMapping).apply(convert, Providers.get(ServerVersionProvider.class).getProtocolVersion());
+            handle = Converters.convert(convert, ItemStack.class);
+        }
     }
 
     @Override

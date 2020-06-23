@@ -28,8 +28,14 @@
         <dependency>
             <groupId>de.exceptionflug</groupId>
             <artifactId>protocolize-api</artifactId>
-            <version>1.5.4-SNAPSHOT</version>
-            <scope>provided</scope>
+            <version>1.6.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.exceptionflug</groupId>
+            <artifactId>protocolize-items</artifactId>
+            <version>1.6.0-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>de.exceptionflug</groupId>
@@ -48,6 +54,35 @@
             </resource>
         </resources>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <filters>
+                                <filter>
+                                    <artifact>de.exceptionflug:protocolize-api</artifact>
+                                    <includes>
+                                        <include>de/exceptionflug/protocolize/api/AbstractProtocolIDMapping.class</include>
+                                    </includes>
+                                </filter>
+                                <filter>
+                                    <artifact>de.exceptionflug:protocolize-items</artifact>
+                                    <includes>
+                                        <include>de/exceptionflug/protocolize/items/*.class</include>
+                                    </includes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>

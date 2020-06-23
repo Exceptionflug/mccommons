@@ -4,17 +4,14 @@ import de.exceptionflug.mccommons.config.shared.ConfigItemStack;
 import de.exceptionflug.mccommons.core.Converter;
 import de.exceptionflug.mccommons.core.Converters;
 import de.exceptionflug.mccommons.core.utils.FormatUtils;
-import de.exceptionflug.mccommons.inventories.api.item.ItemType;
 import de.exceptionflug.mccommons.inventories.spigot.utils.ItemUtils;
+import de.exceptionflug.protocolize.items.ItemType;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
-import org.bukkit.material.SpawnEgg;
 
 import java.util.List;
 import java.util.stream.Collectors;

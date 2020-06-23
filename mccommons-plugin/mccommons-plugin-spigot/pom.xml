@@ -56,6 +56,20 @@
                                     <shadedPattern>de.exceptionflug.mccommons.packetwrapper</shadedPattern>
                                 </relocation>
                             </relocations>
+                            <filters>
+                                <filter>
+                                    <artifact>de.exceptionflug:protocolize-api</artifact>
+                                    <includes>
+                                        <include>de/exceptionflug/protocolize/api/AbstractProtocolIDMapping.class</include>
+                                    </includes>
+                                </filter>
+                                <filter>
+                                    <artifact>de.exceptionflug:protocolize-items</artifact>
+                                    <includes>
+                                        <include>de/exceptionflug/protocolize/items/*.class</include>
+                                    </includes>
+                                </filter>
+                            </filters>
                         </configuration>
                     </execution>
                 </executions>

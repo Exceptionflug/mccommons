@@ -3,8 +3,8 @@ package de.exceptionflug.mccommons.inventories.proxy.item;
 import com.flowpowered.nbt.CompoundTag;
 import de.exceptionflug.mccommons.core.Converters;
 import de.exceptionflug.mccommons.inventories.api.item.ItemStackWrapper;
-import de.exceptionflug.mccommons.inventories.api.item.ItemType;
 import de.exceptionflug.protocolize.items.ItemStack;
+import de.exceptionflug.protocolize.items.ItemType;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public class ProtocolizeItemStackWrapper implements ItemStackWrapper {
 
     @Override
     public ItemType getType() {
-        return Converters.convert(handle.getType(), ItemType.class);
+        return handle.getType();
     }
 
     @Override
@@ -48,7 +48,7 @@ public class ProtocolizeItemStackWrapper implements ItemStackWrapper {
 
     @Override
     public void setType(final ItemType type) {
-        handle.setType(Converters.convert(type, de.exceptionflug.protocolize.items.ItemType.class));
+        handle.setType(type);
     }
 
     @Override

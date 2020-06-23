@@ -65,7 +65,7 @@ public class ProtocolizeInventoryBuilder implements InventoryBuilder {
           inventory.setItem(i, item.getItemStackWrapper().getHandle());
         } else {
           if (item.getItemStackWrapper().getType()
-              == de.exceptionflug.mccommons.inventories.api.item.ItemType.PLAYER_HEAD
+              == ItemType.PLAYER_HEAD
               && currentStack.getType() == ItemType.PLAYER_HEAD) {
             final String ownaz1 = ItemUtils
                 .getSkullOwner(item.getItemStackWrapper().getHandle());

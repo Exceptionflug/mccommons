@@ -17,7 +17,6 @@ import de.exceptionflug.mccommons.inventories.api.InventoryBuilder;
 import de.exceptionflug.mccommons.inventories.api.InventoryType;
 import de.exceptionflug.mccommons.inventories.api.PlayerWrapper;
 import de.exceptionflug.mccommons.inventories.api.item.ItemStackWrapper;
-import de.exceptionflug.mccommons.inventories.api.item.ItemType;
 import de.exceptionflug.mccommons.inventories.spigot.builder.SpigotInventoryBuilder;
 import de.exceptionflug.mccommons.inventories.spigot.converters.*;
 import de.exceptionflug.mccommons.inventories.spigot.item.SpigotItemStackWrapper;
@@ -28,6 +27,7 @@ import de.exceptionflug.mccommons.plugin.spigot.commands.ConfigReloadCommand;
 import de.exceptionflug.mccommons.plugin.spigot.commands.HologramReloadCommand;
 import de.exceptionflug.mccommons.plugin.spigot.converter.ItemStackConverter;
 import de.exceptionflug.mccommons.plugin.spigot.converter.PlayerConverter;
+import de.exceptionflug.protocolize.items.ItemType;
 import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -76,6 +76,8 @@ public class MCCommonsSpigotBootstrap {
             }
 
             Converters.register(ConfigItemStack.class, ItemStack.class, new ItemStackConverter());
+            Converters.register(de.exceptionflug.protocolize.items.ItemStack.class, ItemStack.class, new ProtocolizeItemStackConverter());
+            Converters.register(ItemStack.class, de.exceptionflug.protocolize.items.ItemStack.class, new BukkitItemStackConverter());
             Converters.register(ItemType.class, MaterialData.class, new ItemTypeMaterialDataConverter());
             Converters.register(MaterialData.class, ItemType.class, new MaterialDataItemTypeConverter());
             Converters.register(CompoundTag.class, ReflectionUtil.getClass("{nms}.NBTTagCompound"), new FlowNbtNmsNbtConverter());
