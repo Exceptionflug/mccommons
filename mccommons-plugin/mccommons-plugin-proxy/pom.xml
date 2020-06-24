@@ -54,6 +54,14 @@
                             <shadedPattern>de.exceptionflug.mccommons.config.remote.client.rxjava2</shadedPattern>
                         </relocation>
                     </relocations>
+                    <filters>
+                        <filter>
+                            <artifact>de.exceptionflug:protocolize-api</artifact>
+                        </filter>
+                        <filter>
+                            <artifact>de.exceptionflug:protocolize-items</artifact>
+                        </filter>
+                    </filters>
                 </configuration>
             </plugin>
         </plugins>
@@ -90,19 +98,19 @@
         <dependency>
             <groupId>de.exceptionflug</groupId>
             <artifactId>protocolize-items</artifactId>
-            <version>1.5.4-SNAPSHOT</version>
+            <version>1.6.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>de.exceptionflug</groupId>
             <artifactId>protocolize-inventory</artifactId>
-            <version>1.5.4-SNAPSHOT</version>
+            <version>1.6.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>de.exceptionflug</groupId>
             <artifactId>protocolize-api</artifactId>
-            <version>1.5.4-SNAPSHOT</version>
+            <version>1.6.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -110,6 +118,16 @@
             <artifactId>mccommons-inventories-proxy</artifactId>
             <version>2.0-SNAPSHOT</version>
             <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>de.exceptionflug</groupId>
+                    <artifactId>protocolize-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.exceptionflug</groupId>
+                    <artifactId>protocolize-items</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 </project>

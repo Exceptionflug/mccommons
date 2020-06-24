@@ -7,7 +7,6 @@ public class Converters {
     private static final Map<Map.Entry<Class, Class>, Converter> CONVERTER_MAP = new HashMap<>();
 
     public static <T> T convert(final Object source, final Class<T> to) {
-        System.out.println("Convert "+source.getClass().getName()+" to "+to.getName());
         Converter converter = getConverter(source.getClass(), to);
         if (converter == null)
             converter = getMultiConverter(source.getClass(), to);
@@ -24,7 +23,6 @@ public class Converters {
         return src -> {
             Object out = src;
             for (final Converter converter : converters) {
-                System.out.println("Perform sub conversion using "+converter.getClass().getName()+" to convert "+out.getClass().getName());
                 out = converter.convert(out);
             }
             return (T) out;
