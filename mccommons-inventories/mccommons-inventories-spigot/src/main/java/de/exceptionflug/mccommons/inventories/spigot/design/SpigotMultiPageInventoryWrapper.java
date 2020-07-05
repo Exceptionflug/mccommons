@@ -18,11 +18,11 @@ import java.util.logging.Level;
 public class SpigotMultiPageInventoryWrapper extends MultiPageInventoryWrapper<Player, ItemStack, Inventory> implements Schedulable {
 
     protected SpigotMultiPageInventoryWrapper(Player player, InventoryType type, ConfigWrapper configWrapper) {
-        super(player, type, configWrapper, Providers.get(LocaleProvider.class).provide(player.getUniqueId()));
+        super(player, type, configWrapper, player == null ? Locale.GERMAN : Providers.get(LocaleProvider.class).provide(player.getUniqueId()));
     }
 
     protected SpigotMultiPageInventoryWrapper(Player player, ConfigWrapper configWrapper) {
-        super(player, configWrapper, Providers.get(LocaleProvider.class).provide(player.getUniqueId()));
+        super(player, configWrapper, player == null ? Locale.GERMAN : Providers.get(LocaleProvider.class).provide(player.getUniqueId()));
     }
 
     protected SpigotMultiPageInventoryWrapper(Player player, InventoryType type, ConfigWrapper configWrapper, Locale locale) {
@@ -34,11 +34,11 @@ public class SpigotMultiPageInventoryWrapper extends MultiPageInventoryWrapper<P
     }
 
     protected SpigotMultiPageInventoryWrapper(Player player, InventoryType type, ConfigWrapper configWrapper, boolean update) {
-        super(player, type, configWrapper, Providers.get(LocaleProvider.class).provide(player.getUniqueId()), update);
+        super(player, type, configWrapper, player == null ? Locale.GERMAN : Providers.get(LocaleProvider.class).provide(player.getUniqueId()), update);
     }
 
     protected SpigotMultiPageInventoryWrapper(Player player, ConfigWrapper configWrapper, boolean update) {
-        super(player, configWrapper, Providers.get(LocaleProvider.class).provide(player.getUniqueId()), update);
+        super(player, configWrapper, player == null ? Locale.GERMAN : Providers.get(LocaleProvider.class).provide(player.getUniqueId()), update);
     }
 
     protected SpigotMultiPageInventoryWrapper(Player player, ConfigWrapper config, Locale locale, boolean update) {

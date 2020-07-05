@@ -8,5 +8,4 @@ public class ProxyMCCommonsPlugin extends Plugin {
     public void onEnable() {
         new MCCommonsProxyBootstrap(this).enableMCCommons();
     }
-
 }
