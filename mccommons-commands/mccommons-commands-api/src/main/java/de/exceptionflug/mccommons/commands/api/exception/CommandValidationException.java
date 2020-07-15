@@ -10,43 +10,43 @@ import lombok.NonNull;
  */
 public final class CommandValidationException extends RuntimeException {
 
-    private final String[] messages;
+	private final String[] messages;
 
-    private final String messageKey;
-    private final String defaultMessage;
-    private final String[] replacements;
+	private final String messageKey;
+	private final String defaultMessage;
+	private final String[] replacements;
 
-    public CommandValidationException(@NonNull final String... message) {
-        super(null, null, true, false);
-        this.messages = message;
-        this.messageKey = null;
-        this.defaultMessage = null;
-        this.replacements = null;
-    }
+	public CommandValidationException(@NonNull final String... message) {
+		super(null, null, true, false);
+		this.messages = message;
+		this.messageKey = null;
+		this.defaultMessage = null;
+		this.replacements = null;
+	}
 
-    public CommandValidationException(String messageKey, String defaultMessage, String... replacements) {
-        super(null, null, true, false);
-        this.messageKey = messageKey;
-        this.defaultMessage = defaultMessage;
-        this.replacements = replacements;
+	public CommandValidationException(String messageKey, String defaultMessage, String... replacements) {
+		super(null, null, true, false);
+		this.messageKey = messageKey;
+		this.defaultMessage = defaultMessage;
+		this.replacements = replacements;
 
-        this.messages = null;
-    }
+		this.messages = null;
+	}
 
-    public String[] getMessages() {
-        return messages;
-    }
+	public String[] getMessages() {
+		return messages;
+	}
 
-    public String getMessageKey() {
-        return messageKey;
-    }
+	public String getMessageKey() {
+		return messageKey;
+	}
 
-    public String getDefaultMessage() {
-        return defaultMessage;
-    }
+	public String getDefaultMessage() {
+		return defaultMessage;
+	}
 
-    public String[] getReplacements() {
-        return replacements;
-    }
+	public String[] getReplacements() {
+		return replacements;
+	}
 }
 

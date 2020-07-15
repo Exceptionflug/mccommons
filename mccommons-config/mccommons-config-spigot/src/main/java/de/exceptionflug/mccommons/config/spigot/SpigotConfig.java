@@ -5,8 +5,10 @@ import org.bukkit.Location;
 
 public interface SpigotConfig extends RemoteConfigWrapper {
 
-    Location getLocation(final String path);
-    SoundData getSoundData(final String path);
-    PositionedSound getPositionedSound(final String path);
+	Location getLocation(final String path);
+
+	SoundData getSoundData(final String path);
+
+	PositionedSound getPositionedSound(final String path);
 
 }

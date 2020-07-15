@@ -9,10 +9,10 @@ import java.io.IOException;
 @RequestMapping("/config")
 public interface ConfigRestController {
 
-    @GetMapping
-    ConfigData getConfig(@RequestParam("path") final String path) throws IOException;
+	@GetMapping
+	ConfigData getConfig(@RequestParam("path") final String path) throws IOException;
 
-    @PutMapping
-    void update(@RequestBody final ConfigData configData) throws IOException;
+	@PutMapping
+	void update(@RequestBody final ConfigData configData) throws IOException;
 
 }

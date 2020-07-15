@@ -8,11 +8,11 @@ import java.util.Locale;
 @Getter
 @RequiredArgsConstructor
 public abstract class AbstractCommandSender<S> {
-    public final S handle;
+	public final S handle;
 
-    public abstract Locale getLocale();
+	public abstract Locale getLocale();
 
-    public abstract void tellPlain(final String... messages);
+	public abstract void tellPlain(final String... messages);
 
-    public abstract void tell(String msgKey, String defaultMessage, String... replacements);
+	public abstract void tell(String msgKey, String defaultMessage, String... replacements);
 }

@@ -19,75 +19,75 @@ import java.util.Optional;
 
 public final class SpigotCommandParser extends AbstractCommandParser<SpigotCommandHandler> {
 
-    public SpigotCommandParser(final AbstractCommand<?> mccCommand, final ConfigWrapper configWrapper) {
-        super(mccCommand, configWrapper);
-    }
+	public SpigotCommandParser(final AbstractCommand<?> mccCommand, final ConfigWrapper configWrapper) {
+		super(mccCommand, configWrapper);
+	}
 
-    @Override
-    public SpigotCommandHandler toCommand() {
-        final SpigotCommandHandler.SpigotCommandHandlerBuilder builder = SpigotCommandHandler.builder();
-        builder.mccCommand((SpigotCommand) mccCommand);
-        builder.configWrapper(configWrapper);
+	@Override
+	public SpigotCommandHandler toCommand() {
+		final SpigotCommandHandler.SpigotCommandHandlerBuilder builder = SpigotCommandHandler.builder();
+		builder.mccCommand((SpigotCommand) mccCommand);
+		builder.configWrapper(configWrapper);
 
-        //Parsing the command
+		//Parsing the command
 
-        Preconditions.checkArgument(
-            isAnnotationPresent(Command.class),
-            "Can not register command: Annotation @Command is not present"
-        );
+		Preconditions.checkArgument(
+			isAnnotationPresent(Command.class),
+			"Can not register command: Annotation @Command is not present"
+		);
 
-        //General stuff
-        final Command command = getCommandAnnotation();
+		//General stuff
+		final Command command = getCommandAnnotation();
 
-        final CommandSettings.CommandSettingsBuilder commandSettingsBuilder = CommandSettings.builder();
+		final CommandSettings.CommandSettingsBuilder commandSettingsBuilder = CommandSettings.builder();
 
-        commandSettingsBuilder.inGameOnly(command.inGameOnly());
-        commandSettingsBuilder.permission(command.permission());
-        commandSettingsBuilder.name(command.value());
+		commandSettingsBuilder.inGameOnly(command.inGameOnly());
+		commandSettingsBuilder.permission(command.permission());
+		commandSettingsBuilder.name(command.value());
 
-        builder.commandSettings(commandSettingsBuilder.build());
+		builder.commandSettings(commandSettingsBuilder.build());
 
-        //Main command
+		//Main command
 
-        final MainCommand.MainCommandBuilder mainCommandBuilder = MainCommand.builder();
-        mainCommandBuilder.mccCommand(mccCommand);
+		final MainCommand.MainCommandBuilder mainCommandBuilder = MainCommand.builder();
+		mainCommandBuilder.mccCommand(mccCommand);
 
-        final Method mainCommandMethod = getMainCommandMethod();
+		final Method mainCommandMethod = getMainCommandMethod();
 
 
-        mainCommandBuilder.inGameOnly(mainCommandMethod.isAnnotationPresent(InGameOnly.class));
+		mainCommandBuilder.inGameOnly(mainCommandMethod.isAnnotationPresent(InGameOnly.class));
 
-        final Optional<String> permission = getPermissionOfMethod(mainCommandMethod);
-        mainCommandBuilder.permission(permission.orElse(""));
+		final Optional<String> permission = getPermissionOfMethod(mainCommandMethod);
+		mainCommandBuilder.permission(permission.orElse(""));
 
-        mainCommandBuilder.maxArguments(maxArguments(mainCommandMethod));
-        mainCommandBuilder.minArguments(minArguments(mainCommandMethod));
+		mainCommandBuilder.maxArguments(maxArguments(mainCommandMethod));
+		mainCommandBuilder.minArguments(minArguments(mainCommandMethod));
 
-        builder.mainCommand(mainCommandBuilder.build());
+		builder.mainCommand(mainCommandBuilder.build());
 
-        //        mainCommandBuilder.permission()
+		//        mainCommandBuilder.permission()
 
-        //Subcommand
+		//Subcommand
 
-        final List<SubCommand> subCommands = new ArrayList<>();
+		final List<SubCommand> subCommands = new ArrayList<>();
 
-        for (final Method method : getSubCommandMethods()) {
-            final SubCommand.SubCommandBuilder subCommandBuilder = SubCommand.builder();
+		for (final Method method : getSubCommandMethods()) {
+			final SubCommand.SubCommandBuilder subCommandBuilder = SubCommand.builder();
 
-            final de.exceptionflug.mccommons.commands.api.annotation.SubCommand subCommand
-                = method.getAnnotation(de.exceptionflug.mccommons.commands.api.annotation.SubCommand.class);
+			final de.exceptionflug.mccommons.commands.api.annotation.SubCommand subCommand
+				= method.getAnnotation(de.exceptionflug.mccommons.commands.api.annotation.SubCommand.class);
 
-            subCommandBuilder.subCommand(method);
-            subCommandBuilder.superCommand(mccCommand);
-            subCommandBuilder.isInGameOnly(isInGameOnly(method));
-            subCommandBuilder.minArguments(minArguments(method));
-            subCommandBuilder.maxArguments(maxArguments(method));
-            subCommandBuilder.neededInput(subCommand.value());
+			subCommandBuilder.subCommand(method);
+			subCommandBuilder.superCommand(mccCommand);
+			subCommandBuilder.isInGameOnly(isInGameOnly(method));
+			subCommandBuilder.minArguments(minArguments(method));
+			subCommandBuilder.maxArguments(maxArguments(method));
+			subCommandBuilder.neededInput(subCommand.value());
 
-            subCommands.add(subCommandBuilder.build());
-        }
-        builder.subCommands(subCommands);
+			subCommands.add(subCommandBuilder.build());
+		}
+		builder.subCommands(subCommands);
 
-        return builder.build();
-    }
+		return builder.build();
+	}
 }

@@ -16,40 +16,40 @@ import java.util.UUID;
 
 public final class ProxyCommandFramework extends AbstractCommandFramework {
 
-    protected ProxyCommandFramework(final ConfigWrapper messageConfig) {
-        super(messageConfig);
-    }
+	protected ProxyCommandFramework(final ConfigWrapper messageConfig) {
+		super(messageConfig);
+	}
 
 
-    @Override
-    public void registerCommand(@NonNull final AbstractCommand<?> command) {
-        registeredCommands.add(command);
-        Commands.registerCommand(new ProxyCommandParser(command, messageConfig).toCommand());
-    }
+	@Override
+	public void registerCommand(@NonNull final AbstractCommand<?> command) {
+		registeredCommands.add(command);
+		Commands.registerCommand(new ProxyCommandParser(command, messageConfig).toCommand());
+	}
 
-    private void registerDefaultInputSerializables() {
+	private void registerDefaultInputSerializables() {
 
-        InputSerializer.registerSerializable(new InputSerializable<ProxiedPlayer>() {
-            @Override
-            public Class<ProxiedPlayer> getClazz() {
-                return ProxiedPlayer.class;
-            }
+		InputSerializer.registerSerializable(new InputSerializable<ProxiedPlayer>() {
+			@Override
+			public Class<ProxiedPlayer> getClazz() {
+				return ProxiedPlayer.class;
+			}
 
-            @Override
-            public ProxiedPlayer serialize(final String input, final Locale locale) {
-                final ProxiedPlayer player;
-                if (input.length() == 36) {
-                    final UUID targetUUID = UUID.fromString(input);
-                    player = ProxyServer.getInstance().getPlayer(targetUUID);
-                } else {
-                    player = ProxyServer.getInstance().getPlayer(input);
-                }
+			@Override
+			public ProxiedPlayer serialize(final String input, final Locale locale) {
+				final ProxiedPlayer player;
+				if (input.length() == 36) {
+					final UUID targetUUID = UUID.fromString(input);
+					player = ProxyServer.getInstance().getPlayer(targetUUID);
+				} else {
+					player = ProxyServer.getInstance().getPlayer(input);
+				}
 
-                if (player == null) {
-                    throwException(Message.getMessage(messageConfig, locale, "PlayerNotOnline", "&cDieser Spieler ist nicht online."));
-                }
-                return player;
-            }
-        });
-    }
+				if (player == null) {
+					throwException(Message.getMessage(messageConfig, locale, "PlayerNotOnline", "&cDieser Spieler ist nicht online."));
+				}
+				return player;
+			}
+		});
+	}
 }

@@ -19,17 +19,17 @@ import java.util.Optional;
  * - Which permission the command needs
  */
 public final class MainCommand {
-    private final AbstractCommand<?> mccCommand;
-    private final boolean inGameOnly;
-    private final String permission;
-    private final int minArguments;
-    private final int maxArguments;
+	private final AbstractCommand<?> mccCommand;
+	private final boolean inGameOnly;
+	private final String permission;
+	private final int minArguments;
+	private final int maxArguments;
 
-    public Optional<String> getPermission() {
-        return Optional.ofNullable(permission);
-    }
+	public Optional<String> getPermission() {
+		return Optional.ofNullable(permission);
+	}
 
-    public void execute(final CommandInput commandInput) {
-        mccCommand.onCommand(commandInput);
-    }
+	public void execute(final CommandInput commandInput) {
+		mccCommand.onCommand(commandInput);
+	}
 }

@@ -7,19 +7,19 @@ import org.bukkit.entity.Player;
 
 public class SpigotPlayerWrapper implements PlayerWrapper {
 
-    private final Player player;
+	private final Player player;
 
-    public SpigotPlayerWrapper(final Player player) {
-        this.player = player;
-    }
+	public SpigotPlayerWrapper(final Player player) {
+		this.player = player;
+	}
 
-    @Override
-    public Object getHandle() {
-        return player;
-    }
+	@Override
+	public Object getHandle() {
+		return player;
+	}
 
-    @Override
-    public int getProtocolVersion() {
-        return Providers.get(ServerVersionProvider.class).getProtocolVersion();
-    }
+	@Override
+	public int getProtocolVersion() {
+		return Providers.get(ServerVersionProvider.class).getProtocolVersion();
+	}
 }

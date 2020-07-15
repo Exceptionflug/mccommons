@@ -6,14 +6,14 @@ import net.md_5.bungee.api.plugin.Command;
 
 public class ConfigReloadCommand extends Command {
 
-    public ConfigReloadCommand() {
-        super("gmcrl", "mccommons.command.crl");
-    }
+	public ConfigReloadCommand() {
+		super("gmcrl", "mccommons.command.crl");
+	}
 
-    @Override
-    public void execute(final CommandSender commandSender, final String[] strings) {
-        ConfigFactory.reloadAll();
-        commandSender.sendMessage("§8[§6MCCommons§8] §5Configs reloaded.");
-    }
+	@Override
+	public void execute(final CommandSender commandSender, final String[] strings) {
+		ConfigFactory.reloadAll();
+		commandSender.sendMessage("§8[§6MCCommons§8] §5Configs reloaded.");
+	}
 
 }

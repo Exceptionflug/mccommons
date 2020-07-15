@@ -5,9 +5,9 @@ import de.exceptionflug.protocolize.inventory.InventoryType;
 
 public class ProtocolizeInventoryTypeConverter implements Converter<de.exceptionflug.mccommons.inventories.api.InventoryType, InventoryType> {
 
-    @Override
-    public InventoryType convert(final de.exceptionflug.mccommons.inventories.api.InventoryType src) {
-        return InventoryType.valueOf(src.name());
-    }
+	@Override
+	public InventoryType convert(final de.exceptionflug.mccommons.inventories.api.InventoryType src) {
+		return InventoryType.valueOf(src.name());
+	}
 
 }
