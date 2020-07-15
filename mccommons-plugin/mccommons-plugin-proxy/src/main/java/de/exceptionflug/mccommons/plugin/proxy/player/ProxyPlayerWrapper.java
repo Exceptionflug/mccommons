@@ -6,19 +6,19 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 public class ProxyPlayerWrapper implements PlayerWrapper {
 
-    private final ProxiedPlayer proxiedPlayer;
+	private final ProxiedPlayer proxiedPlayer;
 
-    public ProxyPlayerWrapper(final ProxiedPlayer proxiedPlayer) {
-        this.proxiedPlayer = proxiedPlayer;
-    }
+	public ProxyPlayerWrapper(final ProxiedPlayer proxiedPlayer) {
+		this.proxiedPlayer = proxiedPlayer;
+	}
 
-    @Override
-    public Object getHandle() {
-        return proxiedPlayer;
-    }
+	@Override
+	public Object getHandle() {
+		return proxiedPlayer;
+	}
 
-    @Override
-    public int getProtocolVersion() {
-        return ReflectionUtil.getProtocolVersion(proxiedPlayer);
-    }
+	@Override
+	public int getProtocolVersion() {
+		return ReflectionUtil.getProtocolVersion(proxiedPlayer);
+	}
 }

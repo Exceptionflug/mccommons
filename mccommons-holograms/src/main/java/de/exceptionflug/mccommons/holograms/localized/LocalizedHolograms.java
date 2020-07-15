@@ -5,8 +5,8 @@ import de.exceptionflug.mccommons.holograms.Holograms;
 
 public class LocalizedHolograms {
 
-    public static LocalizedHologramBuilder createBuilder(final ConfigWrapper messageConfig) {
-        return new LocalizedHologramBuilder(Holograms.getRegistrant(), messageConfig);
-    }
+	public static LocalizedHologramBuilder createBuilder(final ConfigWrapper messageConfig) {
+		return new LocalizedHologramBuilder(Holograms.getRegistrant(), messageConfig);
+	}
 
 }

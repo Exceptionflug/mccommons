@@ -9,19 +9,19 @@ import java.util.UUID;
 
 public class PlayerBoardHolder extends AbstractBoardHolder {
 
-    public PlayerBoardHolder(final UUID uuid) {
-        super(uuid);
-    }
+	public PlayerBoardHolder(final UUID uuid) {
+		super(uuid);
+	}
 
-    @Override
-    public void accept(final PacketContainer container) {
-        final Player player = Bukkit.getPlayer(getUniqueId());
-        if(player == null) return;
-        try {
-            ProtocolLibrary.getProtocolManager().sendServerPacket(player, container);
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
-    }
+	@Override
+	public void accept(final PacketContainer container) {
+		final Player player = Bukkit.getPlayer(getUniqueId());
+		if (player == null) return;
+		try {
+			ProtocolLibrary.getProtocolManager().sendServerPacket(player, container);
+		} catch (final Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 }

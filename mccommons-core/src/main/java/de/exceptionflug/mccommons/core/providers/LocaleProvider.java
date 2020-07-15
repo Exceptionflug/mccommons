@@ -5,7 +5,8 @@ import java.util.UUID;
 
 public abstract class LocaleProvider {
 
-    public abstract Locale provide(UUID uuid);
-    public abstract Locale getFallbackLocale();
+	public abstract Locale provide(UUID uuid);
+
+	public abstract Locale getFallbackLocale();
 
 }

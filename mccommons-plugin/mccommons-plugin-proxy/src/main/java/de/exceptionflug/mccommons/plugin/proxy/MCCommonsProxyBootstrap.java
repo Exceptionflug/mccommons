@@ -33,41 +33,41 @@ import net.md_5.bungee.api.plugin.Plugin;
 import java.io.File;
 
 public class MCCommonsProxyBootstrap {
-    private final Plugin plugin;
+	private final Plugin plugin;
 
-    public MCCommonsProxyBootstrap(final Plugin plugin) {
-        this.plugin = plugin;
-    }
+	public MCCommonsProxyBootstrap(final Plugin plugin) {
+		this.plugin = plugin;
+	}
 
-    public void enableMCCommons() {
-        Providers.register(Plugin.class, plugin);
-        Providers.register(InventoryBuilder.class, new ProtocolizeInventoryBuilder());
-        Providers.register(AsyncProvider.class, new AsyncProvider() {
-            @Override
-            public void async(Runnable runnable) {
-                ProxyServer.getInstance().getScheduler().runAsync(plugin, runnable);
-            }
-        });
-        Providers.register(WorkingDirectoryProvider.class, new WorkingDirectoryProvider() {
-            @Override
-            public File getWorkingDirectory() {
-                return plugin.getDataFolder();
-            }
-        });
+	public void enableMCCommons() {
+		Providers.register(Plugin.class, plugin);
+		Providers.register(InventoryBuilder.class, new ProtocolizeInventoryBuilder());
+		Providers.register(AsyncProvider.class, new AsyncProvider() {
+			@Override
+			public void async(Runnable runnable) {
+				ProxyServer.getInstance().getScheduler().runAsync(plugin, runnable);
+			}
+		});
+		Providers.register(WorkingDirectoryProvider.class, new WorkingDirectoryProvider() {
+			@Override
+			public File getWorkingDirectory() {
+				return plugin.getDataFolder();
+			}
+		});
 
-        ConfigFactory.register(ConfigWrapper.class, ProxyConfigProxyYamlConfigWrapper::new);
-        ConfigFactory.register(ProxyConfig.class, ProxyConfigProxyYamlConfigWrapper::new);
-        Converters.register(ConfigItemStack.class, ItemStack.class, new ItemStackConverter());
-        Converters.register(UserConnection.class, PlayerWrapper.class, new PlayerConverter());
-        Converters.register(de.exceptionflug.mccommons.inventories.api.InventoryType.class, InventoryType.class, new ProtocolizeInventoryTypeConverter());
-        Converters.register(ItemType.class, de.exceptionflug.mccommons.inventories.api.item.ItemType.class, new ProtocolizeItemTypeConverter());
-        Converters.register(de.exceptionflug.mccommons.inventories.api.item.ItemType.class, ItemType.class, new ItemTypeConverter());
-        Converters.register(ItemStack.class, ItemStackWrapper.class, src -> new ProtocolizeItemStackWrapper((ItemStack) src));
-        Converters.register(ItemStackWrapper.class, ItemStack.class, src -> ((ItemStackWrapper) src).getHandle());
-        Converters.register(ProtocolizeItemStackWrapper.class, ItemStack.class, src -> ((ItemStackWrapper) src).getHandle());
-        Converters.register(ClickType.class, de.exceptionflug.mccommons.inventories.api.ClickType.class, new ProtocolizeClickTypeConverter());
+		ConfigFactory.register(ConfigWrapper.class, ProxyConfigProxyYamlConfigWrapper::new);
+		ConfigFactory.register(ProxyConfig.class, ProxyConfigProxyYamlConfigWrapper::new);
+		Converters.register(ConfigItemStack.class, ItemStack.class, new ItemStackConverter());
+		Converters.register(UserConnection.class, PlayerWrapper.class, new PlayerConverter());
+		Converters.register(de.exceptionflug.mccommons.inventories.api.InventoryType.class, InventoryType.class, new ProtocolizeInventoryTypeConverter());
+		Converters.register(ItemType.class, de.exceptionflug.mccommons.inventories.api.item.ItemType.class, new ProtocolizeItemTypeConverter());
+		Converters.register(de.exceptionflug.mccommons.inventories.api.item.ItemType.class, ItemType.class, new ItemTypeConverter());
+		Converters.register(ItemStack.class, ItemStackWrapper.class, src -> new ProtocolizeItemStackWrapper((ItemStack) src));
+		Converters.register(ItemStackWrapper.class, ItemStack.class, src -> ((ItemStackWrapper) src).getHandle());
+		Converters.register(ProtocolizeItemStackWrapper.class, ItemStack.class, src -> ((ItemStackWrapper) src).getHandle());
+		Converters.register(ClickType.class, de.exceptionflug.mccommons.inventories.api.ClickType.class, new ProtocolizeClickTypeConverter());
 
-        ProxyServer.getInstance().getPluginManager().registerListener(plugin, new InventoryListener());
-        ProxyServer.getInstance().getPluginManager().registerCommand(plugin, new ConfigReloadCommand());
-    }
+		ProxyServer.getInstance().getPluginManager().registerListener(plugin, new InventoryListener());
+		ProxyServer.getInstance().getPluginManager().registerCommand(plugin, new ConfigReloadCommand());
+	}
 }

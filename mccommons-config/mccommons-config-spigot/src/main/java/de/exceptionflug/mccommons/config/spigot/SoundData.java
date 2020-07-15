@@ -5,42 +5,42 @@ import org.bukkit.entity.Player;
 
 public class SoundData {
 
-    private Sound sound;
-    private float volume;
-    private float pitch;
+	private Sound sound;
+	private float volume;
+	private float pitch;
 
-    public SoundData(final Sound sound, final float volume, final float pitch) {
-        this.sound = sound;
-        this.volume = volume;
-        this.pitch = pitch;
-    }
+	public SoundData(final Sound sound, final float volume, final float pitch) {
+		this.sound = sound;
+		this.volume = volume;
+		this.pitch = pitch;
+	}
 
-    public Sound getSound() {
-        return sound;
-    }
+	public Sound getSound() {
+		return sound;
+	}
 
-    public void setSound(final Sound sound) {
-        this.sound = sound;
-    }
+	public void setSound(final Sound sound) {
+		this.sound = sound;
+	}
 
-    public float getVolume() {
-        return volume;
-    }
+	public float getVolume() {
+		return volume;
+	}
 
-    public void setVolume(final float volume) {
-        this.volume = volume;
-    }
+	public void setVolume(final float volume) {
+		this.volume = volume;
+	}
 
-    public float getPitch() {
-        return pitch;
-    }
+	public float getPitch() {
+		return pitch;
+	}
 
-    public void setPitch(final float pitch) {
-        this.pitch = pitch;
-    }
+	public void setPitch(final float pitch) {
+		this.pitch = pitch;
+	}
 
-    public void play(final Player p) {
-        p.playSound(p.getLocation(), sound, volume, pitch);
-    }
+	public void play(final Player p) {
+		p.playSound(p.getLocation(), sound, volume, pitch);
+	}
 
 }

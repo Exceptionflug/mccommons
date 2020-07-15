@@ -21,11 +21,11 @@ import java.util.Optional;
 @Data
 @Builder
 public final class CommandSettings {
-    private final String permission;
-    private final boolean inGameOnly;
-    private String[] name;
+	private final String permission;
+	private final boolean inGameOnly;
+	private String[] name;
 
-    public Optional<String> getPermission() {
-        return Optional.ofNullable(permission);
-    }
+	public Optional<String> getPermission() {
+		return Optional.ofNullable(permission);
+	}
 }

@@ -5,9 +5,9 @@ import org.bukkit.inventory.ItemStack;
 
 public class CraftItemStackConverter implements Converter<Object, ItemStack> {
 
-    @Override
-    public ItemStack convert(final Object src) {
-        return new ItemStack((ItemStack) src);
-    }
+	@Override
+	public ItemStack convert(final Object src) {
+		return new ItemStack((ItemStack) src);
+	}
 
 }

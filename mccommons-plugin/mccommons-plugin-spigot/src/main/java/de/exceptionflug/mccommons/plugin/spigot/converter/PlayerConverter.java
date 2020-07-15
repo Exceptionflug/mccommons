@@ -7,9 +7,9 @@ import org.bukkit.entity.Player;
 
 public class PlayerConverter implements Converter<Player, PlayerWrapper> {
 
-    @Override
-    public PlayerWrapper convert(final Player src) {
-        return new SpigotPlayerWrapper(src);
-    }
+	@Override
+	public PlayerWrapper convert(final Player src) {
+		return new SpigotPlayerWrapper(src);
+	}
 
 }

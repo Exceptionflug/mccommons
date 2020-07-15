@@ -5,9 +5,9 @@ import de.exceptionflug.mccommons.inventories.api.item.ItemType;
 
 public class ItemTypeConverter implements Converter<ItemType, de.exceptionflug.protocolize.items.ItemType> {
 
-    @Override
-    public de.exceptionflug.protocolize.items.ItemType convert(final ItemType src) {
-        return de.exceptionflug.protocolize.items.ItemType.valueOf(src.name());
-    }
+	@Override
+	public de.exceptionflug.protocolize.items.ItemType convert(final ItemType src) {
+		return de.exceptionflug.protocolize.items.ItemType.valueOf(src.name());
+	}
 
 }

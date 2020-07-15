@@ -4,6 +4,6 @@ import java.io.File;
 
 public abstract class WorkingDirectoryProvider {
 
-    public abstract File getWorkingDirectory();
+	public abstract File getWorkingDirectory();
 
 }

@@ -9,17 +9,17 @@ import de.exceptionflug.mccommons.commands.api.input.CommandInput;
 @Command(value = {"ban", "bannane", "bamburg"})
 public final class SpigotCommandExample extends SpigotCommand {
 
-    private static final String TEST = "TEST";
+	private static final String TEST = "TEST";
 
-    @InGameOnly
-    @SubCommand(value = "perma")
-    @CommandArgs(minArgsLength = 1, maxArgsLength = 2)
-    public void test(final CommandInput input) {
+	@InGameOnly
+	@SubCommand(value = "perma")
+	@CommandArgs(minArgsLength = 1, maxArgsLength = 2)
+	public void test(final CommandInput input) {
 
-    }
+	}
 
-    @Override
-    @InGameOnly
-    public void onCommand(final CommandInput input) {
-    }
+	@Override
+	@InGameOnly
+	public void onCommand(final CommandInput input) {
+	}
 }

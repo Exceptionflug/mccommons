@@ -11,14 +11,14 @@ import java.util.List;
 
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class AbstractCommandFramework {
-    protected final ConfigWrapper messageConfig;
+	protected final ConfigWrapper messageConfig;
 
-    protected final List<AbstractCommand<?>> registeredCommands = new ArrayList<>();
+	protected final List<AbstractCommand<?>> registeredCommands = new ArrayList<>();
 
-    public abstract void registerCommand(@NonNull final AbstractCommand<?> command);
+	public abstract void registerCommand(@NonNull final AbstractCommand<?> command);
 
-    public List<AbstractCommand<?>> getRegisteredCommands() {
-        // We don't want anybody to modify our commands
-        return Collections.unmodifiableList(registeredCommands);
-    }
+	public List<AbstractCommand<?>> getRegisteredCommands() {
+		// We don't want anybody to modify our commands
+		return Collections.unmodifiableList(registeredCommands);
+	}
 }

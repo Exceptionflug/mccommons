@@ -14,27 +14,27 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @Order(1)
 public class ApiSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Value("${mcc2.http.auth-token-header-name:X-API-KEY}")
-    private String principalRequestHeader;
+	@Value("${mcc2.http.auth-token-header-name:X-API-KEY}")
+	private String principalRequestHeader;
 
-    @Value("${mcc2.http.auth-token:123456}")
-    private String principalRequestValue;
+	@Value("${mcc2.http.auth-token:123456}")
+	private String principalRequestValue;
 
-    @Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception {
-        ApiKeyAuthFilter filter = new ApiKeyAuthFilter(principalRequestHeader);
-        filter.setAuthenticationManager(authentication -> {
-            String principal = (String) authentication.getPrincipal();
-            if (!principalRequestValue.equals(principal)) {
-                throw new BadCredentialsException("The API key was not found or not the expected value.");
-            }
-            authentication.setAuthenticated(true);
-            return authentication;
-        });
-        httpSecurity.
-                antMatcher("/api/**").
-                csrf().disable().
-                sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).
-                and().addFilter(filter).authorizeRequests().anyRequest().authenticated();
-    }
+	@Override
+	protected void configure(HttpSecurity httpSecurity) throws Exception {
+		ApiKeyAuthFilter filter = new ApiKeyAuthFilter(principalRequestHeader);
+		filter.setAuthenticationManager(authentication -> {
+			String principal = (String) authentication.getPrincipal();
+			if (!principalRequestValue.equals(principal)) {
+				throw new BadCredentialsException("The API key was not found or not the expected value.");
+			}
+			authentication.setAuthenticated(true);
+			return authentication;
+		});
+		httpSecurity.
+			antMatcher("/api/**").
+			csrf().disable().
+			sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).
+			and().addFilter(filter).authorizeRequests().anyRequest().authenticated();
+	}
 }

@@ -9,10 +9,10 @@ import retrofit2.http.Query;
 
 public interface ConfigService {
 
-    @GET("config")
-    Observable<ConfigData> getConfig(@Query("path") final String path);
+	@GET("config")
+	Observable<ConfigData> getConfig(@Query("path") final String path);
 
-    @PUT("config")
-    Observable<Void> update(@Body ConfigData configData);
+	@PUT("config")
+	Observable<Void> update(@Body ConfigData configData);
 
 }

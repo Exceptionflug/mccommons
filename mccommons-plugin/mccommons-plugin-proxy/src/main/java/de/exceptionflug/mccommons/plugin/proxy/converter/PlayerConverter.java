@@ -7,9 +7,9 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 public class PlayerConverter implements Converter<ProxiedPlayer, PlayerWrapper> {
 
-    @Override
-    public PlayerWrapper convert(final ProxiedPlayer src) {
-        return new ProxyPlayerWrapper(src);
-    }
+	@Override
+	public PlayerWrapper convert(final ProxiedPlayer src) {
+		return new ProxyPlayerWrapper(src);
+	}
 
 }

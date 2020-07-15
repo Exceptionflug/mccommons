@@ -9,8 +9,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CommandArgs {
-    int maxArgsLength() default -1;
+	int maxArgsLength() default -1;
 
 
-    int minArgsLength() default -1;
+	int minArgsLength() default -1;
 }

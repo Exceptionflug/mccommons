@@ -11,18 +11,18 @@ import java.util.HashMap;
 
 public class ConfigTest {
 
-    @Test
-    public void runTest() {
-        // Set up
-        ConfigFactory.register(SpigotConfig.class, SpigotConfigSpigotYamlConfigWrapper::new);
+	@Test
+	public void runTest() {
+		// Set up
+		ConfigFactory.register(SpigotConfig.class, SpigotConfigSpigotYamlConfigWrapper::new);
 
-        final SpigotConfig config = ConfigFactory.create(new File("target/test.yml"), SpigotConfig.class);
-        config.getItemStack("Test.itemStack");
-        config.getOrSetDefault("Test.double", Math.PI);
-        config.getOrSetDefault("Test.list", new ArrayList<>());
-        config.getOrSetDefault("Test.map", new HashMap<>());
-        config.getOrSetDefault("Test.string", "This is a test");
-        System.out.println("Test passed.");
-    }
+		final SpigotConfig config = ConfigFactory.create(new File("target/test.yml"), SpigotConfig.class);
+		config.getItemStack("Test.itemStack");
+		config.getOrSetDefault("Test.double", Math.PI);
+		config.getOrSetDefault("Test.list", new ArrayList<>());
+		config.getOrSetDefault("Test.map", new HashMap<>());
+		config.getOrSetDefault("Test.string", "This is a test");
+		System.out.println("Test passed.");
+	}
 
 }

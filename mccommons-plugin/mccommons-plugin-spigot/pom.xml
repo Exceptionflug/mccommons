@@ -41,15 +41,18 @@
                                 </relocation>
                                 <relocation>
                                     <pattern>okhttp</pattern>
-                                    <shadedPattern>de.exceptionflug.mccommons.config.remote.client.okhttp</shadedPattern>
+                                    <shadedPattern>de.exceptionflug.mccommons.config.remote.client.okhttp
+                                    </shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>retrofit2</pattern>
-                                    <shadedPattern>de.exceptionflug.mccommons.config.remote.client.retrofit2</shadedPattern>
+                                    <shadedPattern>de.exceptionflug.mccommons.config.remote.client.retrofit2
+                                    </shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>io.reactivex</pattern>
-                                    <shadedPattern>de.exceptionflug.mccommons.config.remote.client.rxjava2</shadedPattern>
+                                    <shadedPattern>de.exceptionflug.mccommons.config.remote.client.rxjava2
+                                    </shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>com.comphenix.packetwrapper</pattern>
@@ -87,16 +90,16 @@
             <version>2.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>de.exceptionflug</groupId>-->
-<!--            <artifactId>mccommons-config-remote-client</artifactId>-->
-<!--            <version>2.0-SNAPSHOT</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>de.exceptionflug</groupId>-->
-<!--            <artifactId>mccommons-config-remote-model</artifactId>-->
-<!--            <version>2.0-SNAPSHOT</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>de.exceptionflug</groupId>-->
+        <!--            <artifactId>mccommons-config-remote-client</artifactId>-->
+        <!--            <version>2.0-SNAPSHOT</version>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>de.exceptionflug</groupId>-->
+        <!--            <artifactId>mccommons-config-remote-model</artifactId>-->
+        <!--            <version>2.0-SNAPSHOT</version>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>de.exceptionflug</groupId>
             <artifactId>mccommons-holograms</artifactId>
