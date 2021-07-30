@@ -16,12 +16,27 @@ import java.util.Map;
 
 public class ReflectionUtil {
 
+	private static final Map<String, String> MOJANG_MAPPINGS = new HashMap<>();
+
+	static {
+		MOJANG_MAPPINGS.put("{nms}.NBTCompressedStreamTools", "net.minecraft.nbt.NBTCompressedStreamTools");
+		MOJANG_MAPPINGS.put("{nms}.NBTTagCompound", "net.minecraft.nbt.NBTTagCompound");
+		MOJANG_MAPPINGS.put("{nms}.Packet", "net.minecraft.network.protocol.Packet");
+		MOJANG_MAPPINGS.put("{nms}.ItemStack", "net.minecraft.world.item.ItemStack");
+	}
+
 	private ReflectionUtil() {
 	}
 
 	private static final Map<Map.Entry<Class, String>, Field> CACHED_FIELDS = new HashMap<>();
 
 	public static Class<?> getClass(String classname) throws ClassNotFoundException {
+		if (getVersion().startsWith("v1_17")) {
+			// md_5 decided to break nms classes again
+			if (MOJANG_MAPPINGS.containsKey(classname)) {
+				return Class.forName(MOJANG_MAPPINGS.get(classname));
+			}
+		}
 		String path = classname.replace("{nms}", "net.minecraft.server." + getVersion()).replace("{obc}", "org.bukkit.craftbukkit." + getVersion())
 			.replace("{nm}", "net.minecraft." + getVersion());
 		return Class.forName(path);
