@@ -90,6 +90,15 @@ public class Score {
 		return scoreboardScore.getHandle();
 	}
 
+	public PacketContainer createRemoveForUpdatePacket(int id) {
+		final WrapperPlayServerScoreboardScore scoreboardScore = new WrapperPlayServerScoreboardScore();
+		scoreboardScore.setObjectiveName(objective.getName());
+		scoreboardScore.setScoreboardAction(EnumWrappers.ScoreboardAction.REMOVE);
+		scoreboardScore.setScoreName(player != null ? player.getName() : entry);
+		scoreboardScore.setScoreName(scoreboardScore.getScoreName()+"."+id);
+		return scoreboardScore.getHandle();
+	}
+
 	public void broadcastPacket(final PacketContainer container) {
 		for (final AbstractBoardHolder holder : Scoreboards.getBoardHolders(objective.getScoreboard())) {
 			holder.accept(container);

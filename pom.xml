@@ -18,7 +18,7 @@
         <module>mccommons-core</module>
         <module>mccommons-config</module>
         <module>mccommons-plugin</module>
-<!--        <module>mccommons-inventories</module>-->
+        <module>mccommons-inventories</module>
         <module>mccommons-holograms</module>
         <module>mccommons-scoreboards</module>
 <!--        <module>mccommons-commands</module>-->

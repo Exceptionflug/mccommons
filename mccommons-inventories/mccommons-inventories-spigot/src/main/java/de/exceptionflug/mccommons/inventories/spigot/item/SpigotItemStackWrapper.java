@@ -49,7 +49,7 @@ public class SpigotItemStackWrapper implements ItemStackWrapper {
 
 	@Override
 	public ItemType getType() {
-		return ItemType.getType(handle.getTypeId(), handle.getDurability(), Providers.get(ServerVersionProvider.class).getProtocolVersion(), this);
+		return ItemType.valueOf(handle.getType().name());
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class SpigotItemStackWrapper implements ItemStackWrapper {
 		final ItemIDMapping applicableMapping = type.getApplicableMapping(Providers.get(ServerVersionProvider.class).getProtocolVersion());
 		if (applicableMapping == null)
 			throw new UnsupportedOperationException(type.name() + " is not allowed on version " + ReflectionUtil.getVersion());
-		handle.setType(Material.getMaterial(applicableMapping.getId()));
+		handle.setType(Material.valueOf(type.name()));
 		handle.setDurability((short) applicableMapping.getData());
 		if (applicableMapping instanceof AbstractCustomItemIDMapping)
 			((AbstractCustomItemIDMapping) applicableMapping).apply(this, Providers.get(ServerVersionProvider.class).getProtocolVersion());
