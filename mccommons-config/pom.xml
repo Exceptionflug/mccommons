@@ -16,7 +16,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>mccommons-config-remote</module>
+<!--        <module>mccommons-config-remote</module>-->
         <module>mccommons-config-shared</module>
         <module>mccommons-config-spigot</module>
         <module>mccommons-config-proxy</module>

@@ -14,7 +14,7 @@ public class MaterialDataItemTypeConverter implements Converter<MaterialData, It
 		if (Providers.get(ServerVersionProvider.class).getProtocolVersion() >= ProtocolVersions.MINECRAFT_1_14) {
 			return ItemType.valueOf(src.getItemType().name());
 		}
-		return ItemType.getType(src.getItemTypeId(), src.getData(), Providers.get(ServerVersionProvider.class).getProtocolVersion(), null); // This will throw NPE when converting SpawnEggs
+		return null;
 	}
 
 }

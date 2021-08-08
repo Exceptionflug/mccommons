@@ -4,6 +4,7 @@ import com.comphenix.packetwrapper.WrapperPlayServerScoreboardDisplayObjective;
 import com.comphenix.packetwrapper.WrapperPlayServerScoreboardObjective;
 import com.comphenix.packetwrapper.WrapperPlayServerScoreboardTeam;
 import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import org.bukkit.scoreboard.DisplaySlot;
 
 import java.util.HashMap;
@@ -85,9 +86,9 @@ public class Scoreboard {
 		final WrapperPlayServerScoreboardObjective packet = new WrapperPlayServerScoreboardObjective();
 		packet.setName(objective.getName());
 		if (objective.getDisplayName() != null)
-			packet.setDisplayName(objective.getDisplayName());
+			packet.setDisplayName(WrappedChatComponent.fromLegacyText(objective.getDisplayName()));
 		packet.setMode(0);
-		packet.setHealthDisplay("integer");
+		packet.setHealthDisplay(WrapperPlayServerScoreboardObjective.HealthDisplay.INTEGER);
 		return packet.getHandle();
 	}
 
@@ -95,9 +96,9 @@ public class Scoreboard {
 		final WrapperPlayServerScoreboardTeam scoreboardTeam = new WrapperPlayServerScoreboardTeam();
 		scoreboardTeam.setName(team.getName());
 		scoreboardTeam.setMode(0);
-		scoreboardTeam.setDisplayName(team.getDisplayName());
-		scoreboardTeam.setPrefix(team.getPrefix());
-		scoreboardTeam.setSuffix(team.getSuffix());
+		scoreboardTeam.setDisplayName(WrappedChatComponent.fromLegacyText(team.getDisplayName()));
+		scoreboardTeam.setPrefix(WrappedChatComponent.fromLegacyText(team.getPrefix()));
+		scoreboardTeam.setSuffix(WrappedChatComponent.fromLegacyText(team.getSuffix()));
 		scoreboardTeam.setPackOptionData(team.isFriendlyFire() ? 0x01 : 0x03);
 		scoreboardTeam.setNameTagVisibility(team.getNameTagVisibility().serialize());
 		scoreboardTeam.setColor(team.getColor());

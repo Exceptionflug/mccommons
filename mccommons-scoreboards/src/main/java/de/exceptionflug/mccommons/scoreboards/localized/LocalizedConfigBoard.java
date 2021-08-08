@@ -7,12 +7,17 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.google.common.base.Preconditions;
 import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
 import de.exceptionflug.mccommons.core.Providers;
 import de.exceptionflug.mccommons.core.providers.LocaleProvider;
 import de.exceptionflug.mccommons.core.utils.FormatUtils;
 import de.exceptionflug.mccommons.scoreboards.*;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
+import net.md_5.bungee.chat.TextComponentSerializer;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.DisplaySlot;
 
@@ -208,13 +213,17 @@ public class LocalizedConfigBoard {
 				}
 			} else {
 				final WrapperPlayServerScoreboardObjective objective = new WrapperPlayServerScoreboardObjective(event.getPacket());
-				if (objective.getDisplayName() != null && objective.getDisplayName().startsWith("{!}")) { // Ensure mccommons placeholder
-					if (Integer.parseInt(objective.getDisplayName().substring(3).split("\\.")[0]) != id)
+				if (objective.getDisplayName() == null) {
+					return;
+				}
+				String displayName = BaseComponent.toLegacyText(ComponentSerializer.parse(objective.getDisplayName().getJson()));
+				if (displayName.startsWith("{!}")) { // Ensure mccommons placeholder
+					if (Integer.parseInt(displayName.substring(3).split("\\.")[0]) != id)
 						return;
 					if (scoreboard.getObjective(objective.getName()) == null)
 						return;
 					final String localizedString = config.getLocalizedString(Providers.get(LocaleProvider.class).provide(event.getPlayer().getUniqueId()), "Objectives." + objective.getName(), ".displayName", "&eObjective");
-					objective.setDisplayName(FormatUtils.formatAmpersandColorCodes(FormatUtils.format(localizedString, lastState.computeIfAbsent(event.getPlayer().getUniqueId(), uuid -> any))));
+					objective.setDisplayName(WrappedChatComponent.fromLegacyText(FormatUtils.formatAmpersandColorCodes(FormatUtils.format(localizedString, lastState.computeIfAbsent(event.getPlayer().getUniqueId(), uuid -> any)))));
 					if (event.getPlayer().isOnline()) {
 						objective.sendPacket(event.getPlayer());
 					}

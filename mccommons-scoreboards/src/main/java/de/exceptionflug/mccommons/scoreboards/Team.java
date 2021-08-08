@@ -2,6 +2,8 @@ package de.exceptionflug.mccommons.scoreboards;
 
 import com.comphenix.packetwrapper.WrapperPlayServerScoreboardTeam;
 import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.wrappers.WrappedChatComponent;
+import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,7 +17,7 @@ public class Team {
 	private String displayName, suffix = "", prefix = "";
 	private boolean friendlyFire = true;
 	private NameTagVisibility nameTagVisibility = NameTagVisibility.ALWAYS;
-	private int color = -1;
+	private ChatColor color = ChatColor.GRAY;
 
 	public Team(final Scoreboard scoreboard, final String name) {
 		this.scoreboard = scoreboard;
@@ -28,7 +30,7 @@ public class Team {
 		broadcastPacket(createUpdatePacket());
 	}
 
-	public void setColor(final int color) {
+	public void setColor(final ChatColor color) {
 		this.color = color;
 		broadcastPacket(createUpdatePacket());
 	}
@@ -100,7 +102,7 @@ public class Team {
 		return nameTagVisibility;
 	}
 
-	public int getColor() {
+	public ChatColor getColor() {
 		return color;
 	}
 
@@ -110,9 +112,9 @@ public class Team {
 		final WrapperPlayServerScoreboardTeam team = new WrapperPlayServerScoreboardTeam();
 		team.setName(name);
 		team.setMode(2);
-		team.setPrefix(prefix);
-		team.setSuffix(suffix);
-		team.setDisplayName(displayName);
+		team.setPrefix(WrappedChatComponent.fromLegacyText(prefix));
+		team.setSuffix(WrappedChatComponent.fromLegacyText(suffix));
+		team.setDisplayName(WrappedChatComponent.fromLegacyText(displayName));
 		team.setPackOptionData(friendlyFire ? 0x01 : 0x03);
 		team.setNameTagVisibility(nameTagVisibility.serialized);
 		team.setColor(color);

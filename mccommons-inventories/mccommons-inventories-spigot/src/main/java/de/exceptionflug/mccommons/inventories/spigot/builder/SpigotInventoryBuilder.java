@@ -76,7 +76,7 @@ public class SpigotInventoryBuilder implements InventoryBuilder {
 					}
 					inventory.setItem(i, Converters.convert(item.getItemStackWrapper(), ItemStack.class));
 				} else {
-					if (item.getItemStackWrapper().getType() == ItemType.PLAYER_HEAD && currentStack.getType() == Material.SKULL_ITEM) {
+					if (item.getItemStackWrapper().getType() == ItemType.PLAYER_HEAD && currentStack.getType() == Material.PLAYER_HEAD) {
 						final SkullMeta meta1 = (SkullMeta) ((ItemStack) item.getItemStackWrapper().getHandle()).getItemMeta();
 						final SkullMeta meta2 = (SkullMeta) currentStack.getItemMeta();
 						if (meta1.hasOwner() && meta2.hasOwner() && meta1.getOwner().equals(meta2.getOwner())) {
@@ -141,10 +141,6 @@ public class SpigotInventoryBuilder implements InventoryBuilder {
 	}
 
 	private String getTitle(final Inventory inventory) {
-		if (Providers.get(ServerVersionProvider.class).getProtocolVersion() < ProtocolVersions.MINECRAFT_1_14) {
-			return inventory.getTitle();
-		}
-
 		// Since the developers of spigot smoke weed every day, we can only get an inventory title
 		// by using the InventoryView (which we don't have). So we use tricky and hacky reflections to get the title.
 

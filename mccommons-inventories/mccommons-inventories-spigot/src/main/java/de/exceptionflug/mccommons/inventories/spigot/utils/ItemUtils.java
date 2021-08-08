@@ -151,7 +151,7 @@ public class ItemUtils {
 	}
 
 	public static ItemStack setSkullAndName(ItemStack is, String name) {
-		is.setType(Material.SKULL_ITEM);
+		is.setType(Material.PLAYER_HEAD);
 		is.setDurability((short) 3);
 		setSkullOwner(is, name);
 		return is;

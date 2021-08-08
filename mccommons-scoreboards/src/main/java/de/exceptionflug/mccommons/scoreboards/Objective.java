@@ -3,6 +3,7 @@ package de.exceptionflug.mccommons.scoreboards;
 import com.comphenix.packetwrapper.WrapperPlayServerScoreboardDisplayObjective;
 import com.comphenix.packetwrapper.WrapperPlayServerScoreboardObjective;
 import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.scoreboard.DisplaySlot;
 
@@ -89,9 +90,9 @@ public class Objective {
 	public PacketContainer createRenamePacket() {
 		final WrapperPlayServerScoreboardObjective playServerScoreboardObjective = new WrapperPlayServerScoreboardObjective();
 		playServerScoreboardObjective.setName(name);
-		playServerScoreboardObjective.setDisplayName(displayName);
+		playServerScoreboardObjective.setDisplayName(WrappedChatComponent.fromLegacyText(displayName));
 		playServerScoreboardObjective.setMode(2);
-		playServerScoreboardObjective.setHealthDisplay("integer");
+		playServerScoreboardObjective.setHealthDisplay(WrapperPlayServerScoreboardObjective.HealthDisplay.INTEGER);
 		return playServerScoreboardObjective.getHandle();
 	}
 

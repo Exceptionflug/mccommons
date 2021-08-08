@@ -1,5 +1,6 @@
 package de.exceptionflug.mccommons.config.spigot;
 
+import com.destroystokyo.paper.Title;
 import de.exceptionflug.mccommons.config.shared.ConfigWrapper;
 import de.exceptionflug.mccommons.config.shared.MessageMode;
 import de.exceptionflug.mccommons.core.Providers;
@@ -14,7 +15,6 @@ import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.github.paperspigot.Title;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -66,7 +66,7 @@ public final class Message {
 						config.getOrSetDefault(messageKey + ".title.fadeIn", 20),
 						config.getOrSetDefault(messageKey + ".title.stay", 60),
 						config.getOrSetDefault(messageKey + ".title.fadeOut", 20));
-					player.sendTitle(title);
+					title.send(player);
 				} else if (messageMode == MessageMode.SOUND) {
 					for (final String key : config.getKeys(messageKey + ".sounds")) {
 						final Sound sound = Sound.valueOf(config.getOrSetDefault(messageKey + ".sounds." + key + ".sound", "CLICK"));

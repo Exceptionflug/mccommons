@@ -71,7 +71,7 @@ public class SpigotConfigSpigotYamlConfigWrapper implements SpigotConfig {
 		try {
 			sound = Sound.valueOf(soundName);
 		} catch (final IllegalArgumentException e) {
-			sound = Sound.CLICK;
+			sound = Sound.UI_BUTTON_CLICK;
 			Bukkit.getLogger().warning("[SpigotConfig] WARN: " + path + " has invalid sound " + soundName);
 		}
 		return new SoundData(sound, (float) volume, (float) pitch);

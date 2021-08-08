@@ -42,7 +42,7 @@ public class ItemHologramLine extends AbstractHologramLine {
 	protected List<PacketContainer> createSpawnPackets() {
 		final WrapperPlayServerSpawnEntity spawnEntity = new WrapperPlayServerSpawnEntity();
 		spawnEntity.setEntityID(getEntityID());
-		spawnEntity.setType(2);
+		spawnEntity.setType(EntityType.ARMOR_STAND);
 		spawnEntity.setObjectData(0);
 		spawnEntity.setOptionalSpeedX(0);
 		spawnEntity.setOptionalSpeedY(0);
@@ -67,7 +67,6 @@ public class ItemHologramLine extends AbstractHologramLine {
 		final WrapperPlayServerAttachEntity detachEntity = new WrapperPlayServerAttachEntity();
 		detachEntity.setEntityID(getEntityID());
 		detachEntity.setVehicleId(-1);
-		detachEntity.setLeash(false);
 
 		final WrapperPlayServerEntityTeleport teleport = new WrapperPlayServerEntityTeleport();
 		teleport.setEntityID(getEntityID());
@@ -84,7 +83,6 @@ public class ItemHologramLine extends AbstractHologramLine {
 		final WrapperPlayServerAttachEntity attachEntity = new WrapperPlayServerAttachEntity();
 		attachEntity.setEntityID(getEntityID());
 		attachEntity.setVehicleId(vehicleId);
-		attachEntity.setLeash(false);
 		return Arrays.asList(detachEntity.getHandle(), teleport.getHandle(), teleportVehicle.getHandle(), attachEntity.getHandle());
 	}
 
@@ -94,7 +92,6 @@ public class ItemHologramLine extends AbstractHologramLine {
 		metadataVehicle.setMetadata(buildMetadataVehicle().getWatchableObjects());
 
 		final WrapperPlayServerAttachEntity attachEntity = new WrapperPlayServerAttachEntity();
-		attachEntity.setLeash(false);
 		final PacketContainer attach = attachEntity.getHandle();
 		attach.getIntegers().write(1, getEntityID());
 		attach.getIntegers().write(2, vehicleId);
