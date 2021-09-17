@@ -29,6 +29,8 @@ public class ServerVersionProvider {
 				this.protocolVersion = ProtocolVersions.MINECRAFT_1_14;
 			} else if (version.startsWith("v1_15_R1")) {
 				this.protocolVersion = ProtocolVersions.MINECRAFT_1_15;
+			} else if (version.startsWith("v1_17_R1")) {
+				this.protocolVersion = ProtocolVersions.MINECRAFT_1_17_1;
 			} else {
 				throw new UnsupportedOperationException("Version " + version + " not supported yet.");
 			}

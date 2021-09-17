@@ -3,21 +3,28 @@ package de.exceptionflug.mccommons.holograms.events;
 import de.exceptionflug.mccommons.holograms.line.HologramLine;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 
-public class HologramLineShowEvent extends PlayerEvent implements Cancellable {
+public class HologramLineShowEvent extends Event implements Cancellable {
 
 	private final HologramLine hologramLine;
+	private final Player player;
 	private boolean cancelled;
 
 	public HologramLineShowEvent(final Player who, final HologramLine hologramLine) {
-		super(who);
+		super(true);
+		this.player = who;
 		this.hologramLine = hologramLine;
 	}
 
 	public HologramLine getHologramLine() {
 		return hologramLine;
+	}
+
+	public Player getPlayer() {
+		return player;
 	}
 
 	@Override

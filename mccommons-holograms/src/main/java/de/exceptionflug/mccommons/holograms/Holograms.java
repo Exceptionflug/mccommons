@@ -24,7 +24,7 @@ public class Holograms {
 
 	public static void init(final JavaPlugin plugin) {
 		mccommons = plugin;
-		Bukkit.getPluginManager().registerEvents(new PlayerListener(), mccommons);
+		Bukkit.getPluginManager().registerEvents(new PlayerListener(mccommons), mccommons);
 	}
 
 	public static List<Hologram> getKnownHolograms() {

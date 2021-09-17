@@ -1,19 +1,19 @@
 package de.exceptionflug.mccommons.holograms.line;
 
-import com.comphenix.packetwrapper.WrapperPlayServerEntityDestroy;
-import com.comphenix.packetwrapper.WrapperPlayServerEntityMetadata;
-import com.comphenix.packetwrapper.WrapperPlayServerEntityTeleport;
-import com.comphenix.packetwrapper.WrapperPlayServerSpawnEntityLiving;
+import de.exceptionflug.mccommons.core.packetwrapper.WrapperPlayServerEntityDestroy;
+import de.exceptionflug.mccommons.core.packetwrapper.WrapperPlayServerEntityMetadata;
+import de.exceptionflug.mccommons.core.packetwrapper.WrapperPlayServerEntityTeleport;
+import de.exceptionflug.mccommons.core.packetwrapper.WrapperPlayServerSpawnEntityLiving;
 import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import org.bukkit.Location;
-import org.bukkit.entity.EntityType;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class TextHologramLine extends AbstractHologramLine {
 
+	private final UUID uuid = UUID.randomUUID();
 	private String text;
 
 	public TextHologramLine(final String text) {
@@ -33,7 +33,7 @@ public class TextHologramLine extends AbstractHologramLine {
 	@Override
 	protected List<PacketContainer> createDespawnPackets() {
 		final WrapperPlayServerEntityDestroy destroy = new WrapperPlayServerEntityDestroy();
-		destroy.setEntityIds(new int[]{getEntityID()});
+		destroy.setEntityIds(Arrays.asList(getEntityID()));
 		return Collections.singletonList(destroy.getHandle());
 	}
 
@@ -41,11 +41,11 @@ public class TextHologramLine extends AbstractHologramLine {
 	protected List<PacketContainer> createSpawnPackets() {
 		final WrapperPlayServerSpawnEntityLiving spawnEntityLiving = new WrapperPlayServerSpawnEntityLiving();
 		spawnEntityLiving.setEntityID(getEntityID());
-		spawnEntityLiving.setType(EntityType.ARMOR_STAND);
-		spawnEntityLiving.setMetadata(buildMetadata());
+		spawnEntityLiving.getHandle().getIntegers().write(1, 1); // Armor stand
 		spawnEntityLiving.setX(getLocation().getX());
 		spawnEntityLiving.setY(getLocation().getY());
 		spawnEntityLiving.setZ(getLocation().getZ());
+		spawnEntityLiving.setUniqueId(uuid);
 		return Collections.singletonList(spawnEntityLiving.getHandle());
 	}
 
@@ -69,10 +69,14 @@ public class TextHologramLine extends AbstractHologramLine {
 
 	private WrappedDataWatcher buildMetadata() {
 		final WrappedDataWatcher metadata = new WrappedDataWatcher();
-		metadata.setObject(0, (byte) 0x20); // Make armor stand invisible
-		metadata.setObject(2, text); // Set name tag
-		metadata.setObject(3, (byte) 1); // Always show nametag
-		metadata.setObject(10, (byte) 0); // Disable all default vals in bitmask
+		WrappedDataWatcher.Serializer componentSerializer = WrappedDataWatcher.Registry.getChatComponentSerializer(true);
+		WrappedDataWatcher.Serializer byteSerializer = WrappedDataWatcher.Registry.get(Byte.class);
+		WrappedDataWatcher.Serializer booleanSerializer = WrappedDataWatcher.Registry.get(Boolean.class);
+		metadata.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(0, byteSerializer), (byte) (0x20)); // Invisibility
+		metadata.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(2, componentSerializer), Optional.of(WrappedChatComponent.fromLegacyText(text).getHandle())); //CustomName
+		metadata.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(3, booleanSerializer), true); // CustomName-Visibility
+		metadata.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(5, booleanSerializer), false); // Gravity
+		metadata.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(15, byteSerializer), (byte) 0x10); // Marker
 		return metadata;
 	}
 

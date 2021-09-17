@@ -1,7 +1,7 @@
 package de.exceptionflug.mccommons.scoreboards;
 
-import com.comphenix.packetwrapper.WrapperPlayServerScoreboardDisplayObjective;
-import com.comphenix.packetwrapper.WrapperPlayServerScoreboardObjective;
+import de.exceptionflug.mccommons.core.packetwrapper.WrapperPlayServerScoreboardDisplayObjective;
+import de.exceptionflug.mccommons.core.packetwrapper.WrapperPlayServerScoreboardObjective;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import org.bukkit.OfflinePlayer;

@@ -1,13 +1,12 @@
 package de.exceptionflug.mccommons.scoreboards.localized;
 
-import com.comphenix.packetwrapper.WrapperPlayServerScoreboardObjective;
-import com.comphenix.packetwrapper.WrapperPlayServerScoreboardScore;
+import de.exceptionflug.mccommons.core.packetwrapper.WrapperPlayServerScoreboardObjective;
+import de.exceptionflug.mccommons.core.packetwrapper.WrapperPlayServerScoreboardScore;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ArrayListMultimap;
@@ -18,10 +17,7 @@ import de.exceptionflug.mccommons.core.providers.LocaleProvider;
 import de.exceptionflug.mccommons.core.utils.FormatUtils;
 import de.exceptionflug.mccommons.scoreboards.*;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
-import net.md_5.bungee.chat.TextComponentSerializer;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -228,8 +224,17 @@ public class LocalizedConfigBoard {
 					scoreboardScore.setScoreName(FormatUtils.formatAmpersandColorCodes(FormatUtils.format(localizedString, lastState.computeIfAbsent(event.getPlayer().getUniqueId(), uuid -> any))));
 					event.setPacket(scoreboardScore.getHandle());
 					if (split.length > 3) {
-						int id = Integer.parseInt(split[3]);
-						locks.remove(player.getUniqueId(), id);
+						try {
+							int id;
+							if (split[2].equals("custom") && split.length > 4) {
+								id = Integer.parseInt(split[4]);
+							} else {
+								id = Integer.parseInt(split[3]);
+							}
+							locks.remove(player.getUniqueId(), id);
+						} catch (NumberFormatException e) {
+							System.out.println("Cannot unlock id "+split[3]+" in "+key);
+						}
 					}
 				}
 			} else {

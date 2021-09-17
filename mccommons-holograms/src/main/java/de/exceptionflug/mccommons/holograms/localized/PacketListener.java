@@ -1,6 +1,6 @@
 package de.exceptionflug.mccommons.holograms.localized;
 
-import com.comphenix.packetwrapper.WrapperPlayServerEntityMetadata;
+import de.exceptionflug.mccommons.core.packetwrapper.WrapperPlayServerEntityMetadata;
 import com.comphenix.protocol.PacketType.Play.Server;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;

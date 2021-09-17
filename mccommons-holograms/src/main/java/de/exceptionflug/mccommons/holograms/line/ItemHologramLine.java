@@ -1,8 +1,8 @@
 package de.exceptionflug.mccommons.holograms.line;
 
-import com.comphenix.packetwrapper.*;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
+import de.exceptionflug.mccommons.core.packetwrapper.*;
 import de.exceptionflug.mccommons.holograms.util.EntityIDFactory;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
@@ -11,21 +11,20 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 public class ItemHologramLine extends AbstractHologramLine {
 
+	private final UUID uuid = UUID.randomUUID();
 	private ItemStack itemStack;
-	private int vehicleId;
 
 	public ItemHologramLine(final ItemStack itemStack) {
 		this.itemStack = itemStack;
-		vehicleId = EntityIDFactory.getAndIncrement();
 	}
 
 	public ItemHologramLine(final Location location, final ItemStack stack) {
 		super(location);
 		this.itemStack = stack;
-		vehicleId = EntityIDFactory.getAndIncrement();
 	}
 
 	@Override
@@ -35,83 +34,47 @@ public class ItemHologramLine extends AbstractHologramLine {
 
 	protected List<PacketContainer> createDespawnPackets() {
 		final WrapperPlayServerEntityDestroy destroy = new WrapperPlayServerEntityDestroy();
-		destroy.setEntityIds(new int[]{getEntityID(), vehicleId});
+		destroy.setEntityIds(Arrays.asList(getEntityID()));
 		return Collections.singletonList(destroy.getHandle());
 	}
 
 	protected List<PacketContainer> createSpawnPackets() {
 		final WrapperPlayServerSpawnEntity spawnEntity = new WrapperPlayServerSpawnEntity();
 		spawnEntity.setEntityID(getEntityID());
-		spawnEntity.setType(EntityType.ARMOR_STAND);
-		spawnEntity.setObjectData(0);
-		spawnEntity.setOptionalSpeedX(0);
-		spawnEntity.setOptionalSpeedY(0);
-		spawnEntity.setOptionalSpeedZ(0);
+//		spawnEntity.getHandle().getIntegers().write(1, 41); // Item
 		spawnEntity.setX(getLocation().getX());
 		spawnEntity.setY(getLocation().getY());
 		spawnEntity.setZ(getLocation().getZ());
-
-		final WrapperPlayServerSpawnEntityLiving spawnVehicle = new WrapperPlayServerSpawnEntityLiving();
-		spawnVehicle.setEntityID(vehicleId);
-		spawnVehicle.setType(EntityType.ARMOR_STAND);
-		spawnVehicle.setX(getLocation().getX());
-		spawnVehicle.setY(getLocation().getY() + 0.48);
-		spawnVehicle.setZ(getLocation().getZ());
-		spawnVehicle.setMetadata(buildMetadataVehicle());
-
-		return Arrays.asList(spawnEntity.getHandle(), spawnVehicle.getHandle());
+		spawnEntity.setUniqueId(uuid);
+		spawnEntity.setType(EntityType.DROPPED_ITEM);
+		return Arrays.asList(spawnEntity.getHandle());
 	}
 
 	@Override
 	protected List<PacketContainer> createTeleportPackets() {
-		final WrapperPlayServerAttachEntity detachEntity = new WrapperPlayServerAttachEntity();
-		detachEntity.setEntityID(getEntityID());
-		detachEntity.setVehicleId(-1);
-
 		final WrapperPlayServerEntityTeleport teleport = new WrapperPlayServerEntityTeleport();
 		teleport.setEntityID(getEntityID());
 		teleport.setX(getLocation().getX());
 		teleport.setY(getLocation().getY());
 		teleport.setZ(getLocation().getZ());
-
-		final WrapperPlayServerEntityTeleport teleportVehicle = new WrapperPlayServerEntityTeleport();
-		teleport.setEntityID(vehicleId);
-		teleport.setX(getLocation().getX());
-		teleport.setY(getLocation().getY() + 0.48);
-		teleport.setZ(getLocation().getZ());
-
-		final WrapperPlayServerAttachEntity attachEntity = new WrapperPlayServerAttachEntity();
-		attachEntity.setEntityID(getEntityID());
-		attachEntity.setVehicleId(vehicleId);
-		return Arrays.asList(detachEntity.getHandle(), teleport.getHandle(), teleportVehicle.getHandle(), attachEntity.getHandle());
+		return Arrays.asList(teleport.getHandle());
 	}
 
 	protected List<PacketContainer> createMetadataPackets() {
-		final WrapperPlayServerEntityMetadata metadataVehicle = new WrapperPlayServerEntityMetadata();
-		metadataVehicle.setEntityID(vehicleId);
-		metadataVehicle.setMetadata(buildMetadataVehicle().getWatchableObjects());
-
-		final WrapperPlayServerAttachEntity attachEntity = new WrapperPlayServerAttachEntity();
-		final PacketContainer attach = attachEntity.getHandle();
-		attach.getIntegers().write(1, getEntityID());
-		attach.getIntegers().write(2, vehicleId);
-
 		final WrapperPlayServerEntityMetadata metadata = new WrapperPlayServerEntityMetadata();
 		metadata.setEntityID(getEntityID());
 		metadata.setMetadata(buildMetadata().getWatchableObjects());
-		return Arrays.asList(metadataVehicle.getHandle(), metadata.getHandle(), attach);
-	}
-
-	private WrappedDataWatcher buildMetadataVehicle() {
-		final WrappedDataWatcher metadata = new WrappedDataWatcher();
-		metadata.setObject(0, (byte) 0x20); // Set invisible
-		return metadata;
+		return Arrays.asList(metadata.getHandle());
 	}
 
 	private WrappedDataWatcher buildMetadata() {
 		final WrappedDataWatcher metadata = new WrappedDataWatcher();
-		metadata.setObject(1, (byte) 0x04); // Set riding
-		metadata.setObject(10, itemStack); // Set itemstack
+		WrappedDataWatcher.Serializer byteSerializer = WrappedDataWatcher.Registry.get(Byte.class);
+		WrappedDataWatcher.Serializer booleanSerializer = WrappedDataWatcher.Registry.get(Boolean.class);
+		WrappedDataWatcher.Serializer itemStackSerializer = WrappedDataWatcher.Registry.getItemStackSerializer(false);
+		metadata.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(3, booleanSerializer), false); // CustomName-Visibility
+		metadata.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(5, booleanSerializer), true); // no Gravity
+		metadata.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(8, itemStackSerializer), itemStack); // Item
 		return metadata;
 	}
 
@@ -127,8 +90,6 @@ public class ItemHologramLine extends AbstractHologramLine {
 	@Override
 	public String toString() {
 		return "ItemHologramLine{" +
-			"itemStack=" + itemStack +
-			", vehicleId=" + vehicleId +
-			'}';
+			"itemStack=" + itemStack + '}';
 	}
 }

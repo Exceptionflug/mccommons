@@ -11,15 +11,24 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 
 public class PlayerListener implements Listener {
 
+	private final JavaPlugin plugin;
+
+	public PlayerListener(JavaPlugin mccommons) {
+		this.plugin = mccommons;
+	}
+
 	@EventHandler
 	public void onJoin(final PlayerJoinEvent e) {
 		final Player p = e.getPlayer();
-		Holograms.getHologramsInWorld(p.getWorld()).forEach(it -> it.spawnFor(p));
+		Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+			Holograms.getHologramsInWorld(p.getWorld()).forEach(it -> it.spawnFor(p));
+		});
 	}
 
 	@EventHandler
@@ -33,7 +42,9 @@ public class PlayerListener implements Listener {
 		final Player p = e.getPlayer();
 		if (!e.getFrom().getWorld().equals(e.getTo().getWorld())) {
 			Holograms.getHologramsInWorld(e.getFrom().getWorld()).forEach(it -> it.despawnFor(p));
-			Holograms.getHologramsInWorld(e.getTo().getWorld()).forEach(it -> it.spawnFor(p));
+			Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> {
+				Holograms.getHologramsInWorld(e.getTo().getWorld()).forEach(it -> it.spawnFor(p));
+			}, 1);
 		} else {
 			processLocationUpdate(p, e.getTo(), e.getFrom());
 		}

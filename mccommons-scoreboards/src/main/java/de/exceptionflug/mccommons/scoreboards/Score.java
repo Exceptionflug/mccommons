@@ -1,6 +1,6 @@
 package de.exceptionflug.mccommons.scoreboards;
 
-import com.comphenix.packetwrapper.WrapperPlayServerScoreboardScore;
+import de.exceptionflug.mccommons.core.packetwrapper.WrapperPlayServerScoreboardScore;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import org.bukkit.OfflinePlayer;

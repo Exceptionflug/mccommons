@@ -67,6 +67,9 @@ public class HologramImpl implements Hologram {
 
 	@Override
 	public void spawnFor(final Player player) {
+		if (!location.getWorld().getUID().equals(player.getWorld().getUID())) {
+			return;
+		}
 		final double distance = location.distance(player.getLocation());
 		if (distance > Holograms.hologramTrackingDistance + 5) {
 			return;
