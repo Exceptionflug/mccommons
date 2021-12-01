@@ -92,6 +92,9 @@ public class LocalizedConfigBoard {
 		final List<Score> resend = new ArrayList<>();
 		for (final AbstractBoardHolder boardHolder : Scoreboards.getBoardHolders(scoreboard)) {
 			for (final Objective objective : scoreboard.getObjectives()) {
+				if (objective.getDisplaySlot() != DisplaySlot.SIDEBAR) {
+					continue;
+				}
 				for (final Score score : objective.getScores()) {
 					final String localizedString = getLocalizedString(boardHolder, score);
 					for (final String placeholder : getUsedPlaceHolders(localizedString)) {
