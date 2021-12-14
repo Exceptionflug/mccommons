@@ -1,7 +1,7 @@
 package de.exceptionflug.mccommons.inventories.proxy.converters;
 
 import de.exceptionflug.mccommons.core.Converter;
-import de.exceptionflug.protocolize.items.ItemType;
+import dev.simplix.protocolize.data.ItemType;
 
 public class ProtocolizeItemTypeConverter implements Converter<ItemType, de.exceptionflug.mccommons.inventories.api.item.ItemType> {
 

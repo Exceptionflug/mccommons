@@ -1,7 +1,7 @@
 package de.exceptionflug.mccommons.inventories.proxy.converters;
 
 import de.exceptionflug.mccommons.core.Converter;
-import de.exceptionflug.protocolize.inventory.InventoryType;
+import dev.simplix.protocolize.data.inventory.InventoryType;
 
 public class ProtocolizeInventoryTypeConverter implements Converter<de.exceptionflug.mccommons.inventories.api.InventoryType, InventoryType> {
 

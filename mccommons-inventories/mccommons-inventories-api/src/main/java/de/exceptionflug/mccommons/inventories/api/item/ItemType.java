@@ -1,6 +1,6 @@
 package de.exceptionflug.mccommons.inventories.api.item;
 
-import static de.exceptionflug.protocolize.api.util.ProtocolVersions.*;
+import static dev.simplix.protocolize.api.util.ProtocolVersions.*;
 
 /**
  * MCC replica of protocolize (pre v1.4) ItemType

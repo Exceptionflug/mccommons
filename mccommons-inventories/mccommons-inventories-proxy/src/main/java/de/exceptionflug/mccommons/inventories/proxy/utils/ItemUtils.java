@@ -4,11 +4,12 @@ import com.google.common.base.Preconditions;
 import de.exceptionflug.mccommons.core.Providers;
 import de.exceptionflug.mccommons.core.providers.TextureProvider;
 import de.exceptionflug.mccommons.core.utils.ProtocolVersions;
-import de.exceptionflug.protocolize.api.util.ReflectionUtil;
-import de.exceptionflug.protocolize.inventory.Inventory;
-import de.exceptionflug.protocolize.inventory.InventoryModule;
-import de.exceptionflug.protocolize.items.ItemStack;
-import de.exceptionflug.protocolize.items.ItemType;
+import dev.simplix.protocolize.api.Protocolize;
+import dev.simplix.protocolize.api.inventory.Inventory;
+import dev.simplix.protocolize.api.inventory.PlayerInventory;
+import dev.simplix.protocolize.api.item.ItemStack;
+import dev.simplix.protocolize.api.util.ReflectionUtil;
+import dev.simplix.protocolize.data.ItemType;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.querz.nbt.tag.*;
 
@@ -30,10 +31,10 @@ public class ItemUtils {
 	}
 
 	public static int getFreeSlots(final Inventory inv) {
-		ItemStack[] a = inv.getItemsIndexed(ProtocolVersions.MINECRAFT_1_8).toArray(new ItemStack[0]);
+		ItemStack[] a = inv.itemsIndexed(ProtocolVersions.MINECRAFT_1_8).toArray(new ItemStack[0]);
 		int c = 0;
 		for (ItemStack ic : a) {
-			if (ic == null || ic.getType() == ItemType.AIR) {
+			if (ic == null || ic.itemType() == ItemType.AIR) {
 				c++;
 			}
 		}
@@ -41,7 +42,7 @@ public class ItemUtils {
 	}
 
 	public static int getFirstSlot(final Inventory inv, final ItemStack is) {
-		ItemStack[] a = inv.getItemsIndexed(ProtocolVersions.MINECRAFT_1_8).toArray(new ItemStack[0]);
+		ItemStack[] a = inv.itemsIndexed(ProtocolVersions.MINECRAFT_1_8).toArray(new ItemStack[0]);
 		for (int i = 0; i < a.length; i++) {
 			ItemStack ic = a[i];
 			if (is.equals(ic)) {
@@ -55,63 +56,63 @@ public class ItemUtils {
 		final ItemStack is,
 		final List<String> lore,
 		final String dname) {
-		is.setLore(lore);
-		is.setDisplayName(dname);
+		is.lore(lore, true);
+		is.displayName(dname);
 		return is;
 	}
 
 	public static ItemStack removeLore(ItemStack is) {
-		is.setLore(new ArrayList<>());
+		is.lore(new ArrayList<>(), true);
 		return is;
 	}
 
 	public static ItemStack setSkullAndName(ItemStack is, String name) {
-		is.setType(ItemType.PLAYER_HEAD);
+		is.itemType(ItemType.PLAYER_HEAD);
 		setSkullOwner(is, name);
 		return is;
 	}
 
 	public static int count(ProxiedPlayer p, ItemType material) {
 		int r = 0;
-		Inventory inv = InventoryModule.getInventory(p.getUniqueId(), 0);
-		for (ItemStack is : inv.getItemsIndexed(ReflectionUtil.getProtocolVersion(p))) {
+		PlayerInventory inv = Protocolize.playerProvider().player(p.getUniqueId()).proxyInventory();
+		for (ItemStack is : inv.itemsIndexed()) {
 			if (is == null && material == ItemType.AIR) {
 				r += 1;
 			}
-			if (is != null && is.getType().equals(material))
-				r += is.getAmount();
+			if (is != null && is.itemType().equals(material))
+				r += is.amount();
 		}
 		return r;
 	}
 
 	public static int count(ProxiedPlayer p, Predicate<ItemStack> match) {
 		int r = 0;
-		Inventory inv = InventoryModule.getInventory(p.getUniqueId(), 0);
-		for (ItemStack is : inv.getItemsIndexed(ReflectionUtil.getProtocolVersion(p))) {
+		PlayerInventory inv = Protocolize.playerProvider().player(p.getUniqueId()).proxyInventory();
+		for (ItemStack is : inv.itemsIndexed()) {
 			if (is != null && match.test(is)) {
-				r += is.getAmount();
+				r += is.amount();
 			}
 		}
 		return r;
 	}
 
 	public static ItemStack addGlow(ItemStack item) {
-		((CompoundTag) item.getNBTTag()).put("ench", new ListTag<>(CompoundTag.class));
+		item.nbtData().put("ench", new ListTag<>(CompoundTag.class));
 		return item;
 	}
 
 	public static ItemStack unbreakable(ItemStack is) {
-		((CompoundTag) is.getNBTTag()).put("Unbreakable", new ByteTag((byte) 1));
+		is.nbtData().put("Unbreakable", new ByteTag((byte) 1));
 		return is;
 	}
 
 	public static ItemStack removeGlow(ItemStack is) {
-		((CompoundTag) is.getNBTTag()).remove("ench");
+		is.nbtData().remove("ench");
 		return is;
 	}
 
 	public static ItemStack first(Inventory inv, Predicate<ItemStack> match) {
-		for (ItemStack is : inv.getItemsIndexed(ProtocolVersions.MINECRAFT_1_8)) {
+		for (ItemStack is : inv.itemsIndexed(ProtocolVersions.MINECRAFT_1_8)) {
 			if (is != null && match.test(is)) {
 				return is;
 			}
@@ -123,7 +124,7 @@ public class ItemUtils {
 		Preconditions.checkNotNull(stack, "The stack cannot be null!");
 		Preconditions.checkNotNull(textureHash, "The textureHash cannot be null!");
 		Preconditions.checkArgument(!textureHash.isEmpty(), "The textureHash cannot be empty!");
-		final CompoundTag skullOwner = (CompoundTag) ((CompoundTag) stack.getNBTTag())
+		final CompoundTag skullOwner = (CompoundTag) ((CompoundTag) stack.nbtData())
 			.get("SkullOwner");
 		skullOwner.put("Name", new StringTag(textureHash));
 		final CompoundTag properties = (CompoundTag) skullOwner
@@ -134,20 +135,20 @@ public class ItemUtils {
 			CompoundTag.class);
 		properties.put("textures", textures);
 		skullOwner.put("properties", properties);
-		((CompoundTag) stack.getNBTTag()).put("SkullOwner", skullOwner);
+		stack.nbtData().put("SkullOwner", skullOwner);
 		return stack;
 	}
 
 	public static void setSkullOwner(final ItemStack stack, final String skullOwner) {
 		if (!Providers.has(TextureProvider.class))
-			((CompoundTag) stack.getNBTTag()).put("SkullOwner", new StringTag(skullOwner));
+			stack.nbtData().put("SkullOwner", new StringTag(skullOwner));
 		else
 			setSkullTexture(stack, Providers.get(TextureProvider.class).getSkin(skullOwner));
 	}
 
 	public static String getSkullOwner(final ItemStack stack) {
-		if (((CompoundTag) stack.getNBTTag()).containsKey("SkullOwner")) {
-			final Tag t = ((CompoundTag) stack.getNBTTag()).get("SkullOwner");
+		if (stack.nbtData().containsKey("SkullOwner")) {
+			final Tag t = stack.nbtData().get("SkullOwner");
 			if (t instanceof StringTag) {
 				return ((StringTag) t).getValue();
 			} else if (t instanceof CompoundTag) {

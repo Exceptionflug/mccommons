@@ -7,8 +7,8 @@ import de.exceptionflug.mccommons.inventories.api.InventoryItem;
 import de.exceptionflug.mccommons.inventories.api.InventoryType;
 import de.exceptionflug.mccommons.inventories.api.design.OnePageInventoryWrapper;
 import de.exceptionflug.mccommons.inventories.proxy.utils.Schedulable;
-import de.exceptionflug.protocolize.inventory.Inventory;
-import de.exceptionflug.protocolize.items.ItemStack;
+import dev.simplix.protocolize.api.inventory.Inventory;
+import dev.simplix.protocolize.api.item.ItemStack;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 

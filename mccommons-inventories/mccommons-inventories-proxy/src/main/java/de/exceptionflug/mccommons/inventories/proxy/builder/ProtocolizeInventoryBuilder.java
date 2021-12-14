@@ -2,17 +2,18 @@ package de.exceptionflug.mccommons.inventories.proxy.builder;
 
 import com.google.common.collect.Sets;
 import de.exceptionflug.mccommons.core.Converters;
-import de.exceptionflug.mccommons.inventories.api.InventoryBuilder;
-import de.exceptionflug.mccommons.inventories.api.InventoryItem;
-import de.exceptionflug.mccommons.inventories.api.InventoryWrapper;
-import de.exceptionflug.mccommons.inventories.api.PlayerWrapper;
+import de.exceptionflug.mccommons.inventories.api.*;
 import de.exceptionflug.mccommons.inventories.proxy.utils.ItemUtils;
-import de.exceptionflug.protocolize.inventory.Inventory;
-import de.exceptionflug.protocolize.inventory.InventoryModule;
-import de.exceptionflug.protocolize.inventory.InventoryType;
-import de.exceptionflug.protocolize.items.ItemStack;
-import de.exceptionflug.protocolize.items.ItemType;
+import dev.simplix.protocolize.api.ClickType;
+import dev.simplix.protocolize.api.Protocolize;
+import dev.simplix.protocolize.api.inventory.Inventory;
+import dev.simplix.protocolize.api.inventory.InventoryClick;
+import dev.simplix.protocolize.api.inventory.InventoryClose;
+import dev.simplix.protocolize.api.item.ItemStack;
+import dev.simplix.protocolize.data.ItemType;
+import dev.simplix.protocolize.data.inventory.InventoryType;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.chat.ComponentSerializer;
@@ -30,12 +31,12 @@ public class ProtocolizeInventoryBuilder implements InventoryBuilder {
 		final boolean register = prebuild == null;
 		if (prebuild instanceof Inventory) {
 			final Inventory inventory = (Inventory) prebuild;
-			if (!ComponentSerializer.toString(inventory.getTitle())
+			if (!ComponentSerializer.toString((BaseComponent) inventory.title())
 				.equals(ComponentSerializer.toString(new TextComponent(wrapper.getTitle()))) ||
-				inventory.getType().getTypicalSize(
+				inventory.type().getTypicalSize(
 					Converters.convert(wrapper.getPlayer(), PlayerWrapper.class)
 						.getProtocolVersion()) != wrapper.getSize()
-				|| inventory.getType() != Converters
+				|| inventory.type() != Converters
 				.convert(wrapper.getInventoryType(), InventoryType.class)) {
 				prebuild = (T) makeInv(wrapper);
 //                reopen = true;
@@ -46,10 +47,10 @@ public class ProtocolizeInventoryBuilder implements InventoryBuilder {
 		final Inventory inventory = (Inventory) prebuild;
 		for (int i = 0; i < wrapper.getSize(); i++) {
 			final InventoryItem item = (InventoryItem) wrapper.getInventoryItemMap().get(i);
-			final ItemStack currentStack = inventory.getItem(i);
+			final ItemStack currentStack = inventory.item(i);
 			if (item == null) {
 				if (currentStack != null) {
-					inventory.setItem(i, ItemStack.NO_DATA);
+					inventory.item(i, ItemStack.NO_DATA);
 				}
 			}
 			if (item != null) {
@@ -59,11 +60,11 @@ public class ProtocolizeInventoryBuilder implements InventoryBuilder {
 							.severe("InventoryItem's ItemStackWrapper is null @ slot " + i);
 						continue;
 					}
-					inventory.setItem(i, item.getItemStackWrapper().getHandle());
+					inventory.item(i, item.getItemStackWrapper().getHandle());
 				} else {
 					if (item.getItemStackWrapper().getType()
 						== de.exceptionflug.mccommons.inventories.api.item.ItemType.PLAYER_HEAD
-						&& currentStack.getType() == ItemType.PLAYER_HEAD) {
+						&& currentStack.itemType() == ItemType.PLAYER_HEAD) {
 						final String ownaz1 = ItemUtils
 							.getSkullOwner(item.getItemStackWrapper().getHandle());
 						final String ownaz2 = ItemUtils.getSkullOwner(currentStack);
@@ -72,7 +73,7 @@ public class ProtocolizeInventoryBuilder implements InventoryBuilder {
 						}
 					}
 					if (!currentStack.equals(item.getItemStackWrapper().getHandle())) {
-						inventory.setItem(i, item.getItemStackWrapper().getHandle());
+						inventory.item(i, item.getItemStackWrapper().getHandle());
 					}
 				}
 			}
@@ -83,14 +84,88 @@ public class ProtocolizeInventoryBuilder implements InventoryBuilder {
 			wrappers.add(wrapper);
 		}
 //        if(reopen)
-		InventoryModule.sendInventory((ProxiedPlayer) wrapper.getPlayer(), inventory);
+		Protocolize.playerProvider()
+				.player(((ProxiedPlayer) wrapper.getPlayer()).getUniqueId())
+				.openInventory(inventory);
 		return prebuild;
 	}
 
 	private Inventory makeInv(final InventoryWrapper wrapper) {
 		final InventoryType type = Converters
 			.convert(wrapper.getInventoryType(), InventoryType.class);
-		return new Inventory(type, new TextComponent(wrapper.getTitle()));
+		Inventory inventory = new Inventory(type);
+		inventory.title(new TextComponent(wrapper.getTitle()));
+
+		inventory.onClick(inventoryClick -> onClick(inventoryClick, wrapper));
+		inventory.onClose(inventoryClose -> onClose(inventoryClose, wrapper));
+
+		return inventory;
+	}
+
+	private void onClick(InventoryClick inventoryClick, InventoryWrapper wrapper) {
+		if (inventoryClick.clickType() == null) {
+			return;
+		}
+		if (inventoryClick.player() == null) {
+			return;
+		}
+		if (inventoryClick.clickedItem() == null) {
+			return;
+		}
+		Inventory i = inventoryClick.inventory();
+		if (i == null) {
+			return;
+		}
+//            ProxyServer.getInstance().broadcast("Clicked inventory");
+//            ProxyServer.getInstance().broadcast("Clicked menu: " + menu.getClass().getSimpleName() + " @ slot " + inventoryClick.slot());
+
+		InventoryItem item = wrapper.get(inventoryClick.slot());
+		ClickType type = inventoryClick.clickType();
+		if (item == null) {
+//                ProxyServer.getInstance().broadcast("Clicked nothing");
+			if (wrapper.getCustomActionHandler() != null) {
+				try {
+					CallResult callResult = wrapper
+							.getCustomActionHandler()
+							.handle(new Click(Converters.convert(type, de.exceptionflug.mccommons.inventories.api.ClickType.class), wrapper, null, inventoryClick.slot()));
+					inventoryClick.cancelled(callResult == null || callResult == CallResult.DENY_GRABBING);
+				} catch (Exception ex) {
+					inventoryClick.cancelled(true);
+					wrapper.onException(ex, null);
+				}
+			}
+			return;
+		}
+//            ProxyServer.getInstance().broadcast("Clicked " + item.displayName());
+		ActionHandler actionHandler = wrapper.getActionHandler(item.getActionHandler());
+		if (actionHandler == null) {
+			inventoryClick.cancelled(true);
+			return;
+		}
+		try {
+			final CallResult callResult = actionHandler.handle(new Click(
+					Converters.convert(type, de.exceptionflug.mccommons.inventories.api.ClickType.class),
+					wrapper,
+					item,
+					inventoryClick.slot()));
+			inventoryClick.cancelled(callResult == null || callResult == CallResult.DENY_GRABBING);
+		} catch (final Exception ex) {
+			inventoryClick.cancelled(true);
+			wrapper.onException(ex, item);
+		}
+	}
+
+	private void onClose(InventoryClose inventoryClose, InventoryWrapper wrapper) {
+		final Inventory inventory = inventoryClose.inventory();
+		if (inventory == null)
+			return;
+		if (wrapper == null)
+			return;
+		final Map.Entry<InventoryWrapper, Long> lastBuild = getLastBuild(inventoryClose.player().uniqueId());
+		if (lastBuild.getKey().getInternalId() == wrapper.getInternalId() && (System.currentTimeMillis() - lastBuild.getValue()) <= 55)
+			return;
+		wrapper.onExit((System.currentTimeMillis() - lastBuild.getValue()) <= 55);
+		uncache(wrapper);
 	}
 
 	@Override
@@ -125,8 +200,9 @@ public class ProtocolizeInventoryBuilder implements InventoryBuilder {
 
 	@Override
 	public void open(final InventoryWrapper wrapper) {
-		InventoryModule
-			.sendInventory((ProxiedPlayer) wrapper.getPlayer(), (Inventory) wrapper.build());
+		Protocolize.playerProvider()
+				.player(((ProxiedPlayer)wrapper.getPlayer()).getUniqueId())
+				.openInventory((Inventory) wrapper.build());
 	}
 
 	@Override

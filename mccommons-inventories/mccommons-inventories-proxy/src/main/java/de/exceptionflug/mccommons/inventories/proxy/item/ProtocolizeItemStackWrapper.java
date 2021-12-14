@@ -3,7 +3,7 @@ package de.exceptionflug.mccommons.inventories.proxy.item;
 import de.exceptionflug.mccommons.core.Converters;
 import de.exceptionflug.mccommons.inventories.api.item.ItemStackWrapper;
 import de.exceptionflug.mccommons.inventories.api.item.ItemType;
-import de.exceptionflug.protocolize.items.ItemStack;
+import dev.simplix.protocolize.api.item.ItemStack;
 import net.querz.nbt.tag.CompoundTag;
 
 import java.util.List;
@@ -18,62 +18,62 @@ public class ProtocolizeItemStackWrapper implements ItemStackWrapper {
 
 	@Override
 	public String getDisplayName() {
-		return handle.getDisplayName();
+		return handle.displayName(true);
 	}
 
 	@Override
 	public List<String> getLore() {
-		return handle.getLore();
+		return handle.lore(true);
 	}
 
 	@Override
 	public ItemType getType() {
-		return Converters.convert(handle.getType(), ItemType.class);
+		return Converters.convert(handle.itemType(), ItemType.class);
 	}
 
 	@Override
 	public CompoundTag getNBT() {
-		return (CompoundTag) handle.getNBTTag();
+		return (CompoundTag) handle.nbtData();
 	}
 
 	@Override
 	public int getAmount() {
-		return handle.getAmount();
+		return handle.amount();
 	}
 
 	@Override
 	public short getDurability() {
-		return handle.getDurability();
+		return handle.durability();
 	}
 
 	@Override
 	public void setType(final ItemType type) {
-		handle.setType(Converters.convert(type, de.exceptionflug.protocolize.items.ItemType.class));
+		handle.itemType(Converters.convert(type, dev.simplix.protocolize.data.ItemType.class));
 	}
 
 	@Override
 	public void setDisplayName(final String s) {
-		handle.setDisplayName(s);
+		handle.displayName(s);
 	}
 
 	@Override
 	public void setLore(final List<String> lore) {
-		handle.setLore(lore);
+		handle.lore(lore, true);
 	}
 
 	@Override
 	public void setNBT(final CompoundTag tag) {
-		handle.setNBTTag(tag);
+		handle.nbtData(tag);
 	}
 
 	@Override
 	public void setAmount(final int amount) {
-		handle.setAmount((byte) amount);
+		handle.amount((byte) amount);
 	}
 
 	@Override
 	public void setDurability(final short durability) {
-		handle.setDurability(durability);
+		handle.durability(durability);
 	}
 
 	@Override

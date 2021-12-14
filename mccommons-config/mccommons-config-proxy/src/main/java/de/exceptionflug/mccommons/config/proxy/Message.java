@@ -5,9 +5,9 @@ import de.exceptionflug.mccommons.config.shared.MessageMode;
 import de.exceptionflug.mccommons.core.Providers;
 import de.exceptionflug.mccommons.core.providers.LocaleProvider;
 import de.exceptionflug.mccommons.core.utils.FormatUtils;
-import de.exceptionflug.protocolize.world.Sound;
-import de.exceptionflug.protocolize.world.SoundCategory;
-import de.exceptionflug.protocolize.world.WorldModule;
+import dev.simplix.protocolize.api.Protocolize;
+import dev.simplix.protocolize.api.SoundCategory;
+import dev.simplix.protocolize.data.Sound;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
@@ -63,11 +63,13 @@ public final class Message {
 				} else if (messageMode == MessageMode.SOUND) {
 					for (final String key : config.getKeys(messageKey + ".sounds")) {
 						final Sound sound = Sound.valueOf(config.getOrSetDefault(messageKey + ".sounds." + key + ".sound", "ENTITY_EXPERIENCE_ORB_PICKUP"));
-						final SoundCategory category = SoundCategory.getCategory(config.getOrSetDefault(messageKey + ".sounds." + key + ".category", "master"));
+						final SoundCategory category = SoundCategory.category(config.getOrSetDefault(messageKey + ".sounds." + key + ".category", "master"));
 						final double volume = config.getOrSetDefault(messageKey + ".sounds." + key + ".volume", 1D);
 						final double pitch = config.getOrSetDefault(messageKey + ".sounds." + key + ".pitch", 1D);
 						if (sender instanceof ProxiedPlayer)
-							WorldModule.playSound((ProxiedPlayer) sender, sound, category, (float) volume, (float) pitch);
+							Protocolize.playerProvider()
+									.player(((ProxiedPlayer) sender).getUniqueId())
+									.playSound(sound, category, (float) volume, (float) pitch);
 					}
 				} else if (messageMode == MessageMode.COMPONENT) {
 					final BaseComponent baseComponent = getComponent0(config, Providers.get(LocaleProvider.class).provide(uuid), messageKey, new TextComponent(defaultMessage), replacements);

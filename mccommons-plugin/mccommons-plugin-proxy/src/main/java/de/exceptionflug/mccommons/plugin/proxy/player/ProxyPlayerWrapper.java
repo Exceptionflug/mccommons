@@ -1,7 +1,7 @@
 package de.exceptionflug.mccommons.plugin.proxy.player;
 
 import de.exceptionflug.mccommons.inventories.api.PlayerWrapper;
-import de.exceptionflug.protocolize.api.util.ReflectionUtil;
+import dev.simplix.protocolize.api.util.ReflectionUtil;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 public class ProxyPlayerWrapper implements PlayerWrapper {
