@@ -31,7 +31,7 @@ public class ReflectionUtil {
 	private static final Map<Map.Entry<Class, String>, Field> CACHED_FIELDS = new HashMap<>();
 
 	public static Class<?> getClass(String classname) throws ClassNotFoundException {
-		if (getVersion().startsWith("v1_17") || getVersion().startsWith("v1_18")) {
+		if (getVersion().startsWith("v1_17") || getVersion().startsWith("v1_18") || getVersion().startsWith("v1_19")) {
 			// md_5 decided to break nms classes again
 			if (MOJANG_MAPPINGS.containsKey(classname)) {
 				return Class.forName(MOJANG_MAPPINGS.get(classname));

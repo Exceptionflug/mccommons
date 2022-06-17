@@ -98,9 +98,9 @@ public class ItemUtils {
 	private static String toReadable(final String string) {
 		final String[] names = string.split("_");
 		for (int i = 0; i < names.length; i++) {
-			names[i] = names[i].substring(0, 1) + names[i].substring(1).toLowerCase();
+			names[i] = names[i].charAt(0) + names[i].substring(1).toLowerCase();
 		}
-		return (org.apache.commons.lang.StringUtils.join(names, " "));
+		return String.join(" ", names);
 	}
 
 	public static boolean hasHiddenString(final ItemStack item) {
